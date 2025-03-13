@@ -1,5 +1,7 @@
 package app.user.model;
 
+import app.advert.model.Advert;
+import app.bid.model.Bid;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,6 +20,7 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
+    @Column(nullable = false, updatable = false, name = "id")
     private UUID id;
 
     @Column(nullable = false, unique = true)
@@ -46,6 +49,14 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime updatedOn;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bidder")
+    @OrderBy("createdOn DESC")
+    private List<Bid> bids = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
+    @OrderBy("createdOn DESC")
+    private List<Advert> adverts = new ArrayList<>();
 
 
 }
