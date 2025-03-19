@@ -1,47 +1,45 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml"><head>
-    <meta charset="UTF-8">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&amp;display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&amp;display=swap" rel="stylesheet">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="/css/common.css">
-    <link rel="stylesheet" type="text/css" href="/css/form.css">
-    <title>Login</title>
-</head>
-<body>
-
+<html lang="en">
+<th:block th:include="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+<!-- Header -->
+<th:block th:include="~{fragments/navigation :: header(${user})}"></th:block>
 <main>
-    <section class="section full-height">
+    <section class="flex items-center justify-center min-h-screen py-10">
+        <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+            <form th:action="@{/login}" th:method="POST" th:object="${loginRequest}">
+                <!-- Email -->
+                <div class="mb-4">
+                    <label for="username" class="block text-gray-700 mb-2">Username</label>
+                    <input type="text" id="username" th:field="*{username}" name="username" required class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                           placeholder="Enter your username"
+                    />
+                    <p class="alert-warning" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+                </div>
+                <!-- Password -->
+                <div class="mb-4">
+                    <label for="password" class="block text-gray-700 mb-2">Password</label>
+                    <input type="password"  th:field="*{password}" id="password" name="password" required  class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500" placeholder="Enter your password"
+                    />
+                    <p class="alert-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                </div>
+                <!-- Submit Button -->
+                <div class="text-center">
+                    <p th:if="${errorMessage}" class="alert-warning text-[14px] font-semibold place-content-center" th:text="${errorMessage}">Wrong user or password</p>
+                    <br />
+                    <button type="submit" class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none">
+                        Login
+                    </button>
+                </div>
+            </form>
+            <!-- Register redirect -->
 
-        <div class="container">
-            <a href="/" class="logo-big">
-                <img src="/images/smart-wallet-text-only.png" alt="Logo Image">
-            </a>
+            <p class="mt-4 text-center text-sm">
+                Don't have an account?
+                <a th:href="@{/register}" class="text-blue-600 hover:underline">Register here</a>.
+            </p>
         </div>
-
-        <form class="form" th:action="@{/login}" th:method="POST" th:object="${loginRequest}">
-
-            <h3>Login Here</h3>
-            <label for="username">Username</label>
-            <input type="text" placeholder="Username" id="username" th:field="*{username}" required>
-            <p class="alert-warning" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
-
-            <label for="password">Password</label>
-            <input type="password" placeholder="Password" id="password" th:field="*{password}" required>
-            <p class="alert-warning" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
-            <button type="submit">Log In</button>
-
-            <p></p>
-            <p th:if="${errorMessage}" class="alert-warning" th:text="${errorMessage}">Wrong user or password</p>
-
-            <p class="form-already">Don't have an account? <a href="/register">Register now</a>!</p>
-
-        </form>
-
     </section>
 </main>
 <!--<th:block th:insert="~{fragments/footer :: footer}"></th:block>-->
