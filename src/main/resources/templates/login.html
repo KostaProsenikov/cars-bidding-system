@@ -8,7 +8,7 @@
     <section class="flex items-center justify-center min-h-screen py-10">
         <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
             <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
-            <form th:action="@{/login}" th:method="POST" th:object="${loginRequest}">
+            <form th:action="@{/login}" th:method="post" th:object="${loginRequest}">
                 <!-- Email -->
                 <div class="mb-4">
                     <label for="username" class="block text-gray-700 mb-2">Username</label>
@@ -32,6 +32,7 @@
                         Login
                     </button>
                 </div>
+<!--                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>-->
             </form>
             <!-- Register redirect -->
 
