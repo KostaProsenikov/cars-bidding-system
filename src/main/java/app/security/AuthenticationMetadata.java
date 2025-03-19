@@ -6,12 +6,9 @@ import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-
-// Този клас пази данните на логнатият потребител
 
 @Data
 @AllArgsConstructor
@@ -23,15 +20,8 @@ public class AuthenticationMetadata implements UserDetails {
     private UserRole role;
     private boolean isActive;
 
-    //    Този метод се използва oт Spring Security, за да се видят
-//    ролите (Roles and Authorities), които логнатият потребител притежава
-//    Authority - това означава permission или роля
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-
-//        hasRole("ADMIN") -> "ROLE_ADMIN
-//        hasAuthority("ADMIN") -> ADMIN
-
         SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + role.name());
         return List.of(authority);
     }
