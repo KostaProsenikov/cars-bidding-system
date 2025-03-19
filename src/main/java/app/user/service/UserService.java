@@ -78,6 +78,8 @@ public class UserService implements UserDetailsService {
         return User.builder()
                 .username(registerRequest.getUsername())
                 .password(passwordEncoder.encode(registerRequest.getPassword()))
+                .firstName(registerRequest.getFirstName())
+                .lastName(registerRequest.getLastName())
                 .role(UserRole.USER)
                 .isActive(true)
                 .createdOn(LocalDateTime.now())
