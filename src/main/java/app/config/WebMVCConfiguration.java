@@ -27,7 +27,7 @@ public class WebMVCConfiguration implements WebMvcConfigurer {
                         .loginPage("/login")
                         .usernameParameter("username")
                         .passwordParameter("password")
-                        .defaultSuccessUrl("/home")
+                        .defaultSuccessUrl("/")
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
