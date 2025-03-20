@@ -25,8 +25,6 @@ public class Advert {
     private UUID id;
 
     @NotNull
-    @Min(3)
-    @Max(50)
     @Column(nullable = false)
     private String advertName;
 
@@ -44,7 +42,7 @@ public class Advert {
 
     @Column(nullable = false)
     private LocalDateTime expireDate;
-    
+
     private boolean visible;
 
     @Min(0)
@@ -72,7 +70,7 @@ public class Advert {
     @URL
     private String imageURL;
 
-    @Min(1)
+    @NotNull
     private BigDecimal buyNowPrice;
 
     @NotNull
@@ -81,11 +79,8 @@ public class Advert {
 
     private boolean isBiddingOpen;
 
-    @Min(0)
-    @Max(100000)
     private BigDecimal minBidPrice;
 
     @Min(0)
-    @Max(100000)
     private BigDecimal currentBidPrice;
 }
