@@ -39,7 +39,6 @@ public class CreateNewAdvertRequest {
     @NotNull
     private int price;
 
-    @NotNull
     private User owner;
 
     @NotNull
