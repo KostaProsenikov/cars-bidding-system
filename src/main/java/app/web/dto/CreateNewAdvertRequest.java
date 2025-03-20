@@ -34,6 +34,8 @@ public class CreateNewAdvertRequest {
     @Positive
     private int horsePower;
 
+    private Boolean isBiddingOpen;
+
     @NotNull
     private int price;
 
@@ -55,7 +57,7 @@ public class CreateNewAdvertRequest {
     @Positive
     @Min (1950)
     @Max (2025)
-    private int releaseYear;
+    private int manufactureYear;
 
     @Positive
     private BigDecimal buyNowPrice;

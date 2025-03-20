@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<th:block th:include="~{fragments/navigation :: head(${user})}"></th:block>
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
 <body class="bg-gray-100">
 <!-- Header -->
-<th:block th:include="~{fragments/navigation :: header(${user})}"></th:block>
+<th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
 
 <!-- Main Section -->
 <section class="bg-black text-white py-20">
@@ -19,7 +19,7 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Car 1: BMW M4 -->
         <div class="bg-white shadow-md rounded-lg p-4">
-            <img src="images/bmwx4.jpg" alt="BMW M4" class="w-full h-[350px] object-cover mb-4 rounded" />
+            <img src="/images/bmwx4.jpg" alt="BMW M4" class="w-full h-[350px] object-cover mb-4 rounded" />
             <h3 class="text-lg font-bold">BMW M4</h3>
             <p>Price: $45,000</p>
             <p>Year: 2021</p>
