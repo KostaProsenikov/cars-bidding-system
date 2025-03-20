@@ -2,13 +2,18 @@ package app.advert.service;
 
 import app.advert.model.Advert;
 import app.advert.repository.AdvertRepository;
+import app.exception.DomainException;
 import app.user.model.User;
 import app.web.dto.CreateNewAdvertRequest;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AdvertService {
@@ -20,14 +25,13 @@ public class AdvertService {
         this.advertRepository = advertRepository;
     }
 
-    @Transactional
-    public Advert createNewAd(CreateNewAdvertRequest createNewAdvertRequest, User user) {
+    public void createNewAd(CreateNewAdvertRequest createNewAdvertRequest, User user) {
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expireDate = now.plusDays(30);
 
-        Boolean isBiddingOpen = createNewAdvertRequest.getIsBiddingOpen() != null ? createNewAdvertRequest.getIsBiddingOpen() : false;
-        Boolean isVisible = createNewAdvertRequest.getVisible() != null ? createNewAdvertRequest.getVisible() : false;
+        boolean isBiddingOpen = createNewAdvertRequest.getIsBiddingOpen() != null ? createNewAdvertRequest.getIsBiddingOpen() : false;
+        boolean isVisible = createNewAdvertRequest.getVisible() != null ? createNewAdvertRequest.getVisible() : false;
         Advert advert = Advert.builder()
                 .advertName(createNewAdvertRequest.getAdvertName())
                 .description(createNewAdvertRequest.getDescription())
@@ -51,8 +55,37 @@ public class AdvertService {
         advertRepository.save(advert);
 
         System.out.printf("Created a new ad with name [%s] and description [%s] %n", advert.getAdvertName(), advert.getDescription());
+    }
 
+    public List<Advert> getAdvertsByOwnerId(UUID ownerId) {
+        return advertRepository.findAdvertByOwnerId(ownerId);
+    }
+
+    public List<Advert> getAllShownAdvertsByPage(int page, String sortType, String sortField) {
+        Sort sort = sortType.equals("ASC") ? Sort.by(sortField).ascending() :
+                Sort.by(sortField).descending();
+        Pageable pageable = (Pageable) PageRequest.of(page, 20, sort);
+        List<Advert> adverts = advertRepository.findByVisibleTrue(pageable);
+        return adverts;
+    }
+
+    public Advert getAdvertById(UUID id) {
+        Advert advert = advertRepository.findById(id).orElseThrow(() -> new DomainException("Advert with ID [%s] is not found!".formatted(id)));
         return advert;
+    }
+
+    public Advert updateAdvert(UUID id, Advert advert) {
+        Advert advertToUpdate = getAdvertById(id);
+        advertToUpdate.setAdvertName(advert.getAdvertName());
+        advertToUpdate.setDescription(advert.getDescription());
+        advertToUpdate.setCarBrand(advert.getCarBrand());
+        advertToUpdate.setCarModel(advert.getCarModel());
+        advertToUpdate.setManufactureYear(advert.getManufactureYear());
+        advertToUpdate.setHorsePower(advert.getHorsePower());
+        advertToUpdate.setFuelType(advert.getFuelType());
+        advertToUpdate.setGearboxType(advert.getGearboxType());
+        advertRepository.save(advertToUpdate);
+        return advertToUpdate;
     }
 
     public List<Advert> getFirst20VisibleAdverts() {
