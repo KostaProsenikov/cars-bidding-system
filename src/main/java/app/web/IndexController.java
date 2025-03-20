@@ -1,5 +1,7 @@
 package app.web;
 
+import app.advert.model.Advert;
+import app.advert.service.AdvertService;
 import app.user.model.User;
 import app.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
@@ -14,15 +16,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import app.user.service.UserService;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Controller
 @RequestMapping ("")
 public class IndexController {
 
     private final UserService userService;
+    private final AdvertService advertService;
 
     @Autowired
-    public IndexController(UserService userService) {
+    public IndexController(UserService userService, AdvertService advertService) {
         this.userService = userService;
+        this.advertService = advertService;
     }
 
     @GetMapping("")
@@ -30,7 +37,9 @@ public class IndexController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
         User user = new User();
+        List<Advert> adverts = advertService.getFirst20VisibleAdverts();
         modelAndView.addObject("user", user);
+        modelAndView.addObject("adverts", adverts);
         return modelAndView;
     }
 
