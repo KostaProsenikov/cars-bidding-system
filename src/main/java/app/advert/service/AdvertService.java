@@ -2,12 +2,11 @@ package app.advert.service;
 
 import app.advert.model.Advert;
 import app.advert.repository.AdvertRepository;
+import app.user.model.User;
 import app.web.dto.CreateNewAdvertRequest;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Service
@@ -21,18 +20,20 @@ public class AdvertService {
     }
 
     @Transactional
-    public Advert createNewAd(CreateNewAdvertRequest createNewAdvertRequest) {
+    public Advert createNewAd(CreateNewAdvertRequest createNewAdvertRequest, User user) {
 
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expireDate = now.plusDays(30);
 
+
         Advert advert = Advert.builder()
                 .advertName(createNewAdvertRequest.getAdvertName())
                 .description(createNewAdvertRequest.getDescription())
-                .owner(createNewAdvertRequest.getOwner())
+                .owner(user)
                 .carBrand(createNewAdvertRequest.getCarBrand())
                 .carModel(createNewAdvertRequest.getCarModel())
-                .releaseYear(LocalDate.ofEpochDay(createNewAdvertRequest.getReleaseYear()))
+                .isBiddingOpen(createNewAdvertRequest.getIsBiddingOpen())
+                .manufactureYear(createNewAdvertRequest.getManufactureYear())
                 .horsePower(createNewAdvertRequest.getHorsePower())
                 .fuelType(createNewAdvertRequest.getFuelType())
                 .gearboxType(createNewAdvertRequest.getGearboxType())
@@ -43,7 +44,9 @@ public class AdvertService {
                 .updatedOn(now)
                 .build();
 
-        System.out.println(advert);
+        advertRepository.save(advert);
+
+        System.out.printf("Advert created: %s%n", advert);
 
         return advert;
     }

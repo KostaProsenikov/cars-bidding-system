@@ -2,11 +2,13 @@ package app.web;
 
 import app.advert.service.AdvertService;
 import app.security.AuthenticationMetadata;
+import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.CreateNewAdvertRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +28,7 @@ public class AdsController {
     }
 
     @GetMapping ("/new")
-    public ModelAndView getNewAdPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView getNewAdPage() {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("new-advert");
         modelAndView.addObject("createAdvertRequest", new CreateNewAdvertRequest());
@@ -34,8 +36,12 @@ public class AdsController {
     }
 
     @PostMapping ("/new")
-    public String createNewAd(CreateNewAdvertRequest createNewAdvertRequest) {
-        advertService.createNewAd(createNewAdvertRequest);
-        return "redirect:/";
+    public ModelAndView createNewAd(CreateNewAdvertRequest createNewAdvertRequest, BindingResult bindingResult, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        if (bindingResult.hasErrors()) {
+            return new ModelAndView("new-advert");
+        }
+        User user = userService.getById(authenticationMetadata.getUserId());
+        advertService.createNewAd(createNewAdvertRequest, user);
+        return new ModelAndView("redirect:/");
     }
 }
