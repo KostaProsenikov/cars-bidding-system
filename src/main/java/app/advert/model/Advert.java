@@ -39,6 +39,7 @@ public class Advert {
 
     private int viewCount;
 
+    @Enumerated(EnumType.STRING)
     private CarBrand carBrand;
 
     private String carModel;
@@ -47,8 +48,10 @@ public class Advert {
 
     private int horsePower;
 
+    @Enumerated(EnumType.STRING)
     private FuelType fuelType;
 
+    @Enumerated(EnumType.STRING)
     private GearboxType gearboxType;
 
     private String imageURL;
