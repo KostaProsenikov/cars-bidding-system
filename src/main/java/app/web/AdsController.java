@@ -5,6 +5,7 @@ import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.CreateNewAdvertRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -36,9 +37,11 @@ public class AdsController {
     }
 
     @PostMapping ("/new")
-    public ModelAndView createNewAd(CreateNewAdvertRequest createNewAdvertRequest, BindingResult bindingResult, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView createNewAd(@Valid CreateNewAdvertRequest createNewAdvertRequest, BindingResult bindingResult, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         if (bindingResult.hasErrors()) {
-            return new ModelAndView("new-advert");
+            ModelAndView modelAndView = new ModelAndView("new-advert");
+            modelAndView.addObject("createAdvertRequest", createNewAdvertRequest);
+            return modelAndView;
         }
         User user = userService.getById(authenticationMetadata.getUserId());
         advertService.createNewAd(createNewAdvertRequest, user);

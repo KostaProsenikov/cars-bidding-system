@@ -18,8 +18,8 @@
              <nav>
                  <ul class="flex space-x-6">
                      <li><a th:href="@{/}" class="hover:text-gray-300">Home</a></li>
-                     <li><a th:href="@{/ads/new}" class="hover:text-gray-300">Create Ad</a></li>
-                     <li sec:authorize="isAuthenticated()"><a th:href="@{/ads}" class="hover:text-gray-300">Show All Ads</a></li>
+                     <li sec:authorize="isAuthenticated()"><a th:href="@{/ads/new}" class="hover:text-gray-300">Create Ad</a></li>
+                     <li><a th:href="@{/ads}" class="hover:text-gray-300">Show All Ads</a></li>
                      <li><a th:href="@{/about-us}" class="hover:text-gray-300">About</a></li>
                      <li sec:authorize="isAuthenticated()"><a th:href="@{/subscriptions}" class="hover:text-gray-300">Subscriptions</a></li>
                      <li sec:authorize="isAuthenticated()"><a th:href="@{/bids}" class="hover:text-gray-300">Bids</a></li>
