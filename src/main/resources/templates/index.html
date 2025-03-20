@@ -8,7 +8,7 @@
 <!-- Main Section -->
 <section class="bg-black text-white py-20">
     <div class="container mx-auto text-center">
-        <h1 class="text-4xl font-bold mb-4 hover:bg-gray-200">Welcome to Cars Bidding Company</h1>
+        <h1 class="text-4xl font-bold mb-4">Welcome to Cars Bidding Company</h1>
         <p class="text-lg mb-6">Find the best deals for buying and selling cars in one place.</p>
     </div>
 </section>
@@ -18,16 +18,16 @@
     <h2 class="text-2xl font-bold text-center mb-6">Featured Cars</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- Car 1: BMW M4 -->
-        <div class="bg-white shadow-md rounded-lg p-6 text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl"th:each="advert : ${adverts}">
+        <div class="bg-white shadow-md rounded-lg p-6 text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl" th:each="advert : ${adverts}">
             <h3 class="text-lg font-bold mb-1" th:text="${advert.advertName}"></h3>
-            <img th:src="${#strings.isEmpty(advert.imageURL)} ?
+            <img alt="advert-picture" th:src="${#strings.isEmpty(advert.imageURL)} ?
                 'https://img.freepik.com/free-psd/realistic-car-illustration_23-2151227626.jpg'
                 : ${advert.imageURL}"
                  class="w-full h-[350px] object-cover mb-4 rounded" />
             <h3 class="text-gray-700" th:text="${advert.description}"></h3>
             <p class="text-gray-700">Buy Now: $<span th:text="${advert.buyNowPrice}"></span></p>
             <p class="text-gray-700">Manufacture year: <span th:text="${advert.manufactureYear}"></span></p>
-            <p class="text-gray-700 mb-4" th:if="${advert.biddingOpen}">Current Bid: <span th:text="${advert.currentBidPrice}">$45,000<span></p>
+            <p class="text-gray-700 mb-4" th:if="${advert.biddingOpen}">Current Bid: <span th:text="${advert.currentBidPrice}">$45,000</span></p>
             <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                 <a th:href="'/ads/' + ${advert.id}">More Information</a>
             </button>

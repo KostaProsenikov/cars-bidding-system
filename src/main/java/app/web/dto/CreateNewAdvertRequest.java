@@ -4,19 +4,18 @@ import app.advert.model.CarBrand;
 import app.advert.model.FuelType;
 import app.advert.model.GearboxType;
 import app.user.model.User;
+import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 
 import java.math.BigDecimal;
 
-@Builder
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class CreateNewAdvertRequest {
 
     @NotNull
@@ -34,6 +33,7 @@ public class CreateNewAdvertRequest {
     @Positive
     private int horsePower;
 
+    @Nullable
     private Boolean isBiddingOpen;
 
     @NotNull
@@ -60,6 +60,7 @@ public class CreateNewAdvertRequest {
     private int manufactureYear;
 
     @Positive
+    @NotNull
     private BigDecimal buyNowPrice;
 
     @PositiveOrZero
@@ -67,4 +68,7 @@ public class CreateNewAdvertRequest {
 
     @PositiveOrZero
     private BigDecimal currentBidPrice;
+
+    @Nullable
+    private Boolean visible;
 }

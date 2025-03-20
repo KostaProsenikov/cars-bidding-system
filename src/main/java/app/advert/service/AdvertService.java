@@ -26,14 +26,17 @@ public class AdvertService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expireDate = now.plusDays(30);
 
-
+        Boolean isBiddingOpen = createNewAdvertRequest.getIsBiddingOpen() != null ? createNewAdvertRequest.getIsBiddingOpen() : false;
+        Boolean isVisible = createNewAdvertRequest.getVisible() != null ? createNewAdvertRequest.getVisible() : false;
         Advert advert = Advert.builder()
                 .advertName(createNewAdvertRequest.getAdvertName())
                 .description(createNewAdvertRequest.getDescription())
                 .owner(user)
+                .viewCount(0)
+                .visible(isVisible)
                 .carBrand(createNewAdvertRequest.getCarBrand())
                 .carModel(createNewAdvertRequest.getCarModel())
-                .isBiddingOpen(createNewAdvertRequest.getIsBiddingOpen())
+                .isBiddingOpen(isBiddingOpen)
                 .manufactureYear(createNewAdvertRequest.getManufactureYear())
                 .horsePower(createNewAdvertRequest.getHorsePower())
                 .fuelType(createNewAdvertRequest.getFuelType())
@@ -47,7 +50,7 @@ public class AdvertService {
 
         advertRepository.save(advert);
 
-        System.out.printf("Advert created: %s%n", advert);
+        System.out.printf("Created a new ad with name [%s] and description [%s] %n", advert.getAdvertName(), advert.getDescription());
 
         return advert;
     }

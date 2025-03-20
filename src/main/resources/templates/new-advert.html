@@ -26,6 +26,7 @@
                         type="text"
                         id="advertName"
                         name="advertName"
+                        th:field="*{advertName}"
                         required
                         class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                         placeholder="Enter Advert Name"
@@ -39,6 +40,7 @@
                 <textarea
                         id="description"
                         name="description"
+                        th:field="*{description}"
                         rows="4"
                         class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                         placeholder="Enter a brief description"
@@ -53,6 +55,7 @@
                         type="checkbox"
                         id="visible"
                         name="visible"
+                        th:field="*{visible}"
                         class="mr-2 align-middle"
                 />
                 <span class="text-gray-700">Check if advert should be visible</span>
@@ -64,6 +67,7 @@
                 <select
                         id="carBrand"
                         name="carBrand"
+                        th:field="*{carBrand}"
                         class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                 >
                     <option value="">-- Select Brand --</option>
@@ -84,6 +88,7 @@
                         type="text"
                         id="carModel"
                         name="carModel"
+                        th:field="*{carModel}"
                         class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                         placeholder="Model of the Car"
                 />
@@ -98,6 +103,7 @@
                         id="manufactureYear"
                         name="manufactureYear"
                         required
+                        th:field="*{manufactureYear}"
                         class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                         placeholder="YYYY"
                         min="1900"
@@ -113,6 +119,7 @@
                         type="number"
                         id="horsePower"
                         name="horsePower"
+                        th:field="*{horsePower}"
                         step="1"
                         min="10"
                         max="1000"
@@ -129,6 +136,8 @@
                 <select
                         id="fuelType"
                         name="fuelType"
+                        th:field="*{fuelType}"
+                        required
                         class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                 >
                     <option value="">-- Select Fuel Type --</option>
@@ -145,6 +154,8 @@
                 <select
                         id="gearboxType"
                         name="gearboxType"
+                        th:field="*{gearboxType}"
+                        required
                         class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                 >
                     <option value="">-- Select Gearbox --</option>
@@ -161,6 +172,7 @@
                         type="url"
                         id="imageURL"
                         name="imageURL"
+                        th:field="*{imageURL}"
                         class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                         placeholder="Link to car image"
                 />
@@ -175,6 +187,7 @@
                         step="0.01"
                         id="buyNowPrice"
                         name="buyNowPrice"
+                        th:field="*{buyNowPrice}"
                         class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                         placeholder="0.00"
                 />
@@ -190,6 +203,7 @@
                         type="checkbox"
                         id="isBiddingOpen"
                         name="isBiddingOpen"
+                        th:field="*{isBiddingOpen}"
                         class="mr-2 align-middle"
                 />
                 <span class="text-gray-700">Check if bidding should be enabled</span>
@@ -204,6 +218,7 @@
                         step="1"
                         id="minBidPrice"
                         name="minBidPrice"
+                        th:field="*{minBidPrice}"
                         class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                         placeholder="0.00"
                 />
