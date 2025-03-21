@@ -1,5 +1,6 @@
 package app.web;
 
+import app.advert.model.Advert;
 import app.advert.service.AdvertService;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
@@ -11,9 +12,12 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.List;
 
 @Controller
 @RequestMapping("/ads")
@@ -27,6 +31,46 @@ public class AdsController {
         this.advertService = advertService;
         this.userService = userService;
     }
+
+    @GetMapping("")
+    public ModelAndView getFirstAdsPage() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("all-ads");
+        int currentPage = 0;
+        String sortType = "DESC";
+        String sortField = "createdOn";
+        List<Advert> adverts = advertService.getAllShownAdvertsByPage(currentPage, sortType, sortField);
+        int totalVisibleAds = advertService.getAdvertCount();
+        int totalPages = (int) Math.ceil((double) totalVisibleAds / 20);
+        modelAndView.addObject("adverts", adverts);
+        modelAndView.addObject("totalVisibleAds", totalVisibleAds);
+        modelAndView.addObject("currentPage", currentPage + 1);
+        modelAndView.addObject("totalPages", totalPages);
+        return modelAndView;
+    }
+
+    @GetMapping("page/{page}")
+    public ModelAndView getAdvertsPage(@PathVariable int page) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("all-ads");
+        page = page < 1 ? 1 : page - 1;
+        String sortType = "DESC";
+        String sortField = "createdOn";
+        List<Advert> adverts = advertService.getAllShownAdvertsByPage(page, sortType, sortField);
+        modelAndView.addObject("adverts", adverts);
+        int totalVisibleAds = advertService.getAdvertCount();
+        int totalPages = (int) Math.ceil((double) totalVisibleAds / 20);
+        modelAndView.addObject("totalVisibleAds", totalVisibleAds);
+        modelAndView.addObject("currentPage", page + 1);
+        modelAndView.addObject("totalPages", totalPages);
+        return modelAndView;
+    }
+
+//    @GetMapping("seed-adverts")
+//    public ResponseEntity<String> seedAdverts() {
+//        advertSeederService.seedAdverts();
+//        return ResponseEntity.ok("Adverts seeded successfully!");
+//    }
 
     @GetMapping ("/new")
     public ModelAndView getNewAdPage() {
@@ -47,4 +91,5 @@ public class AdsController {
         advertService.createNewAd(createNewAdvertRequest, user);
         return new ModelAndView("redirect:/");
     }
+
 }
