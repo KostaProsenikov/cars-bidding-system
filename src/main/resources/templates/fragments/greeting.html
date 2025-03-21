@@ -3,7 +3,7 @@
 <body>
     <div th:fragment="greeting(user)" class="container mx-auto">
         <br />
-        <h3 class="greeting">Welcome to the Cars bidding System, <span th:text="${user.firstName != null ? user.firstName : user.username}">Guest</span>!</h3>
+        <h3 class="greeting">Welcome to the Cars bidding System, <span th:text="${user?.firstName != null ? user.firstName : user.username}">Guest</span>!</h3>
         <br />
     </div>
 </body>
