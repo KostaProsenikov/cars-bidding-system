@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-
-import java.awt.print.Pageable;
+import org.springframework.data.domain.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -64,14 +63,16 @@ public class AdvertService {
     public List<Advert> getAllShownAdvertsByPage(int page, String sortType, String sortField) {
         Sort sort = sortType.equals("ASC") ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
-        Pageable pageable = (Pageable) PageRequest.of(page, 20, sort);
-        List<Advert> adverts = advertRepository.findByVisibleTrue(pageable);
-        return adverts;
+        Pageable pageable = PageRequest.of(page, 20, sort);
+        return advertRepository.findByVisible(true, pageable);
+    }
+
+    public int getAdvertCount() {
+        return (int) advertRepository.count();
     }
 
     public Advert getAdvertById(UUID id) {
-        Advert advert = advertRepository.findById(id).orElseThrow(() -> new DomainException("Advert with ID [%s] is not found!".formatted(id)));
-        return advert;
+        return advertRepository.findById(id).orElseThrow(() -> new DomainException("Advert with ID [%s] is not found!".formatted(id)));
     }
 
     public Advert updateAdvert(UUID id, Advert advert) {
@@ -89,7 +90,6 @@ public class AdvertService {
     }
 
     public List<Advert> getFirst20VisibleAdverts() {
-        List<Advert> adverts = advertRepository.findByVisibleTrue().stream().filter(a -> a.isVisible()).limit(20).toList();
-        return adverts;
+        return advertRepository.findByVisibleTrue().stream().filter(a -> a.isVisible()).limit(20).toList();
     }
 }
