@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+<!-- Header -->
+<th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
+
+<!-- Main Section -->
+<section class="bg-black text-white py-20">
+    <div class="container mx-auto text-center">
+        <h2 class="text-4xl font-bold mb-4">Edit Your Profile, <span th:text="${user?.firstName != null ? user.firstName : user.username}"></span></h2>
+    </div>
+</section>
+
+<!--<th:block th:insert="~{fragments/greeting :: greeting(${user})}"></th:block>-->
+
+<!-- Automobile Ads Section -->
+<section class="container mx-auto py-10">
+<!--    <h2 class="text-2xl font-bold text-center mb-6">Edit My Profile</h2>-->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="bg-white shadow-md rounded-lg p-6 text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl" th:each="advert : ${adverts}">
+
+        </div>
+    </div>
+</section>
+
+<th:block th:insert="~{fragments/footer :: footer}"></th:block>
+</body>
+</html>
