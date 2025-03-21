@@ -2,10 +2,12 @@ package app.web;
 
 import app.advert.model.Advert;
 import app.advert.service.AdvertService;
+import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.web.dto.RegisterRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import app.web.dto.LoginRequest;
@@ -32,10 +34,10 @@ public class IndexController {
     }
 
     @GetMapping("")
-    public ModelAndView getIndexPage() {
+    public ModelAndView getIndexPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
-        User user = new User();
+        User user = userService.getById(authenticationMetadata.getUserId());
         List<Advert> adverts = advertService.getFirst20VisibleAdverts();
         modelAndView.addObject("user", user);
         modelAndView.addObject("adverts", adverts);

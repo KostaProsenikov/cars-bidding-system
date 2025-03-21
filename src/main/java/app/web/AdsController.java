@@ -33,16 +33,18 @@ public class AdsController {
     }
 
     @GetMapping("")
-    public ModelAndView getFirstAdsPage() {
+    public ModelAndView getFirstAdsPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("all-ads");
         int currentPage = 0;
         String sortType = "DESC";
         String sortField = "createdOn";
+        User user = userService.getById(authenticationMetadata.getUserId());
         List<Advert> adverts = advertService.getAllShownAdvertsByPage(currentPage, sortType, sortField);
         int totalVisibleAds = advertService.getAdvertCount();
         int totalPages = (int) Math.ceil((double) totalVisibleAds / 20);
         modelAndView.addObject("adverts", adverts);
+        modelAndView.addObject("user", user);
         modelAndView.addObject("totalVisibleAds", totalVisibleAds);
         modelAndView.addObject("currentPage", currentPage + 1);
         modelAndView.addObject("totalPages", totalPages);
@@ -50,9 +52,10 @@ public class AdsController {
     }
 
     @GetMapping("page/{page}")
-    public ModelAndView getAdvertsPage(@PathVariable int page) {
+    public ModelAndView getAdvertsPage(@PathVariable int page, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("all-ads");
+        User user = userService.getById(authenticationMetadata.getUserId());
         page = page < 1 ? 1 : page - 1;
         String sortType = "DESC";
         String sortField = "createdOn";
@@ -63,6 +66,7 @@ public class AdsController {
         modelAndView.addObject("totalVisibleAds", totalVisibleAds);
         modelAndView.addObject("currentPage", page + 1);
         modelAndView.addObject("totalPages", totalPages);
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 
@@ -73,10 +77,12 @@ public class AdsController {
 //    }
 
     @GetMapping ("/new")
-    public ModelAndView getNewAdPage() {
+    public ModelAndView getNewAdPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         ModelAndView modelAndView = new ModelAndView();
+        User user = userService.getById(authenticationMetadata.getUserId());
         modelAndView.setViewName("new-advert");
         modelAndView.addObject("createAdvertRequest", new CreateNewAdvertRequest());
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 
