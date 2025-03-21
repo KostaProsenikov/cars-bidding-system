@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
 <body class="bg-gray-100">
 <!-- Header -->
@@ -8,12 +8,13 @@
 <!-- Main Section -->
 <section class="bg-black text-white py-20">
     <div class="container mx-auto text-center">
-        <h1 class="text-4xl font-bold mb-4">Welcome to Cars Bidding Company</h1>
-        <p class="text-lg mb-6">Find the best deals for buying and selling cars in one place.</p>
+        <h2 class="text-4xl font-bold mb-4">Find the best car deals</h2>
     </div>
 </section>
 
-<th:block th:insert="~{fragments/greeting :: greeting(${user})}"></th:block>
+<div sec:authorize="isAuthenticated()">
+    <th:block th:insert="~{fragments/greeting :: greeting(${user})}"></th:block>
+</div>
 
 <!-- Automobile Ads Section -->
 <section class="container mx-auto py-10">
@@ -39,11 +40,6 @@
     </div>
 </section>
 
-<!-- Footer -->
-<footer class="bg-gray-800 text-white py-4">
-        <div class="container mx-auto text-center">
-            <p>&copy; Cars Bidding Company 2025</p>
-        </div>
-</footer>
+<th:block th:insert="~{fragments/footer :: footer}"></th:block>
 </body>
 </html>

@@ -37,7 +37,10 @@ public class IndexController {
     public ModelAndView getIndexPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
-        User user = userService.getById(authenticationMetadata.getUserId());
+        User user = new User();
+        if (authenticationMetadata != null) {
+            user = userService.getById(authenticationMetadata.getUserId());
+        }
         List<Advert> adverts = advertService.getFirst20VisibleAdverts();
         modelAndView.addObject("user", user);
         modelAndView.addObject("adverts", adverts);
