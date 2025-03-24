@@ -2,6 +2,8 @@ package app.user.model;
 
 import app.advert.model.Advert;
 import app.bid.model.Bid;
+import app.subscription.model.Subscription;
+import app.wallet.model.Wallet;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -49,6 +51,14 @@ public class User {
 
     @Column(nullable = false)
     private LocalDateTime updatedOn;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
+    @OrderBy("createdOn DESC")
+    private List<Subscription> subscriptions = new ArrayList<>();
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
+    @OrderBy("createdOn ASC")
+    private List<Wallet> wallets = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bidder")
     @OrderBy("createdOn DESC")

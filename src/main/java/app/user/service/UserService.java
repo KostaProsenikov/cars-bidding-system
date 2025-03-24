@@ -2,9 +2,13 @@ package app.user.service;
 
 import app.exception.DomainException;
 import app.security.AuthenticationMetadata;
+import app.subscription.service.SubscriptionService;
+import app.subscription.model.Subscription;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.repository.UserRepository;
+import app.wallet.model.Wallet;
+import app.wallet.service.WalletService;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import app.web.dto.RegisterRequest;
@@ -29,12 +33,16 @@ import java.util.UUID;
 public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    private final WalletService walletService;
+    private final SubscriptionService subscriptionService;
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository,
+    public UserService(UserRepository userRepository, WalletService walletService, SubscriptionService subscriptionService,
                        PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.walletService = walletService;
+        this.subscriptionService = subscriptionService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -52,11 +60,11 @@ public class UserService implements UserDetailsService {
 
         System.out.println(user);
 
-//        Subscription defaultSubscription = subscriptionService.createDefaultSubscription(user);
-//        user.setSubscriptions(List.of(defaultSubscription));
+        Subscription defaultSubscription = subscriptionService.createDefaultSubscription(user);
+        user.setSubscriptions(List.of(defaultSubscription));
 
-//        Wallet standardWallet = walletService.initializeFirstWallet(user);
-//        user.setWallets(List.of(standardWallet));
+        Wallet standardWallet = walletService.initializeFirstWallet(user);
+        user.setWallets(List.of(standardWallet));
 
         log.info("Successfully created new user account for username [%s] and id [%s].".formatted(user.getUsername(), user.getId()));
 
