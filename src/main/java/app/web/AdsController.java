@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
+import java.util.UUID;
 
 @Controller
 @RequestMapping("/ads")
@@ -48,6 +49,17 @@ public class AdsController {
         modelAndView.addObject("totalVisibleAds", totalVisibleAds);
         modelAndView.addObject("currentPage", currentPage + 1);
         modelAndView.addObject("totalPages", totalPages);
+        return modelAndView;
+    }
+
+    @GetMapping("{id}/info")
+    public ModelAndView getAdvertInfoPage(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        Advert advert = advertService.getAdvertById(id);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("ad-info");
+        User user = userService.getById(authenticationMetadata.getUserId());
+        modelAndView.addObject("advert", advert);
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 
