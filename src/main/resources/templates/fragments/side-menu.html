@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Side Menu</title>
@@ -14,8 +14,17 @@
   </h2>
 
   <!-- Navigation Links -->
-  <nav>
+  <nav sec:authorize="isAuthenticated()">
     <ul class="space-y-3">
+      <li>
+        <a th:href="@{/ads}"
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
+          Show All Ads
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/ads/new}" class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">Create Ad</a>
+      </li>
       <li>
         <a th:href="@{/ads/my-ads}"
            class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">

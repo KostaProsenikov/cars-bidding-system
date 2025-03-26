@@ -82,6 +82,23 @@ public class AdsController {
         return modelAndView;
     }
 
+    @GetMapping("/my-ads")
+    public ModelAndView getMyAdvertsPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("my-ads");
+        User user = userService.getById(authenticationMetadata.getUserId());
+        List<Advert> adverts = advertService.getAdvertsByOwnerId(user.getId());
+        int totalVisibleAds = adverts.size();
+        int totalPages = 1;
+        int currentPage = 0;
+        modelAndView.addObject("adverts", adverts);
+        modelAndView.addObject("totalVisibleAds", totalVisibleAds);
+        modelAndView.addObject("currentPage", currentPage + 1);
+        modelAndView.addObject("totalPages", totalPages);
+        modelAndView.addObject("user", user);
+        return modelAndView;
+    }
+
 //    @GetMapping("seed-adverts")
 //    public ResponseEntity<String> seedAdverts() {
 //        advertSeederService.seedAdverts();
