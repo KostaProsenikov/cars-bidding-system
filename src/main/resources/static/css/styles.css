@@ -6,3 +6,7 @@
 .greeting {
     font-size: 20px;
 }
+
+.main-container {
+    padding: 20px 0 20px 0;
+}
