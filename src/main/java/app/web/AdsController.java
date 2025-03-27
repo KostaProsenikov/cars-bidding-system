@@ -57,6 +57,10 @@ public class AdsController {
         Advert advert = advertService.getAdvertById(id);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("ad-info");
+//        Update view count of the advert
+        advert.setViewCount(advert.getViewCount() + 1);
+        advertService.updateAdvert(id, advert);
+
         User user = userService.getById(authenticationMetadata.getUserId());
         modelAndView.addObject("advert", advert);
         modelAndView.addObject("user", user);
