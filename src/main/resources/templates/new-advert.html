@@ -5,18 +5,17 @@
 <!-- Header -->
 <th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
 
-<!-- Main Section -->
-<section class="bg-black text-white py-20">
-    <div class="container mx-auto text-center">
-        <h1 class="text-4xl font-bold mb-4">Welcome to Cars Bidding Company</h1>
-        <p class="text-lg mb-6">Find the best deals for buying and selling cars in one place.</p>
-    </div>
-</section>
+<div class="main-container container mx-auto flex flex-row items-start gap-4">
+    <th:block sec:authorize="isAuthenticated()"
+              th:insert="~{fragments/side-menu :: side-menu(${user})}">
+    </th:block>
 
 <!-- Main Section -->
-<section class="flex items-center justify-center min-h-screen py-10">
+    <main class="flex-1 overflow-auto w-4/5">
+        <!-- Main Section -->
+        <section class="flex items-center justify-center min-h-screen py-10">
     <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full">
-        <h2 class="text-2xl font-bold mb-6 text-center">Create Advert</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center">Create a new car advert</h2>
         <form th:action="@{/ads/new}" th:method="post" th:object="${createAdvertRequest}"
               class="space-y-4">
             <!-- Advert Name -->
@@ -237,7 +236,8 @@
         </form>
     </div>
 </section>
-
+    </main>
+</div>
 
 <th:block th:insert="~{fragments/footer :: footer}"></th:block>
 </body>
