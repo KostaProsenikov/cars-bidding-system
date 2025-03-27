@@ -74,7 +74,7 @@ public class Advert {
     private BigDecimal buyNowPrice;
 
     @NotNull
-    @Size(min = 5, max = 1000)
+    @Size(min = 4, max = 1000)
     private String description;
 
     private boolean isBiddingOpen;
