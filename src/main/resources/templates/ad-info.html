@@ -35,12 +35,12 @@
                         Brand & Model
                     </h4>
 
+                    <h4>Viewed: <span th:text="${advert.viewCount}">1000</span> times.</h4>
+
                     <h2 class="text-gray-800">
                         <span class="font-semibold">Buy Now Price:</span>
                         <span th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">N/A</span>
                     </h2>
-
-                    <br />
 
                     <!-- Image -->
                     <img
