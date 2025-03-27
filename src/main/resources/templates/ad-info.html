@@ -24,23 +24,21 @@
 
             <div class="grid grid-cols-1 gap-6 w-full">
                 <!-- Example single card; repeats with Thymeleaf (th:each) -->
-                <div
-                        class="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between w-full">
-
-                    <!-- Advert Name -->
-                    <h3 class="text-2xl font-bold mb-2" th:text="${advert.advertName}">Car Name</h3>
+                <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between w-full">
 
                     <!-- Brand & Model -->
-                    <h4 class="text-lg text-gray-700 mb-4" th:text="${advert.getCarBrand().name() + ' ' + advert.getCarModel()}">
+                    <h4 class="text-lg mb-4" th:text="${advert.getCarBrand().name() + ' ' + advert.getCarModel()}">
                         Brand & Model
                     </h4>
 
-                    <h4>Viewed: <span th:text="${advert.viewCount}">1000</span> times.</h4>
-
-                    <h2 class="text-gray-800">
+                    <h2 class="text-gray-800 text-lg">
                         <span class="font-semibold">Buy Now Price:</span>
                         <span th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">N/A</span>
                     </h2>
+
+                    <h3>Viewed: <span th:text="${advert.viewCount}">1000</span> times.</h3>
+
+
 
                     <!-- Image -->
                     <img
@@ -51,13 +49,13 @@
                     />
 
                     <!-- Manufacture Year -->
-                    <h3>
+                    <h3 class="mb-4">
                         <span class="font-semibold">Manufacture Year:</span>
                         <span th:text="${advert.manufactureYear}">2022</span>
                     </h3>
 
                     <!-- Current Bid -->
-                    <h3 th:if="${advert.biddingOpen}">
+                    <h3 class="mb-4" th:if="${advert.biddingOpen}">
                         <span class="font-semibold">Current Bid:</span>
                         <span th:text="${advert.currentBidPrice > 0 ? '€' + advert.currentBidPrice : advert.minBidPrice}"></span>
                     </h3>
@@ -106,9 +104,11 @@
                             <div class="flex items-center space-x-2" th:if="${advert.biddingOpen && advert.minBidPrice != null}">
                                 <form th:method="post" th:action="'/place-bid/' + ${advert.id}" class="flex items-center space-x-2">
                                     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                                    <label for="bidPrice" class="font-semibold">Place a Bid:</label>
                                     <input
                                             type="number"
-                                            name="bidPrice"
+                                            id="bidPrice"
+                                            th:name="bidPrice"
                                             th:min="${advert.currentBidPrice != null ? advert.currentBidPrice : advert.minBidPrice}"
                                             step="1"
                                             class="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
