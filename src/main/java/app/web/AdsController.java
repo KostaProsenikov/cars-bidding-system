@@ -59,7 +59,6 @@ public class AdsController {
 //        Update view count of the advert
         advert.setViewCount(advert.getViewCount() + 1);
         advertService.updateAdvert(id, advert);
-
         User user = userService.getById(authenticationMetadata.getUserId());
         modelAndView.addObject("advert", advert);
         modelAndView.addObject("user", user);
@@ -111,6 +110,20 @@ public class AdsController {
         modelAndView.addObject("currentPage", currentPage + 1);
         modelAndView.addObject("totalPages", totalPages);
         modelAndView.addObject("user", user);
+        return modelAndView;
+    }
+
+    @GetMapping("/my-bids-and-reservations")
+    public ModelAndView getMyBidsAndReservationsPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        User user = userService.getById(authenticationMetadata.getUserId());
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("my-bids");
+        List<Advert> adverts = advertService.getAdvertsByWinnerId(user.getId());
+        int totalVisibleAds = adverts.size();
+        int totalPages = 1;
+        int currentPage = 0;
+        modelAndView.addObject("adverts", adverts);
+        modelAndView.addObject("totalVisibleAds", totalVisibleAds);
         return modelAndView;
     }
 
@@ -181,7 +194,7 @@ public class AdsController {
         if (user.getId() == null) {
             throw new DomainException("You are not logged in!");
         }
-        advertService.reserveCarAdvert(id);
+        advertService.reserveCarAdvert(id, user);
         return new ModelAndView("redirect:/ads");
     }
 

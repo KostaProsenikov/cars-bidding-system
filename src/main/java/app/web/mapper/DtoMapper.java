@@ -44,6 +44,7 @@ public class DtoMapper {
                 .imageURL(advert.getImageURL())
                 .visible(advert.isVisible())
                 .isBiddingOpen(advert.isBiddingOpen())
+                .winner(null)
                 .build();
     }
 
@@ -72,6 +73,7 @@ public class DtoMapper {
                 .createdOn(existingAdvert.getCreatedOn())
                 .expireDate(existingAdvert.getExpireDate())
                 .viewCount(existingAdvert.getViewCount())
+                .winner(createAdvertRequest.getWinner())
                 .updatedOn(now)
                 .build();
     }
