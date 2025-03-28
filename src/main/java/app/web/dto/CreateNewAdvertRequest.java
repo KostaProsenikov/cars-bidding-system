@@ -1,6 +1,7 @@
 package app.web.dto;
 
 import app.advert.model.CarBrand;
+import app.advert.model.CarStatus;
 import app.advert.model.FuelType;
 import app.advert.model.GearboxType;
 import app.user.model.User;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
@@ -78,4 +80,15 @@ public class CreateNewAdvertRequest {
 
     @Nullable
     private Boolean visible;
+
+    @NotNull
+    private CarStatus carStatus;
+
+    private int viewCount;
+
+    private LocalDateTime createdOn;
+
+    private LocalDateTime updatedOn;
+
+    private LocalDateTime expireDate;
 }
