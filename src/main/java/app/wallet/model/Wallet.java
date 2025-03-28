@@ -37,6 +37,5 @@ public class Wallet {
 
     @Column(nullable = false)
     private LocalDateTime updatedOn;
-
-
+    
 }

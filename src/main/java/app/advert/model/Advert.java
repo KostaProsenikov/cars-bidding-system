@@ -71,6 +71,9 @@ public class Advert {
     private String imageURL;
 
     @NotNull
+    private BigDecimal mileage;
+
+    @NotNull
     private BigDecimal buyNowPrice;
 
     @NotNull

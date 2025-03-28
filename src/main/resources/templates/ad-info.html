@@ -38,7 +38,15 @@
 
                     <h3>Viewed: <span th:text="${advert.viewCount}">1000</span> times.</h3>
 
-
+                    <div class="edit-advert" th:if="${advert.owner == user}">
+                        <a th:href="'/ads/' + ${advert.id} + '/edit'">
+                            <button
+                                    type="submit"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow">
+                                Edit your advert
+                            </button>
+                        </a>
+                    </div>
 
                     <!-- Image -->
                     <img
