@@ -62,6 +62,10 @@ public class AdvertService {
         return advertRepository.findAdvertByOwnerId(ownerId);
     }
 
+    public List<Advert> getAdvertsByWinnerId(UUID winnerId) {
+        return advertRepository.findAdvertByWinnerId(winnerId);
+    }
+
     public List<Advert> getAllShownAdvertsByPage(int page, String sortType, String sortField) {
         Sort sort = sortType.equals("ASC") ? Sort.by(sortField).ascending() :
                 Sort.by(sortField).descending();
@@ -81,25 +85,42 @@ public class AdvertService {
         return advertRepository.findById(id).orElseThrow(() -> new DomainException("Advert with ID [%s] is not found!".formatted(id)));
     }
 
-    public void reserveCarAdvert(UUID id) {
+    public void reserveCarAdvert(UUID id, User winner) {
         Advert advert = getAdvertById(id);
         advert.setVisible(false);
         advert.setUpdatedOn(LocalDateTime.now());
         advert.setCarStatus(CarStatus.RESERVED);
+        advert.setWinner(winner);
         advertRepository.save(advert);
     }
 
     public void updateAdvert(UUID id, Advert advert) {
         Advert advertToUpdate = getAdvertById(id);
-        advertToUpdate.setAdvertName(advert.getAdvertName());
-        advertToUpdate.setDescription(advert.getDescription());
-        advertToUpdate.setCarBrand(advert.getCarBrand());
-        advertToUpdate.setCarModel(advert.getCarModel());
-        advertToUpdate.setManufactureYear(advert.getManufactureYear());
-        advertToUpdate.setHorsePower(advert.getHorsePower());
-        advertToUpdate.setFuelType(advert.getFuelType());
-        advertToUpdate.setGearboxType(advert.getGearboxType());
-        advertRepository.save(advertToUpdate);
+        LocalDateTime now = LocalDateTime.now();
+        Advert build = advertToUpdate.builder()
+                .id(advertToUpdate.getId())
+                .owner(advertToUpdate.getOwner())
+                .advertName(advert.getAdvertName())
+                .description(advert.getDescription())
+                .carBrand(advert.getCarBrand())
+                .carModel(advert.getCarModel())
+                .mileage(advert.getMileage())
+                .manufactureYear(advert.getManufactureYear())
+                .horsePower(advert.getHorsePower())
+                .fuelType(advert.getFuelType())
+                .gearboxType(advert.getGearboxType())
+                .buyNowPrice(advert.getBuyNowPrice())
+                .imageURL(advert.getImageURL())
+                .expireDate(advert.getExpireDate())
+                .updatedOn(LocalDateTime.now())
+                .visible(advert.isVisible())
+                .viewCount(advert.getViewCount())
+                .winner(advert.getWinner())
+                .carStatus(advert.getCarStatus())
+                .createdOn(advertToUpdate.getCreatedOn())
+                .updatedOn(now)
+                .build();
+        advertRepository.save(build);
     }
 
     public List<Advert> getFirst20VisibleAdverts() {

@@ -13,6 +13,8 @@ public interface AdvertRepository extends JpaRepository<Advert, UUID> {
 
     List<Advert> findAdvertByOwnerId(UUID ownerId);
 
+    List<Advert> findAdvertByWinnerId(UUID winnerId);
+
     List<Advert> findByVisibleTrue();
 
     List<Advert> findByVisible(boolean visible, Pageable pageable);

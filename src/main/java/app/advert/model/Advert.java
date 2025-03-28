@@ -1,6 +1,7 @@
 package app.advert.model;
 
 import app.user.model.User;
+import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -90,4 +91,8 @@ public class Advert {
     @NotNull
     @Enumerated(EnumType.STRING)
     private CarStatus carStatus;
+
+    @Nullable
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User winner;
 }
