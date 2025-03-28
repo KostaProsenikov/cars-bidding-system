@@ -39,6 +39,7 @@ public class AdvertService {
                 .visible(isVisible)
                 .carBrand(createNewAdvertRequest.getCarBrand())
                 .carModel(createNewAdvertRequest.getCarModel())
+                .mileage(createNewAdvertRequest.getMileage())
                 .isBiddingOpen(isBiddingOpen)
                 .manufactureYear(createNewAdvertRequest.getManufactureYear())
                 .horsePower(createNewAdvertRequest.getHorsePower())
