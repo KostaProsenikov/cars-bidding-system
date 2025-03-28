@@ -67,6 +67,10 @@ public class AdvertService {
         return advertRepository.findByVisible(true, pageable);
     }
 
+    public Advert saveAdvert(Advert advert) {
+        return advertRepository.save(advert);
+    }
+
     public int getAdvertCount() {
         return (int) advertRepository.count();
     }
@@ -85,11 +89,10 @@ public class AdvertService {
         advertToUpdate.setHorsePower(advert.getHorsePower());
         advertToUpdate.setFuelType(advert.getFuelType());
         advertToUpdate.setGearboxType(advert.getGearboxType());
-        advertRepository.save(advertToUpdate);
-        return advertToUpdate;
+        return advertRepository.save(advertToUpdate);
     }
 
     public List<Advert> getFirst20VisibleAdverts() {
-        return advertRepository.findByVisibleTrue().stream().filter(a -> a.isVisible()).limit(20).toList();
+        return advertRepository.findByVisibleTrue().stream().filter(Advert::isVisible).limit(20).toList();
     }
 }

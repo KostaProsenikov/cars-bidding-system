@@ -2,19 +2,18 @@ package app.web;
 
 import app.advert.model.Advert;
 import app.advert.service.AdvertService;
+import app.exception.DomainException;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.CreateNewAdvertRequest;
+import app.web.mapper.DtoMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
@@ -63,6 +62,18 @@ public class AdsController {
 
         User user = userService.getById(authenticationMetadata.getUserId());
         modelAndView.addObject("advert", advert);
+        modelAndView.addObject("user", user);
+        return modelAndView;
+    }
+
+    @GetMapping("{id}/edit")
+    public ModelAndView updateAdvertPage(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        Advert advert = advertService.getAdvertById(id);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("new-advert");
+//        Update view count of the advert
+        User user = userService.getById(authenticationMetadata.getUserId());
+        modelAndView.addObject("createAdvertRequest", DtoMapper.mapAdvertToCreateNewAdvertRequest(advert));
         modelAndView.addObject("user", user);
         return modelAndView;
     }
@@ -119,16 +130,50 @@ public class AdsController {
         return modelAndView;
     }
 
-    @PostMapping ("/new")
-    public ModelAndView createNewAd(@Valid CreateNewAdvertRequest createNewAdvertRequest, BindingResult bindingResult, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
-        if (bindingResult.hasErrors()) {
-            ModelAndView modelAndView = new ModelAndView("new-advert");
-            modelAndView.addObject("createAdvertRequest", createNewAdvertRequest);
-            return modelAndView;
-        }
-        User user = userService.getById(authenticationMetadata.getUserId());
-        advertService.createNewAd(createNewAdvertRequest, user);
-        return new ModelAndView("redirect:/");
+    private ModelAndView returnModelAndViewWithErrors(
+            @Valid CreateNewAdvertRequest createAdvertRequest,
+            @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        // Return form again in case of errors
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("new-advert");
+        modelAndView.addObject("createAdvertRequest", createAdvertRequest);
+        modelAndView.addObject("user", authenticationMetadata.getUserId() != null ? userService.getById(authenticationMetadata.getUserId()) : null);
+        return modelAndView;
     }
+
+    @PostMapping("/new")
+    public ModelAndView saveAdvert(
+            @Valid CreateNewAdvertRequest createAdvertRequest,
+            BindingResult bindingResult,
+            @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+        User user = userService.getById(authenticationMetadata.getUserId());
+        if (bindingResult.hasErrors()) {
+            return returnModelAndViewWithErrors(createAdvertRequest, authenticationMetadata);
+        }
+        advertService.createNewAd(createAdvertRequest, user);
+        return new ModelAndView("redirect:/ads");
+    }
+
+    @PutMapping("/{id}/update")
+    public ModelAndView deleteAdvert(@PathVariable UUID id,
+                                     @Valid CreateNewAdvertRequest createAdvertRequest,
+                                     BindingResult bindingResult,
+                                     @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+
+        User user = userService.getById(authenticationMetadata.getUserId());
+        if (bindingResult.hasErrors()) {
+            // Return form again in case of errors
+           return returnModelAndViewWithErrors(createAdvertRequest, authenticationMetadata);
+        }
+        Advert advert = advertService.getAdvertById(id);
+        if (advert.getOwner().getId() != user.getId() && !user.getRole().name().equals("ADMIN")) {
+            throw new DomainException("You are not allowed to edit this advert!");
+        }
+        Advert updatedAdvert = DtoMapper.mapCreateNewAdvertRequestToAdvert(createAdvertRequest, advert);
+        advertService.saveAdvert(updatedAdvert);
+        return new ModelAndView("redirect:/ads");
+    }
+
 
 }

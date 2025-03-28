@@ -7,16 +7,21 @@ import app.user.model.User;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.URL;
 
 import java.math.BigDecimal;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CreateNewAdvertRequest {
+
+    private UUID id;
 
     @NotNull
     @Size (min = 5, max = 50, message = "The ad must be at least 5 characters and maximum 50!")
@@ -46,6 +51,9 @@ public class CreateNewAdvertRequest {
 
     @NotNull
     private GearboxType gearboxType;
+
+    @NotNull
+    private BigDecimal mileage;
 
     @NotNull
     private CarBrand carBrand;
