@@ -45,7 +45,7 @@
                     <!-- Description -->
                     <p class="text-gray-700" th:text="${advert.description}">advert-description</p>
                     <p class="text-gray-700" th:if="${advert.buyNowPrice}">
-                        Buy Now: $<span th:text="${advert.buyNowPrice}"></span>
+                        Price: $<span th:text="${advert.buyNowPrice}"></span>
                     </p>
                     <p class="text-gray-700">
                         Manufacture year: <span th:text="${advert.manufactureYear}"></span>

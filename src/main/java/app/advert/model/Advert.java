@@ -86,4 +86,8 @@ public class Advert {
 
     @Min(0)
     private BigDecimal currentBidPrice;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    private CarStatus carStatus;
 }

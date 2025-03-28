@@ -32,7 +32,7 @@
                     </h4>
 
                     <h2 class="text-gray-800 text-lg">
-                        <span class="font-semibold">Buy Now Price:</span>
+                        <span class="font-semibold">Price:</span>
                         <span th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">N/A</span>
                     </h2>
 
@@ -99,18 +99,19 @@
 
                             <!-- Action Buttons -->
                             <!-- Buy Now Button -->
-                            <form th:method="post" th:action="'/buy-now/' + ${advert.id}">
+                            <form th:method="post" th:action="'/ads/' + ${advert.id} + '/reserve'">
                                 <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                                 <button th:if="${advert.buyNowPrice != null}"
                                         type="submit"
                                         class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow">
-                                    Buy Now for <span th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">N/A</span>
+                                    Reserve Now for <span th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">N/A</span>
                                 </button>
                             </form>
 
                             <!-- Current Bid Section -->
                             <div class="flex items-center space-x-2" th:if="${advert.biddingOpen && advert.minBidPrice != null}">
-                                <form th:method="post" th:action="'/place-bid/' + ${advert.id}" class="flex items-center space-x-2">
+                                <form th:method="post" th:action="'/ads/' + ${advert.id} + '/place-bid'"
+                                      class="flex items-center space-x-2">
                                     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                                     <label for="bidPrice" class="font-semibold">Place a Bid:</label>
                                     <input
