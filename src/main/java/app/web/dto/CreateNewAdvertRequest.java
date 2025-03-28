@@ -91,4 +91,6 @@ public class CreateNewAdvertRequest {
     private LocalDateTime updatedOn;
 
     private LocalDateTime expireDate;
+
+    private User winner;
 }
