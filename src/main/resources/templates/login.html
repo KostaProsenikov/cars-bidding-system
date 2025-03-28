@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<th:block th:include="~{fragments/navigation :: head(${user})}"></th:block>
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
 <body class="bg-gray-100">
 <!-- Header -->
-<th:block th:include="~{fragments/navigation :: header(${user})}"></th:block>
+<th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
 <main>
     <section class="flex items-center justify-center min-h-screen py-10">
         <div class="bg-white rounded-lg shadow-lg p-8 max-w-md w-full">
