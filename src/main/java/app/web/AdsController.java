@@ -156,7 +156,7 @@ public class AdsController {
     }
 
     @PutMapping("/{id}/update")
-    public ModelAndView deleteAdvert(@PathVariable UUID id,
+    public ModelAndView updateAdvert(@PathVariable UUID id,
                                      @Valid CreateNewAdvertRequest createAdvertRequest,
                                      BindingResult bindingResult,
                                      @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
@@ -172,6 +172,16 @@ public class AdsController {
         }
         Advert updatedAdvert = DtoMapper.mapCreateNewAdvertRequestToAdvert(createAdvertRequest, advert);
         advertService.saveAdvert(updatedAdvert);
+        return new ModelAndView("redirect:/ads");
+    }
+
+    @PostMapping("{id}/reserve")
+    public ModelAndView reserveAdvert(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        User user = userService.getById(authenticationMetadata.getUserId());
+        if (user.getId() == null) {
+            throw new DomainException("You are not logged in!");
+        }
+        advertService.reserveCarAdvert(id);
         return new ModelAndView("redirect:/ads");
     }
 

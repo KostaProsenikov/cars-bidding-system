@@ -1,6 +1,7 @@
 package app.advert.service;
 
 import app.advert.model.Advert;
+import app.advert.model.CarStatus;
 import app.advert.repository.AdvertRepository;
 import app.exception.DomainException;
 import app.user.model.User;
@@ -68,8 +69,8 @@ public class AdvertService {
         return advertRepository.findByVisible(true, pageable);
     }
 
-    public Advert saveAdvert(Advert advert) {
-        return advertRepository.save(advert);
+    public void saveAdvert(Advert advert) {
+        advertRepository.save(advert);
     }
 
     public int getAdvertCount() {
@@ -80,7 +81,15 @@ public class AdvertService {
         return advertRepository.findById(id).orElseThrow(() -> new DomainException("Advert with ID [%s] is not found!".formatted(id)));
     }
 
-    public Advert updateAdvert(UUID id, Advert advert) {
+    public void reserveCarAdvert(UUID id) {
+        Advert advert = getAdvertById(id);
+        advert.setVisible(false);
+        advert.setUpdatedOn(LocalDateTime.now());
+        advert.setCarStatus(CarStatus.RESERVED);
+        advertRepository.save(advert);
+    }
+
+    public void updateAdvert(UUID id, Advert advert) {
         Advert advertToUpdate = getAdvertById(id);
         advertToUpdate.setAdvertName(advert.getAdvertName());
         advertToUpdate.setDescription(advert.getDescription());
@@ -90,7 +99,7 @@ public class AdvertService {
         advertToUpdate.setHorsePower(advert.getHorsePower());
         advertToUpdate.setFuelType(advert.getFuelType());
         advertToUpdate.setGearboxType(advert.getGearboxType());
-        return advertRepository.save(advertToUpdate);
+        advertRepository.save(advertToUpdate);
     }
 
     public List<Advert> getFirst20VisibleAdverts() {

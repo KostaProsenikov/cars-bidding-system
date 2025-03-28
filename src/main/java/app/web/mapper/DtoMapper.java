@@ -1,6 +1,7 @@
 package app.web.mapper;
 
 import app.advert.model.Advert;
+import app.advert.model.CarStatus;
 import app.user.model.User;
 import app.web.dto.CreateNewAdvertRequest;
 import app.web.dto.UserEditRequest;
@@ -21,6 +22,8 @@ public class DtoMapper {
     }
 
     public static CreateNewAdvertRequest mapAdvertToCreateNewAdvertRequest(Advert advert) {
+        CarStatus carStatus = CarStatus.AVAILABLE;
+
         return CreateNewAdvertRequest.builder()
                 .id(advert.getId())
                 .advertName(advert.getAdvertName())
@@ -29,6 +32,11 @@ public class DtoMapper {
                 .carModel(advert.getCarModel())
                 .mileage(advert.getMileage())
                 .manufactureYear(advert.getManufactureYear())
+                .minBidPrice(advert.getMinBidPrice())
+                .currentBidPrice(advert.getCurrentBidPrice())
+                .viewCount(0)
+                .expireDate(advert.getExpireDate())
+                .carStatus(carStatus)
                 .horsePower(advert.getHorsePower())
                 .fuelType(advert.getFuelType())
                 .gearboxType(advert.getGearboxType())
@@ -54,6 +62,7 @@ public class DtoMapper {
                 .gearboxType(createAdvertRequest.getGearboxType())
                 .buyNowPrice(createAdvertRequest.getBuyNowPrice())
                 .imageURL(createAdvertRequest.getImageURL())
+                .carStatus(createAdvertRequest.getCarStatus())
                 .visible(Boolean.TRUE.equals(createAdvertRequest.getVisible()))
                 .isBiddingOpen(Boolean.TRUE.equals(createAdvertRequest.getIsBiddingOpen()))
                 .minBidPrice(createAdvertRequest.getMinBidPrice())
