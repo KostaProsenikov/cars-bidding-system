@@ -41,7 +41,7 @@
 
         <div class="mt-8 flex justify-center">
         <nav aria-label="Page navigation">
-            <ul class="inline-flex space-x-1">
+            <ul class="inline-flex space-x-1" th:if="${totalPages > 1}">
                 <!-- Previous Button -->
                 <li>
                     <!-- Enabled version -->
@@ -55,12 +55,12 @@
                     </a>
                     <!-- Disabled version -->
                     <span
-                            th:if="${currentPage} == 1"
+                            th:if="${currentPage == 1 && totalPages > 1}"
                             class="px-3 py-1 bg-gray-100 border border-gray-300
                      text-gray-400 rounded-l-md cursor-not-allowed"
                     >
-              Prev
-            </span>
+                      Prev
+                    </span>
                 </li>
 
                 <!-- Page Numbers -->
