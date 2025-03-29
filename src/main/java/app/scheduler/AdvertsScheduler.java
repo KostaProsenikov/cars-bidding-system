@@ -21,7 +21,7 @@ public class AdvertsScheduler {
     }
 
 
-    @Scheduled(initialDelay = 1000, fixedDelay = 60000)
+    @Scheduled(initialDelay = 1000, fixedDelay = 600000)
     public void expireAdverts() {
 
         List<Advert> adverts = advertService.getAllExpiredAdverts();

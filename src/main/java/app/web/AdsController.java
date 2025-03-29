@@ -118,12 +118,9 @@ public class AdsController {
         User user = userService.getById(authenticationMetadata.getUserId());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("my-bids");
-        List<Advert> adverts = advertService.getAdvertsByWinnerId(user.getId());
-        int totalVisibleAds = adverts.size();
-        int totalPages = 1;
-        int currentPage = 0;
-        modelAndView.addObject("adverts", adverts);
-        modelAndView.addObject("totalVisibleAds", totalVisibleAds);
+        List<Advert> reservedCarAdverts = advertService.getAdvertsByWinnerId(user.getId());
+        modelAndView.addObject("reservedCars", reservedCarAdverts);
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 
