@@ -24,19 +24,32 @@
 
             <div class="grid grid-cols-1 gap-6 w-full">
                 <!-- Example single card; repeats with Thymeleaf (th:each) -->
-                <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between w-full">
+                <div class=" antialiased bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between w-full">
 
                     <!-- Brand & Model -->
-                    <h4 class="text-lg mb-4" th:text="${advert.getCarBrand().name() + ' ' + advert.getCarModel()}">
-                        Brand & Model
+                    <h4 class="antialiased font-semibold text-lg mb-4">
+                        Brand and Model:
+                        <span class="font-extrabold"
+                              th:text="${advert.getCarBrand().name() + ' ' + advert.getCarModel()}">
+                        </span>
                     </h4>
 
-                    <h2 class="text-gray-800 text-lg">
-                        <span class="font-semibold">Price:</span>
+                    <h2 class="antialiased text-gray-800 text-lg mb-4 font-semibold">
+                        <span>Price:</span>
                         <span th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">N/A</span>
                     </h2>
 
-                    <h3>Viewed: <span th:text="${advert.viewCount}">1000</span> times.</h3>
+                    <h3 class="viewed-count antialiased text-gray-800 text-lg mb-4 font-semibold">Viewed: <span class="font-medium" th:text="${advert.viewCount}">1000</span> times.</h3>
+
+                    <h3 class="antialiased text-gray-800 text-sm mb-4 font-semibold">Created on:
+                        <span class="font-medium" th:text="${#temporals.format(advert.createdOn, 'dd.MM.YYYY HH:mm')}">20.03.2025 19:01
+                        </span>
+                    </h3>
+
+                    <h3 class="antialiased text-gray-800 text-sm mb-4 font-semibold">Last updated on:
+                        <span class="font-medium" th:text="${#temporals.format(advert.updatedOn, 'dd.MM.YYYY HH:mm')}">20.03.2025 19:01
+                        </span>
+                    </h3>
 
                     <div class="edit-advert" th:if="${advert.owner == user}">
                         <a th:href="'/ads/' + ${advert.id} + '/edit'">
@@ -57,38 +70,44 @@
                     />
 
                     <!-- Manufacture Year -->
-                    <h3 class="mb-4">
-                        <span class="font-semibold">Manufacture Year:</span>
-                        <span th:text="${advert.manufactureYear}">2022</span>
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
+                        <span>Manufacture Year:</span>
+                        <span class="font-normal" th:text="${advert.manufactureYear}">2022</span>
                     </h3>
 
                     <!-- Current Bid -->
-                    <h3 class="mb-4" th:if="${advert.biddingOpen}">
-                        <span class="font-semibold">Current Bid:</span>
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold" th:if="${advert.biddingOpen}">
+                        <span class="font-semibold antialiased">Current Bid:</span>
                         <span th:text="${advert.currentBidPrice > 0 ? '€' + advert.currentBidPrice : advert.minBidPrice}"></span>
                     </h3>
 
                     <br />
 
                     <!-- Description -->
-                    <h3 class="mb-4">
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
                         Description:
-                        <span th:text="${advert.description}"></span>
+                        <span class="font-normal" th:text="${advert.description}"></span>
                     </h3>
 
-                    <h3 class="mb-4">
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
                         Gearbox:
-                        <span th:text="${advert.gearboxType.name()}"></span>
+                        <span class="font-normal" th:text="${advert.gearboxType.name()}"></span>
                     </h3>
 
-                    <h3 class="mb-4">
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
                         Fuel Type:
-                        <span th:text="${advert.fuelType.name()}"></span>
+                        <span class="font-normal" th:text="${advert.fuelType.name()}"></span>
                     </h3>
 
-                    <h3 class="mb-4">
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
                         Horse Power:
-                        <span th:text="${advert.horsePower}"></span>
+                        <span class="font-normal" th:text="${advert.horsePower}"></span>
+                    </h3>
+
+
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
+                        Mileage:
+                        <span class="font-normal" th:text="${#strings.substring(advert.mileage, 0, #strings.length(advert.mileage)-3) + ' km'}"></span>
                     </h3>
 
                     <!-- Details Section -->

@@ -41,3 +41,13 @@ nav[aria-label="Page navigation"] {
     transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
+
+.edit-advert a {
+    float: right;
+    margin-bottom: 20px;
+    margin-top: -115px;
+}
+
+.viewed-count {
+    margin-bottom: 20px;
+}
