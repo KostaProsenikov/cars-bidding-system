@@ -6,6 +6,7 @@ import app.advert.repository.AdvertRepository;
 import app.exception.DomainException;
 import app.user.model.User;
 import app.web.dto.CreateNewAdvertRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Slf4j
 @Service
 public class AdvertService {
 
@@ -78,7 +80,9 @@ public class AdvertService {
     }
 
     public int getAdvertCount() {
-        return (int) advertRepository.count();
+        Sort sort = Sort.by("createdOn").descending();
+        Pageable pageable = PageRequest.of(0, 10000, sort);
+        return advertRepository.findByVisible(true, pageable).size();
     }
 
     public Advert getAdvertById(UUID id) {
@@ -126,4 +130,17 @@ public class AdvertService {
     public List<Advert> getFirst20VisibleAdverts() {
         return advertRepository.findByVisibleTrue().stream().filter(Advert::isVisible).limit(20).toList();
     }
+
+    public List<Advert> getAllExpiredAdverts() {
+        LocalDateTime now = LocalDateTime.now();
+        return advertRepository.findByExpireDate(now);
+    }
+
+    public void expireAdvert(Advert advert) {
+        advert.setVisible(false);
+        advert.setUpdatedOn(LocalDateTime.now());
+        advertRepository.save(advert);
+        log.info("Advert with id [%s] has expired!".formatted(advert.getId()));
+    }
+
 }
