@@ -52,6 +52,7 @@ public class Advert {
     @Enumerated(EnumType.STRING)
     private CarBrand carBrand;
 
+    @Size(min = 1, max = 100)
     private String carModel;
 
     @Min(1950)
