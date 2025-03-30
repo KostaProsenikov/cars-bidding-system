@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+<!-- Header -->
+<th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
+
+<!-- Main Section -->
+<th:block th:insert="~{fragments/greeting :: greeting('Subscriptions')}"></th:block>
+
+
+<div class="main-container container mx-auto flex flex-row items-start gap-4">
+    <th:block th:insert="~{fragments/side-menu :: side-menu(${user})}"></th:block>
+    <!-- Subscription Section -->
+    <section class="w-4/5 flex-1">
+        <div class="container mx-auto px-4">
+            <h1 class="text-3xl font-bold text-center mb-8 text-gray-700">Our Subscription Plans</h1>
+
+            <!-- 3-Column Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+                <!-- Default (Free) Plan -->
+                <div class="bg-indigo-50 rounded-lg shadow p-6 flex flex-col text-center">
+                    <h2 class="text-xl font-bold mb-2 text-indigo-600">Default</h2>
+                    <p class="text-3xl font-bold mb-4 text-gray-700">Free</p>
+                    <ul class="text-gray-700 space-y-2 flex-1">
+                        <li>Up to 5 free ads</li>
+                        <li>Ads last for 30 days</li>
+                        <li>No promotion tools</li>
+                        <li>No auto-extend advert</li>
+                        <li>No free VIN checks for the cars</li>
+                        <li>Bid on 1 advert max</li>
+                    </ul>
+                    <button
+                            class="mt-6 bg-indigo-500 text-white py-2 px-6 rounded hover:bg-indigo-600 transition-colors"
+                    >
+                        Choose Plan
+                    </button>
+                </div>
+
+                <!-- Plus ($30/month) Plan -->
+                <div class="bg-blue-50 rounded-lg shadow p-6 flex flex-col text-center">
+                    <h2 class="text-xl font-bold mb-2 text-blue-600">Plus</h2>
+                    <p class="text-3xl font-bold mb-4 text-gray-700">
+                        $30 <span class="text-base font-medium">/ month</span>
+                    </p>
+                    <ul class="text-gray-700 space-y-2 flex-1">
+                        <li>Up to 15 adverts for 30 days</li>
+                        <li>Auto-extend ads feature</li>
+                        <li>Up to 3 Free VIN checks for each month</li>
+                        <li>Bid on up to 5 adverts</li>
+                    </ul>
+                    <button
+                            class="mt-6 bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition-colors"
+                    >
+                        Choose Plan
+                    </button>
+                </div>
+
+                <!-- Professional ($50/month) Plan -->
+                <div class="bg-green-50 rounded-lg shadow p-6 flex flex-col text-center">
+                    <h2 class="text-xl font-bold mb-2 text-green-600">Professional</h2>
+                    <p class="text-3xl font-bold mb-4 text-gray-700">
+                        $50 <span class="text-base font-medium">/ month</span>
+                    </p>
+                    <ul class="text-gray-700 space-y-2 flex-1">
+                        <li>Up to 50 adverts</li>
+                        <li>Auto-extend ads feature</li>
+                        <li>Bid on up to 20 adverts</li>
+                        <li>Up to 5 Free VIN checks per month</li>
+                        <li>See previous bidders & max bids</li>
+                    </ul>
+                    <button
+                            class="mt-6 bg-green-500 text-white py-2 px-6 rounded hover:bg-green-600 transition-colors"
+                    >
+                        Choose Plan
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </section>
+</div>
+
+<th:block th:insert="~{fragments/footer :: footer}"></th:block>
+</body>
+</html>
