@@ -14,5 +14,4 @@ public class UpgradeRequest {
     private SubscriptionPeriod subscriptionPeriod;
 
     private UUID walletId;
-
 }
