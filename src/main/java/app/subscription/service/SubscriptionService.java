@@ -123,9 +123,9 @@ public class SubscriptionService {
             if (subscriptionPeriod == SubscriptionPeriod.WEEKLY) {
                 return new BigDecimal("19.99");
             } else if (subscriptionPeriod == SubscriptionPeriod.MONTHLY) {
-                return new BigDecimal("69.99");
+                return new BigDecimal("49.99");
             } else if (subscriptionPeriod == SubscriptionPeriod.YEARLY) {
-                return new BigDecimal("699.99");
+                return new BigDecimal("599.99");
             }
         }
         return BigDecimal.ZERO;
