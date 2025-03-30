@@ -55,3 +55,15 @@ nav[aria-label="Page navigation"] {
 .max-h-85 {
     max-height: 8.5rem;
 }
+
+.bg-indigo-50 {
+    background-color: rgba(238, 242, 255, 0.8);
+}
+
+.bg-blue-50 {
+    background-color: rgba(239, 246, 255, 0.8);
+}
+
+.bg-green-50 {
+    background-color: rgba(237, 252, 242, 0.8);
+}
