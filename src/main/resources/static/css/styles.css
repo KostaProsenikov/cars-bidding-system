@@ -52,8 +52,8 @@ nav[aria-label="Page navigation"] {
     margin-bottom: 20px;
 }
 
-.max-h-85 {
-    max-height: 8.5rem;
+.max-h-250 {
+    max-height: 250px;
 }
 
 .bg-indigo-50 {

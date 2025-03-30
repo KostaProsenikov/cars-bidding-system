@@ -81,8 +81,10 @@ public class SubscriptionService {
         LocalDateTime completedOn = LocalDateTime.now();
         if (subscriptionPeriod == SubscriptionPeriod.MONTHLY) {
             completedOn.plusMonths(1);
-        } else {
+        } else if (subscriptionPeriod.equals(SubscriptionPeriod.YEARLY)) {
             completedOn.plusYears(1);
+        }else {
+            completedOn.plusWeeks(1);
         }
 
         Subscription newSubscription = Subscription.builder()
