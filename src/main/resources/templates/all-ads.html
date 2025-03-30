@@ -6,11 +6,7 @@
 <th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
 
 <!-- Main Section -->
-<section class="bg-black text-white py-20">
-    <div class="container mx-auto text-center">
-        <h1 class="text-4xl font-bold mb-4">All Cars Ads</h1>
-    </div>
-</section>
+<th:block th:insert="~{fragments/greeting :: greeting('All Adverts')}"></th:block>
 
 <div class="main-container container mx-auto flex flex-row items-start gap-4">
     <th:block sec:authorize="isAuthenticated()"
