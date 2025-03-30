@@ -22,6 +22,10 @@ html, body {
     flex-direction: column;
 }
 
+.margin-25 {
+    margin: 0 25px !important;
+}
+
 /* Footer pinned to the bottom */
 footer {
     margin-top: auto; /* Pushes the footer to the end of the page or container */
