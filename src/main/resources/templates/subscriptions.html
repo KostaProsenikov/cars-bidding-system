@@ -34,7 +34,12 @@
                     <button
                             class="mt-6 bg-indigo-500 text-white py-2 px-6 rounded hover:bg-indigo-600 transition-colors"
                     >
-                        Choose Plan
+                        <span th:if="${user.subscriptions.get(0).type.name() == 'DEFAULT'}">
+                            Your Current Plan
+                        </span>
+                        <span th:if="${user.subscriptions.get(0).type.name() != 'DEFAULT'}">
+                            Choose Plan
+                        </span>
                     </button>
                 </div>
 
@@ -53,7 +58,12 @@
                     <button
                             class="mt-6 bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition-colors"
                     >
-                        Choose Plan
+                        <span th:if="${user.subscriptions.get(0).type.name() == 'PLUS'}">
+                            Your Current Plan
+                        </span>
+                        <span th:if="${user.subscriptions.get(0).type.name() != 'PLUS'}">
+                            Upgrade to Plus
+                        </span>
                     </button>
                 </div>
 
@@ -73,7 +83,12 @@
                     <button
                             class="mt-6 bg-green-500 text-white py-2 px-6 rounded hover:bg-green-600 transition-colors"
                     >
-                        Choose Plan
+                          <span th:if="${user.subscriptions.get(0).type.name() == 'PROFESSIONAL'}">
+                            Your Current Plan
+                        </span>
+                        <span th:if="${user.subscriptions.get(0).type.name() != 'PROFESSIONAL'}">
+                            Upgrade to Professional
+                        </span>
                     </button>
                 </div>
 
