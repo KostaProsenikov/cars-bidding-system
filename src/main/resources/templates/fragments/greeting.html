@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-    <div th:fragment="greeting(user)" class="container mx-auto">
-        <br />
-        <h3 class="greeting">Welcome to the Cars bidding System, <span th:text="${user?.firstName != null ? user.firstName : user.username}">Guest</span>!</h3>
-        <br />
-    </div>
+    <section th:fragment="greeting(title)" class="bg-gradient-to-r from-green-600 to-blue-800 to-90% text-white py-20">
+        <div class="container mx-auto text-center">
+            <h2 class="text-4xl font-bold mb-4" th:text="${title}">Find the best car deals</h2>
+            <img src="/images/logo.jpg" alt="logo" class="max-h-85 mx-auto mb-4" />
+        </div>
+    </section>
 </body>
 </html>

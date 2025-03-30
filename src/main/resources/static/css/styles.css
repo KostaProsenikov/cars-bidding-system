@@ -51,3 +51,7 @@ nav[aria-label="Page navigation"] {
 .viewed-count {
     margin-bottom: 20px;
 }
+
+.max-h-85 {
+    max-height: 8.5rem;
+}
