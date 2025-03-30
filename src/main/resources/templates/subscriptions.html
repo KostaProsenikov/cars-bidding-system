@@ -38,7 +38,7 @@
                         class="mt-6 bg-indigo-500 text-white py-2 px-6 rounded hover:bg-indigo-600 transition-colors"
                     >
                         <span>
-                            Choose Plan
+                            Downgrade to Default
                         </span>
                     </button>
                 </div>
@@ -47,7 +47,7 @@
                 <div class="bg-blue-50 rounded-lg shadow p-6 flex flex-col text-center">
                     <h2 class="text-xl font-bold mb-2 text-blue-600">Plus</h2>
                     <p class="text-3xl font-bold mb-4 text-gray-700">
-                        Price: $ <span id="subscriptionPrice1">30</span>
+                        Price: $ <span id="subscriptionPrice1">29.99</span>
                        <span class="text-base font-medium" id="subscriptionPeriod1"> / month.</span>
                     </p>
                     <ul class="text-gray-700 space-y-2 flex-1">
@@ -56,42 +56,45 @@
                         <li>Up to 3 Free VIN checks for each month</li>
                         <li>Bid on up to 5 adverts</li>
                     </ul>
-                    <span th:if="${user.subscriptions.get(0).type.name() == 'PLUS'}">
+                    <span class="mt-6 bg-indigo-500 text-white py-2 px-6 rounded hover:bg-indigo-600 transition-colors"
+                           th:if="${user.subscriptions.get(0).type.name() == 'PLUS'}">
                         Your Current Plan
                     </span>
-                    <form th:action="@{/subscriptions/change/1}" th:method="post">
-                        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                        <input type="hidden" name="subscriptionType" value="PLUS"/>
-                        <div class="max-w-md mx-auto my-8">
-                            <label for="period1" class="block text-lg font-medium text-gray-700 mb-2">
-                                Subscription Period
-                            </label>
+                    <div th:if="${user.subscriptions.get(0).type.name() != 'PLUS' && user.subscriptions.get(0).type.name() != 'PROFESSIONAL'}">
+                        <form th:action="@{/subscriptions/change/1}" th:method="post">
+                            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                            <input type="hidden" name="subscriptionType" value="PLUS"/>
+                            <div class="max-w-md mx-auto my-8">
+                                <label for="period1" class="block text-lg font-medium text-gray-700 mb-2">
+                                    Subscription Period
+                                </label>
 
-                            <select
-                                    id="period1"
-                                    name="period"
-                                    th:value="${user.subscriptions.get(0).period}"
-                                    required
-                                    autofocus
-                                    class="block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none transition duration-300"
-                            >
-                                <option value="">Select a period</option>
-                                <option value="WEEKLY">Weekly</option>
-                                <option value="MONTHLY" selected>Monthly</option>
-                                <option value="YEARLY">Yearly</option>
-                            </select>
-                        </div>
-                        <button class="mt-6 bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition-colors">
-                            Upgrade to Plus
-                        </button>
-                    </form>
+                                <select
+                                        id="period1"
+                                        name="period"
+                                        th:value="${user.subscriptions.get(0).period}"
+                                        required
+                                        autofocus
+                                        class="block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none transition duration-300"
+                                >
+                                    <option value="">Select a period</option>
+                                    <option value="WEEKLY">Weekly</option>
+                                    <option value="MONTHLY" selected>Monthly</option>
+                                    <option value="YEARLY">Yearly</option>
+                                </select>
+                            </div>
+                            <button class="mt-6 bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition-colors">
+                                Upgrade to Plus
+                            </button>
+                        </form>
+                    </div>
                 </div>
 
                 <!-- Professional ($50/month) Plan -->
                 <div class="bg-green-50 rounded-lg shadow p-6 flex flex-col text-center">
                     <h2 class="text-xl font-bold mb-2 text-green-600">Professional</h2>
                     <p class="text-3xl font-bold mb-4 text-gray-700">
-                        Price: $ <span id="subscriptionPrice2">50</span>
+                        Price: $ <span id="subscriptionPrice2">49.99</span>
                         <span class="text-base font-medium" id="subscriptionPeriod2"> / month.</span>
                     </p>
                     <ul class="text-gray-700 space-y-2 flex-1">
@@ -101,35 +104,39 @@
                         <li>Up to 5 Free VIN checks per month</li>
                         <li>See previous bidders & max bids</li>
                     </ul>
-                    <span th:if="${user.subscriptions.get(0).type.name() == 'PROFESSIONAL'}">
+                    <span class="mt-6 bg-indigo-500 text-white py-2 px-6 rounded hover:bg-indigo-600 transition-colors"
+                          th:if="${user.subscriptions.get(0).type.name() == 'PROFESSIONAL'}">
                         Your Current Plan
-                      </span>
-                    <form th:action="@{/subscriptions/change/2}" th:method="post">
-                        <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                        <input type="hidden" name="subscriptionType" value="PROFESSIONAL"/>
-                        <div class="max-w-md mx-auto my-8">
-                            <label for="period2" class="block text-lg font-medium text-gray-700 mb-2">
-                                Subscription Period
-                            </label>
+                    </span>
+                    <div th:if="${user.subscriptions.get(0).type.name() != 'PROFESSIONAL'}">
+                        <form th:action="@{/subscriptions/change/2}" th:method="post">
+                            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                            <input type="hidden" name="subscriptionType" value="PROFESSIONAL"/>
+                            <div class="max-w-md mx-auto my-8">
+                                <label for="period2" class="block text-lg font-medium text-gray-700 mb-2">
+                                    Subscription Period
+                                </label>
 
-                            <select
-                                    id="period2"
-                                    name="period2"
-                                    th:value="${user.subscriptions.get(0).period}"
-                                    required
-                                    autofocus
-                                    class="block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none transition duration-300"
-                            >
-                                <option value="">Select a period</option>
-                                <option value="WEEKLY">Weekly</option>
-                                <option value="MONTHLY" selected>Monthly</option>
-                                <option value="YEARLY">Yearly</option>
-                            </select>
-                        </div>
-                        <button class="mt-6 bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition-colors">
-                            Upgrade to Professional
-                        </button>
-                    </form>
+                                <select
+                                        id="period2"
+                                        name="period"
+                                        th:value="${user.subscriptions.get(0).period}"
+                                        required
+                                        autofocus
+                                        class="block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none transition duration-300"
+                                >
+                                    <option value="">Select a period</option>
+                                    <option value="WEEKLY">Weekly</option>
+                                    <option value="MONTHLY" selected>Monthly</option>
+                                    <option value="YEARLY">Yearly</option>
+                                </select>
+                            </div>
+                            <button class="mt-6 bg-blue-500 text-white py-2 px-6 rounded hover:bg-blue-600 transition-colors">
+                                Upgrade to Professional
+                            </button>
+                        </form>
+                    </div>
+
                 </div>
             </div>
         </div>
@@ -165,13 +172,22 @@
             periodDisplay2.textContent = selected === 'WEEKLY' ? '/ week' : selected === 'MONTHLY' ? '/ month' : '/ year';
         }
 
-        dropdown.addEventListener("change", function () {
-            setUpListeners(this.value);
-        });
-
-        dropdown2.addEventListener("change", function () {
-           setUpListeners(this.value);
-        });
+        if (dropdown !== null) {
+            dropdown.addEventListener("change", function () {
+                setUpListeners(this.value);
+                if (dropdown2 !== null) {
+                    dropdown2.value = this.value;
+                }
+            });
+        }
+        if (dropdown2 !== null) {
+            dropdown2.addEventListener("change", function () {
+                setUpListeners(this.value);
+            });
+            if (dropdown !== null) {
+                dropdown.value = dropdown2.value;
+            }
+        }
     });
 </script>
 
