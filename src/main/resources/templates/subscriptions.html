@@ -146,23 +146,23 @@
         const dropdown2 = document.getElementById("period2");
 
         const plusPricing = {
-            weekly: 10,
-            monthly: 30,
-            yearly: 300
+            WEEKLY: 10,
+            MONTHLY: 30,
+            YEARLY: 300
         };
 
         const professionalPricing = {
-            weekly: 20,
-            monthly: 50,
-            yearly: 600
+            WEEKLY: 20,
+            MONTHLY: 50,
+            YEARLY: 600
         };
 
         const setUpListeners = (value) => {
             const selected = value;
             priceDisplay.textContent = plusPricing[selected] || '-';
-            periodDisplay.textContent = selected === 'weekly' ? '/ week' : selected === 'monthly' ? '/ month' : '/ year';
+            periodDisplay.textContent = selected === 'WEEKLY' ? '/ week' : selected === 'MONTHLY' ? '/ month' : '/ year';
             priceDisplay2.textContent = professionalPricing[selected] || '—';
-            periodDisplay2.textContent = selected === 'weekly' ? '/ week' : selected === 'monthly' ? '/ month' : '/ year';
+            periodDisplay2.textContent = selected === 'WEEKLY' ? '/ week' : selected === 'MONTHLY' ? '/ month' : '/ year';
         }
 
         dropdown.addEventListener("change", function () {
