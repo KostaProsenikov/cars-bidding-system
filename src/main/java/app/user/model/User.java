@@ -44,7 +44,7 @@ public class User {
     @Column(nullable = false)
     private UserRole role;
 
-    private boolean isActive;
+    private Boolean isActive;
 
     @Column(nullable = false)
     private LocalDateTime createdOn;
