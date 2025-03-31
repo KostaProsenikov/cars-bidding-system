@@ -70,6 +70,10 @@ nav[aria-label="Page navigation"] {
     background-color: rgba(237, 252, 242, 0.8);
 }
 
+.py-4-top {
+    padding-top: 1rem;
+}
+
 .error {
     font-weight: bold;
     font-size: 15px;
