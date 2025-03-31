@@ -32,15 +32,15 @@
         <a th:href="@{/ads/new}" class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">Create Ad</a>
       </li>
       <li>
-        <a th:href="@{/admin}"
-           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
-          Admin Page
-        </a>
-      </li>
-      <li>
         <a th:href="@{/subscriptions}"
            class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
           Subscriptions
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/transactions}"
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
+          Transactions
         </a>
       </li>
       <li>
@@ -49,10 +49,10 @@
           Bids And Reserved Cars
         </a>
       </li>
-      <li>
-        <a th:href="@{/transactions}"
+      <li sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/admin}"
            class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
-          Transactions
+          Admin Page
         </a>
       </li>
       <li>
