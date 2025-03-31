@@ -70,6 +70,12 @@ nav[aria-label="Page navigation"] {
     background-color: rgba(237, 252, 242, 0.8);
 }
 
+.error {
+    font-weight: bold;
+    font-size: 15px;
+    color: red;
+}
+
 .payment-box {
     border-radius: 12px;
     padding: 20px;
