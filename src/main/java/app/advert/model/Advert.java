@@ -82,8 +82,10 @@ public class Advert {
     @Size(min = 4, max = 1000)
     private String description;
 
+    @Column(name = "is_bidding_open")
     private Boolean biddingOpen;
 
+    @Column(name = "min_bid_price")
     private BigDecimal minBidPrice;
 
     @Min(0)
