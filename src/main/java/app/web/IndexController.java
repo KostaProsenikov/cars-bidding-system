@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import app.user.service.UserService;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.View;
 
 import java.util.List;
 
@@ -65,6 +66,27 @@ public class IndexController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("register");
         modelAndView.addObject("registerRequest", new RegisterRequest());
+        return modelAndView;
+    }
+
+    @GetMapping("/about-us")
+    public ModelAndView GetAboutUsPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        return getModelAndView(authenticationMetadata, "about-us" );
+    }
+
+    @GetMapping("/contact")
+    public ModelAndView GetContactsPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        return getModelAndView(authenticationMetadata, "contact");
+    }
+
+    private ModelAndView getModelAndView(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, String viewName) {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName(viewName);
+        User user = new User();
+        if (authenticationMetadata != null) {
+            user = userService.getById(authenticationMetadata.getUserId());
+        }
+        modelAndView.addObject("user", user);
         return modelAndView;
     }
 
