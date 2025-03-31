@@ -79,7 +79,7 @@
 
                         <!-- Current Bid Section -->
                         <div class="flex items-center space-x-2" th:if="${advert.biddingOpen == true && advert.minBidPrice != null}">
-                            <form th:method="post" th:action="'/ads/' + ${advert.id} + '/place-bid'"
+                            <form th:method="post" th:action="'/bids/' + ${advert.id}"
                                   class="flex items-center space-x-2">
                                 <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                                 <label for="bidPrice" class="font-semibold">Place a Bid:</label>
@@ -93,6 +93,15 @@
                                         placeholder="Bid Price"
                                         th:value="${advert.currentBidPrice != null ? advert.currentBidPrice : advert.minBidPrice}"
                                 />
+<!--                                <input-->
+<!--                                        type="number"-->
+<!--                                        id="maxBidPrice"-->
+<!--                                        th:name="maxBidPrice"-->
+<!--                                        step="1"-->
+<!--                                        class="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"-->
+<!--                                        placeholder="Bid Price"-->
+<!--                                        th:value="*{maxBidPrice}"-->
+<!--                                />-->
                                 <button
                                         type="submit"
                                         class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow">
