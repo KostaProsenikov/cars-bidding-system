@@ -23,20 +23,11 @@
               th:method="${createAdvertRequest.id != null} ? 'put' : 'post'"
               th:object="${createAdvertRequest}"
               class="space-y-4">
-<!--            <div>-->
-<!--                <h3>Debug BindingResult:</h3>-->
-<!--                <pre th:text="${#fields.hasAnyErrors()}"></pre>-->
-<!--                <h3>Debug Object:</h3>-->
-<!--                <pre th:text="${createAdvertRequest}"></pre>-->
-<!--                <h3>Debug Descriptions</h3>-->
-<!--                <pre th:text="${#fields.errors()}"></pre>-->
-<!--            </div>-->
-
-
 
             <!-- Display all field errors at the top -->
             <div class="alert alert-danger mb-4" th:if="${#fields.hasErrors()}">
-                <ul>
+                <p class="error">There are errors in the form. Please fix the before continue:</p>
+                <ul class="error alert-warning">
                     <li th:each="err : ${#fields.errors()}" th:text="${err}"></li>
                 </ul>
             </div>

@@ -124,7 +124,7 @@
                             </form>
 
                             <!-- Current Bid Section -->
-                            <div class="flex items-center space-x-2" th:if="${advert.biddingOpen && advert.minBidPrice != null}">
+                            <div class="flex items-center space-x-2" th:if="${advert.biddingOpen == true && advert.minBidPrice != null}">
                                 <form th:method="post" th:action="'/ads/' + ${advert.id} + '/place-bid'"
                                       class="flex items-center space-x-2">
                                     <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
