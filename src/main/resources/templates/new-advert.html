@@ -7,7 +7,7 @@
 
 <th:block th:insert="~{fragments/greeting :: greeting('Create a new car advert')}"></th:block>
 
-<div class="main-container container mx-auto flex flex-row items-start gap-4">
+<div class="main-container container margin-25 flex flex-row items-start gap-4">
     <th:block sec:authorize="isAuthenticated()"
               th:insert="~{fragments/side-menu :: side-menu(${user})}">
     </th:block>

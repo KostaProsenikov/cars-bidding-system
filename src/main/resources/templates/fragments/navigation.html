@@ -17,8 +17,6 @@
                      <ul class="flex space-x-6">
                          <li><a th:href="@{/}" class="hover:text-gray-300">Home</a></li>
                          <li sec:authorize="isAuthenticated()"><a th:href="@{/users/my-profile}" class="hover:text-gray-300">My Profile</a></li>
-                         <li sec:authorize="isAuthenticated()"><a th:href="@{/subscriptions}" class="hover:text-gray-300">Subscriptions</a></li>
-                         <li sec:authorize="isAuthenticated()"><a th:href="@{/bids}" class="hover:text-gray-300">Bids</a></li>
                          <li><a th:href="@{/about-us}" class="hover:text-gray-300">About us</a></li>
                          <li><a th:href="@{/contact}" class="hover:text-gray-300">Contact</a></li>
                          <li sec:authorize="isAnonymous()"><a th:href="@{/login}" class="hover:text-gray-300">Login</a></li>

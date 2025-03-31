@@ -4,6 +4,7 @@ import app.security.AuthenticationMetadata;
 import app.subscription.model.SubscriptionPeriod;
 import app.subscription.model.SubscriptionType;
 import app.subscription.service.SubscriptionService;
+import app.transaction.model.Transaction;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.web.dto.UpgradeRequest;
@@ -46,13 +47,12 @@ public class SubscriptionsController {
             case 2 -> SubscriptionType.PROFESSIONAL;
             default -> SubscriptionType.DEFAULT;
         };
-        User subscriptionOwner = user;
-        UUID walletId =  subscriptionOwner.getWallets().getFirst().getId();
+        UUID walletId = user.getWallets().getFirst().getId();
         UpgradeRequest upgradeRequest = UpgradeRequest.builder()
                 .subscriptionPeriod(subscriptionPeriod)
                 .walletId(walletId)
                 .build();
-        subscriptionService.upgrade(user, subscriptionType, upgradeRequest);
-        return "redirect:/subscriptions";
+        Transaction upgradeResult = subscriptionService.upgrade(user, subscriptionType, upgradeRequest);
+        return "redirect:/transactions/" + upgradeResult.getId();
     }
 }
