@@ -157,14 +157,14 @@ public class AdsController {
     }
 
     @PutMapping("/{id}/update")
-    public ModelAndView updateAdvert(@PathVariable UUID id,@Valid CreateNewAdvertRequest createAdvertRequest,
+    public ModelAndView updateAdvert(@Valid CreateNewAdvertRequest createAdvertRequest,
                                      BindingResult bindingResult,
+                                     @PathVariable UUID id,
                                      @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
-
         if (bindingResult.hasErrors()) {
-            ModelAndView modelAndView = new ModelAndView();
-            modelAndView.setViewName("new-advert");
+            ModelAndView modelAndView = new ModelAndView("new-advert");
             modelAndView.addObject("createAdvertRequest", createAdvertRequest);
+            modelAndView.addObject("org.springframework.validation.BindingResult.createAdvertRequest", bindingResult);
             modelAndView.addObject("user", userService.getById(authenticationMetadata.getUserId()));
             return modelAndView;
         }
