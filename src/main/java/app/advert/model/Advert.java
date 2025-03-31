@@ -44,10 +44,10 @@ public class Advert {
     @Column(nullable = false)
     private LocalDateTime expireDate;
 
-    private boolean visible;
+    private Boolean visible;
 
     @Min(0)
-    private int viewCount;
+    private Integer viewCount;
 
     @Enumerated(EnumType.STRING)
     private CarBrand carBrand;
@@ -57,11 +57,11 @@ public class Advert {
 
     @Min(1950)
     @Max(2025)
-    private int manufactureYear;
+    private Integer manufactureYear;
 
     @Min(0)
     @Max(1000)
-    private int horsePower;
+    private Integer horsePower;
 
     @Enumerated(EnumType.STRING)
     private FuelType fuelType;
@@ -82,14 +82,13 @@ public class Advert {
     @Size(min = 4, max = 1000)
     private String description;
 
-    private boolean isBiddingOpen;
+    private Boolean biddingOpen;
 
     private BigDecimal minBidPrice;
 
     @Min(0)
     private BigDecimal currentBidPrice;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private CarStatus carStatus;
 

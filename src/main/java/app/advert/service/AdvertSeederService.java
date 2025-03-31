@@ -50,7 +50,7 @@ public class AdvertSeederService {
                     .imageURL("https://example.com/car" + i + ".jpg")
                     .buyNowPrice(new BigDecimal("10000.00").add(new BigDecimal(i * 500)))
                     .description("Car " + i + " is a great vehicle.")
-                    .isBiddingOpen(true)
+                    .biddingOpen(true)
                     .minBidPrice(new BigDecimal("5000.00"))
                     .currentBidPrice(null)
                     .build();
