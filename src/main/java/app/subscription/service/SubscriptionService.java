@@ -28,7 +28,6 @@ public class SubscriptionService {
     private final SubscriptionRepository subscriptionRepository;
     private final WalletService walletService;
 
-
     @Autowired
     public SubscriptionService(SubscriptionRepository subscriptionRepository, WalletService walletService) {
         this.subscriptionRepository = subscriptionRepository;

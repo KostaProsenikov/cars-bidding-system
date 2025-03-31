@@ -3,10 +3,8 @@ package app.bid.model;
 import app.advert.model.Advert;
 import app.user.model.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -17,6 +15,7 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class Bid {
 
     @Id
@@ -29,6 +28,7 @@ public class Bid {
     @ManyToOne
     private Advert advert;
 
+    @NotNull
     private BigDecimal bidPrice;
 
     private Boolean isAccepted;
