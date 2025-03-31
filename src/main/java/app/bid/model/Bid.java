@@ -31,7 +31,7 @@ public class Bid {
 
     private BigDecimal bidPrice;
 
-    private boolean isAccepted;
+    private Boolean isAccepted;
 
     private BigDecimal maxBidPrice;
 

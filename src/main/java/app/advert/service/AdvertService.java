@@ -32,8 +32,8 @@ public class AdvertService {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime expireDate = now.plusDays(30);
 
-        boolean isBiddingOpen = createNewAdvertRequest.getIsBiddingOpen() != null ? createNewAdvertRequest.getIsBiddingOpen() : false;
-        boolean isVisible = createNewAdvertRequest.getVisible() != null ? createNewAdvertRequest.getVisible() : false;
+        Boolean isBiddingOpen = createNewAdvertRequest.getIsBiddingOpen() != null ? createNewAdvertRequest.getIsBiddingOpen() : false;
+        Boolean isVisible = createNewAdvertRequest.getVisible() != null ? createNewAdvertRequest.getVisible() : false;
         Advert advert = Advert.builder()
                 .advertName(createNewAdvertRequest.getAdvertName())
                 .description(createNewAdvertRequest.getDescription())
@@ -42,8 +42,9 @@ public class AdvertService {
                 .visible(isVisible)
                 .carBrand(createNewAdvertRequest.getCarBrand())
                 .carModel(createNewAdvertRequest.getCarModel())
+                .carStatus(CarStatus.AVAILABLE)
                 .mileage(createNewAdvertRequest.getMileage())
-                .isBiddingOpen(isBiddingOpen)
+                .biddingOpen(isBiddingOpen)
                 .manufactureYear(createNewAdvertRequest.getManufactureYear())
                 .horsePower(createNewAdvertRequest.getHorsePower())
                 .fuelType(createNewAdvertRequest.getFuelType())
@@ -117,7 +118,7 @@ public class AdvertService {
                 .imageURL(advert.getImageURL())
                 .expireDate(advert.getExpireDate())
                 .updatedOn(LocalDateTime.now())
-                .visible(advert.isVisible())
+                .visible(advert.getVisible())
                 .viewCount(advert.getViewCount())
                 .winner(advert.getWinner())
                 .carStatus(advert.getCarStatus())
@@ -128,7 +129,7 @@ public class AdvertService {
     }
 
     public List<Advert> getFirst20VisibleAdverts() {
-        return advertRepository.findByVisibleTrue().stream().filter(Advert::isVisible).limit(20).toList();
+        return advertRepository.findByVisibleTrue().stream().filter(advert -> advert.getVisible()).limit(20).toList();
     }
 
     public List<Advert> getAllExpiredAdverts() {

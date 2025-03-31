@@ -42,8 +42,8 @@ public class DtoMapper {
                 .gearboxType(advert.getGearboxType())
                 .buyNowPrice(advert.getBuyNowPrice())
                 .imageURL(advert.getImageURL())
-                .visible(advert.isVisible())
-                .isBiddingOpen(advert.isBiddingOpen())
+                .visible(advert.getVisible())
+                .isBiddingOpen(advert.getBiddingOpen())
                 .winner(null)
                 .build();
     }
@@ -65,7 +65,7 @@ public class DtoMapper {
                 .imageURL(createAdvertRequest.getImageURL())
                 .carStatus(createAdvertRequest.getCarStatus())
                 .visible(Boolean.TRUE.equals(createAdvertRequest.getVisible()))
-                .isBiddingOpen(Boolean.TRUE.equals(createAdvertRequest.getIsBiddingOpen()))
+                .biddingOpen(Boolean.TRUE.equals(createAdvertRequest.getIsBiddingOpen()))
                 .minBidPrice(createAdvertRequest.getMinBidPrice())
                 .mileage(createAdvertRequest.getMileage())
                 .currentBidPrice(createAdvertRequest.getCurrentBidPrice())

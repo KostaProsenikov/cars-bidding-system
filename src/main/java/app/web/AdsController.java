@@ -140,47 +140,40 @@ public class AdsController {
         return modelAndView;
     }
 
-    private ModelAndView returnModelAndViewWithErrors(
-            @Valid CreateNewAdvertRequest createAdvertRequest,
-            @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
-        // Return form again in case of errors
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("new-advert");
-        modelAndView.addObject("createAdvertRequest", createAdvertRequest);
-        modelAndView.addObject("user", authenticationMetadata.getUserId() != null ? userService.getById(authenticationMetadata.getUserId()) : null);
-        return modelAndView;
-    }
-
     @PostMapping("/new")
     public ModelAndView saveAdvert(
             @Valid CreateNewAdvertRequest createAdvertRequest,
             BindingResult bindingResult,
             @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
-
-        User user = userService.getById(authenticationMetadata.getUserId());
         if (bindingResult.hasErrors()) {
-            return returnModelAndViewWithErrors(createAdvertRequest, authenticationMetadata);
+            ModelAndView modelAndView = new ModelAndView("new-advert");
+            modelAndView.addObject("user", authenticationMetadata.getUserId() != null ? userService.getById(authenticationMetadata.getUserId()) : null);
+            modelAndView.addObject("createAdvertRequest", createAdvertRequest);
+            return modelAndView;
         }
+        User user = userService.getById(authenticationMetadata.getUserId());
         advertService.createNewAd(createAdvertRequest, user);
         return new ModelAndView("redirect:/ads");
     }
 
     @PutMapping("/{id}/update")
-    public ModelAndView updateAdvert(@PathVariable UUID id,
-                                     @Valid CreateNewAdvertRequest createAdvertRequest,
+    public ModelAndView updateAdvert(@PathVariable UUID id,@Valid CreateNewAdvertRequest createAdvertRequest,
                                      BindingResult bindingResult,
                                      @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
 
-        User user = userService.getById(authenticationMetadata.getUserId());
         if (bindingResult.hasErrors()) {
-            // Return form again in case of errors
-           return returnModelAndViewWithErrors(createAdvertRequest, authenticationMetadata);
+            ModelAndView modelAndView = new ModelAndView();
+            modelAndView.setViewName("new-advert");
+            modelAndView.addObject("createAdvertRequest", createAdvertRequest);
+            modelAndView.addObject("user", userService.getById(authenticationMetadata.getUserId()));
+            return modelAndView;
         }
-        Advert advert = advertService.getAdvertById(id);
-        if (advert.getOwner().getId() != user.getId() && !user.getRole().name().equals("ADMIN")) {
+        User user = userService.getById(authenticationMetadata.getUserId());
+        Advert updatedAdvert = DtoMapper.mapCreateNewAdvertRequestToAdvert(createAdvertRequest, advertService.getAdvertById(id));
+        if (updatedAdvert.getOwner().getId() != user.getId() && !user.getRole().name().equals("ADMIN")) {
             throw new DomainException("You are not allowed to edit this advert!");
         }
-        Advert updatedAdvert = DtoMapper.mapCreateNewAdvertRequestToAdvert(createAdvertRequest, advert);
+
         advertService.saveAdvert(updatedAdvert);
         return new ModelAndView("redirect:/ads");
     }
@@ -194,6 +187,4 @@ public class AdsController {
         advertService.reserveCarAdvert(id, user);
         return new ModelAndView("redirect:/ads");
     }
-
-
 }

@@ -37,27 +37,27 @@ public class CreateNewAdvertRequest {
     private String imageURL;
 
     @NotNull
-    @Positive
-    private int horsePower;
+    @Positive(message = "Horse power must be a positive number.")
+    private Integer horsePower;
 
     @Nullable
     private Boolean isBiddingOpen;
 
-    @NotNull
-    private int price;
+    @Positive(message = "Price must be a positive number.")
+    private Integer price;
 
     private User owner;
 
-    @NotNull
+    @NotNull(message = "Fuel type must be selected.")
     private FuelType fuelType;
 
-    @NotNull
+    @NotNull(message = "Gearbox type must be selected.")
     private GearboxType gearboxType;
 
-    @NotNull
+    @PositiveOrZero(message = "Mileage must be a positive number.")
     private BigDecimal mileage;
 
-    @NotNull
+    @NotNull(message = "Car brand must be selected.")
     private CarBrand carBrand;
 
     @NotNull
@@ -66,7 +66,7 @@ public class CreateNewAdvertRequest {
     @Positive
     @Min (1950)
     @Max (2025)
-    private int manufactureYear;
+    private Integer manufactureYear;
 
     @Positive
     @NotNull
@@ -81,10 +81,9 @@ public class CreateNewAdvertRequest {
     @Nullable
     private Boolean visible;
 
-    @NotNull
     private CarStatus carStatus;
 
-    private int viewCount;
+    private Integer viewCount;
 
     private LocalDateTime createdOn;
 

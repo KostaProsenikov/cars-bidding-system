@@ -112,7 +112,7 @@ public class UserService implements UserDetailsService {
                 username,
                 user.getPassword(),
                 user.getRole(),
-                user.isActive()
+                user.getIsActive()
         );
     }
 }
