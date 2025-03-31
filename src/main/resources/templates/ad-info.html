@@ -65,8 +65,45 @@
                             class="w-full h-[350px] object-cover mb-4 rounded-lg"
                     />
 
+                    <div class="flex items-center justify-between" th:if="${advert.owner != user}">
+                        <!-- Action Buttons -->
+                        <!-- Buy Now Button -->
+                        <form th:method="post" th:action="'/ads/' + ${advert.id} + '/reserve'">
+                            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                            <button th:if="${advert.buyNowPrice != null}"
+                                    type="submit"
+                                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow">
+                                Reserve Now for <span th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">N/A</span>
+                            </button>
+                        </form>
+
+                        <!-- Current Bid Section -->
+                        <div class="flex items-center space-x-2" th:if="${advert.biddingOpen == true && advert.minBidPrice != null}">
+                            <form th:method="post" th:action="'/ads/' + ${advert.id} + '/place-bid'"
+                                  class="flex items-center space-x-2">
+                                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                                <label for="bidPrice" class="font-semibold">Place a Bid:</label>
+                                <input
+                                        type="number"
+                                        id="bidPrice"
+                                        th:name="bidPrice"
+                                        th:min="${advert.currentBidPrice != null ? advert.currentBidPrice : advert.minBidPrice}"
+                                        step="1"
+                                        class="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Bid Price"
+                                        th:value="${advert.currentBidPrice != null ? advert.currentBidPrice : advert.minBidPrice}"
+                                />
+                                <button
+                                        type="submit"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow">
+                                    Bid Now
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
                     <!-- Manufacture Year -->
-                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
+                    <h3 class="mb-4 antialiased py-4-top text-gray-800 text-base mb-4 font-semibold">
                         <span>Manufacture Year:</span>
                         <span class="font-normal" th:text="${advert.manufactureYear}">2022</span>
                     </h3>
@@ -109,45 +146,6 @@
                     <!-- Details Section -->
                     <div class="text-left text-sm text-gray-700 space-y-4">
                         <!-- Buy Now Price with Action Buttons -->
-                        <div class="flex items-center justify-between" th:if="${advert.owner != user}">
-                            <!-- Label -->
-
-                            <!-- Action Buttons -->
-                            <!-- Buy Now Button -->
-                            <form th:method="post" th:action="'/ads/' + ${advert.id} + '/reserve'">
-                                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                                <button th:if="${advert.buyNowPrice != null}"
-                                        type="submit"
-                                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow">
-                                    Reserve Now for <span th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">N/A</span>
-                                </button>
-                            </form>
-
-                            <!-- Current Bid Section -->
-                            <div class="flex items-center space-x-2" th:if="${advert.biddingOpen == true && advert.minBidPrice != null}">
-                                <form th:method="post" th:action="'/ads/' + ${advert.id} + '/place-bid'"
-                                      class="flex items-center space-x-2">
-                                    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
-                                    <label for="bidPrice" class="font-semibold">Place a Bid:</label>
-                                    <input
-                                            type="number"
-                                            id="bidPrice"
-                                            th:name="bidPrice"
-                                            th:min="${advert.currentBidPrice != null ? advert.currentBidPrice : advert.minBidPrice}"
-                                            step="1"
-                                            class="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            placeholder="Bid Price"
-                                            th:value="${advert.currentBidPrice != null ? advert.currentBidPrice : advert.minBidPrice}"
-                                    />
-                                    <button
-                                            type="submit"
-                                            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow">
-                                        Bid Now
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-
 
                     </div>
                 </div>
