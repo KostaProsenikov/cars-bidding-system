@@ -92,4 +92,8 @@ public class CreateNewAdvertRequest {
     private LocalDateTime expireDate;
 
     private User winner;
+
+    private User lastBidder;
+
+    private LocalDateTime lastBidDate;
 }

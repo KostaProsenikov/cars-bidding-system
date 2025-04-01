@@ -1,5 +1,6 @@
 package app.advert.model;
 
+import app.bid.model.Bid;
 import app.user.model.User;
 import jakarta.annotation.Nullable;
 import jakarta.persistence.*;
@@ -12,6 +13,8 @@ import org.hibernate.validator.constraints.URL;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -40,6 +43,12 @@ public class Advert {
     @NotNull
     @Column(nullable = false)
     private LocalDateTime updatedOn;
+
+    @Nullable
+    private LocalDateTime lastBidDate;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    private User lastBidder;
 
     @Column(nullable = false)
     private LocalDateTime expireDate;
@@ -93,6 +102,10 @@ public class Advert {
 
     @Enumerated(EnumType.STRING)
     private CarStatus carStatus;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "advert")
+    @OrderBy("createdOn DESC")
+    private List<Bid> bids = new ArrayList<>();
 
     @Nullable
     @ManyToOne(fetch = FetchType.EAGER)
