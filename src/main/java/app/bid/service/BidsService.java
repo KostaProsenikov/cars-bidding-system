@@ -36,7 +36,7 @@ public class BidsService {
     }
 
     public List<Bid> getBidsForUserId(User user) {
-        return bidsRepository.findAllByBidder(user);
+        return bidsRepository.findAllByBidderOrderByCreatedOnDesc(user);
     }
 
     public List<Bid> getBidsForAdvertIdAndUser(UUID advertId, User user) {

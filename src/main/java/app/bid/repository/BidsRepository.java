@@ -13,5 +13,5 @@ public interface BidsRepository extends JpaRepository<Bid, UUID> {
 
    List<Bid> findAllByAdvertIdAndBidder(UUID advertId, User bidder);
 
-   List<Bid> findAllByBidder(User bidder);
+   List<Bid> findAllByBidderOrderByCreatedOnDesc(User bidder);
 }

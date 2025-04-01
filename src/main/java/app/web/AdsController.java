@@ -64,7 +64,7 @@ public class AdsController {
         advert.setViewCount(advert.getViewCount() + 1);
         advertService.updateAdvert(id, advert);
         User user = userService.getById(authenticationMetadata.getUserId());
-        List<Bid> bids = bidsService.getBidsForAdvertIdAndUser(id, user);
+//        List<Bid> bids = bidsService.getBidsForAdvertIdAndUser(id, user);
         modelAndView.addObject("advert", advert);
         modelAndView.addObject("user", user);
         return modelAndView;
