@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c6629ed4-748d-4b8d-91fc-fe567dfba9ce" name="Changes" comment="Add FeignClient information">
+      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/CarsProjectApplication.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/model/Advert.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/model/CarBrand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/model/CarStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/model/FuelType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/model/GearboxType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/repository/AdvertRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/service/AdvertSeederService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/service/AdvertService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/bid/model/Bid.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/bid/repository/BidsRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/bid/service/BidsService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/config/BeanConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/config/WebMVCConfiguration.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/exception/DomainException.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/leasing/model/Leasing.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/scheduler/AdvertsScheduler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/security/AuthenticationMetadata.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/model/Subscription.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/model/SubscriptionPeriod.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/model/SubscriptionStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/model/SubscriptionType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/repository/SubscriptionRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/service/SubscriptionService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/transaction/model/Transaction.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/transaction/model/TransactionStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/transaction/model/TransactionType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/transaction/repository/TransactionRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/transaction/service/TransactionService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/user/model/User.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/user/model/UserRole.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/user/repository/UserRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/user/service/UserService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/vin/client/VinClient.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/wallet/model/Wallet.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/wallet/model/WalletStatus.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/wallet/repository/WalletRepository.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/wallet/service/WalletService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/AdsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/BidsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/IndexController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/SubscriptionsController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/TransactionController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/UserController.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/CreateNewAdvertRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/LoginRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/RegisterRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/TransferRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/UpgradeRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/UserEditRequest.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/mapper/DtoMapper.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/styles.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/tailwind.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/FMI_Location.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/audir8.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/avatar.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/aventador.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/bmwx4.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/cars_bidding_logo.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/cars_bidding_logo_2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/cars_bidding_system_logo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/ferrari.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/fordgt.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/logo.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/mercedescclass.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/nissangtr.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/porsche911.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/teslamodels.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/toyotasupra.jpg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/about-us.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/ad-info.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/all-ads.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/bid-info.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/bids.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/contact.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/footer.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/greeting.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/navigation.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/side-menu.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/login.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/my-ads.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/my-profile.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/my-reservations.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/new-advert.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/register.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/subscriptions.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/transaction-result.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/transactions.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/app/CarsprojectApplicationTests.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--tags" />
+        <option name="title" value="All" />
+      </GitPushTagMode>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;KostaProsenikov&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/KostaProsenikov/cars-bidding-system.git&quot;,
+    &quot;accountId&quot;: &quot;d2dcb7ea-b77a-44cb-ab1b-ea8a03a5babe&quot;
+  }
+}</component>
+  <component name="KubernetesApiPersistence">{}</component>
+  <component name="KubernetesApiProvider">{
+  &quot;isMigrated&quot;: true
+}</component>
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHomeTypeForPersistence" value="WRAPPER" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 2
+}</component>
+  <component name="ProjectId" id="2u501OM6WUva5Kn2eAuCn6LuQWf" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Maven.carsproject [clean,compile].executor&quot;: &quot;Run&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-WindowsDefender&quot;: &quot;Microsoft Defender may affect IDE&quot;,
+    &quot;Notification.DoNotAsk-WindowsDefender&quot;: &quot;true&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;Spring Boot.CarsProjectApplication.executor&quot;: &quot;Debug&quot;,
+    &quot;Spring Boot.CarsprojectApplication.executor&quot;: &quot;Run&quot;,
+    &quot;deletionFromPopupRequiresConfirmation&quot;: &quot;false&quot;,
+    &quot;extract.method.default.visibility&quot;: &quot;private&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Projects/carsproject/src/main/resources/templates&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;advanced.settings&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Projects\carsproject\src\main\resources\templates" />
+      <recent name="C:\Projects\carsproject\src\main\java\app" />
+      <recent name="C:\Projects\carsproject\src\main\java\app\transaction" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Projects\carsproject\src\main\resources\static\images" />
+      <recent name="C:\Projects\carsproject\src\main\resources\static" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="app.web.dto" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Spring Boot.CarsProjectApplication">
+    <configuration name="carsproject [clean,compile]" type="MavenRunConfiguration" factoryName="Maven" temporary="true">
+      <MavenSettings>
+        <option name="myGeneralSettings" />
+        <option name="myRunnerSettings" />
+        <option name="myRunnerParameters">
+          <MavenRunnerParameters>
+            <option name="cmdOptions" />
+            <option name="profiles">
+              <set />
+            </option>
+            <option name="goals">
+              <list>
+                <option value="clean" />
+                <option value="compile" />
+              </list>
+            </option>
+            <option name="multimoduleDir" />
+            <option name="pomFileName" value="pom.xml" />
+            <option name="profilesMap">
+              <map />
+            </option>
+            <option name="projectsCmdOptionValues">
+              <list />
+            </option>
+            <option name="resolveToWorkspace" value="false" />
+            <option name="workingDirPath" value="$PROJECT_DIR$" />
+          </MavenRunnerParameters>
+        </option>
+      </MavenSettings>
+      <method v="2" />
+    </configuration>
+    <configuration name="CarsProjectApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
+      <module name="carsproject" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="app.CarsProjectApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="app.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Spring Boot.CarsProjectApplication" />
+        <item itemvalue="Maven.carsproject [clean,compile]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fbdcb00ec9e3-intellij.indexing.shared.core-IU-251.23774.200" />
+        <option value="bundled-js-predefined-d6986cc7102b-f27c65a3e318-JavaScript-IU-251.23774.200" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="StructureViewState">
+    <option name="selectedTab" value="Logical" />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c6629ed4-748d-4b8d-91fc-fe567dfba9ce" name="Changes" comment="" />
+      <created>1741522913124</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1741522913124</updated>
+      <workItem from="1741522913471" duration="2818000" />
+      <workItem from="1741539963362" duration="2375000" />
+      <workItem from="1741542355005" duration="574000" />
+      <workItem from="1741636945973" duration="24000" />
+      <workItem from="1741762934353" duration="32000" />
+      <workItem from="1741762976527" duration="28000" />
+      <workItem from="1741847234097" duration="6000" />
+      <workItem from="1741933794624" duration="43000" />
+      <workItem from="1741933852652" duration="14000" />
+      <workItem from="1742415426491" duration="2885000" />
+      <workItem from="1742452576600" duration="6248000" />
+      <workItem from="1742494473412" duration="1581000" />
+      <workItem from="1742579692461" duration="1340000" />
+      <workItem from="1742740694329" duration="3697000" />
+      <workItem from="1742805834749" duration="1869000" />
+      <workItem from="1743006677499" duration="252000" />
+      <workItem from="1743100977938" duration="12000" />
+      <workItem from="1743101030712" duration="4627000" />
+      <workItem from="1743145565526" duration="6402000" />
+      <workItem from="1743353617901" duration="3576000" />
+      <workItem from="1743399362249" duration="20366000" />
+      <workItem from="1743485267607" duration="5654000" />
+      <workItem from="1743506185540" duration="147000" />
+      <workItem from="1743506345008" duration="757000" />
+    </task>
+    <task id="LOCAL-00001" summary="Initial commit for the Cars Bidding system">
+      <option name="closed" value="true" />
+      <created>1741523007656</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1741523007656</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Add Spring configuration and User model and Role to the repository.">
+      <option name="closed" value="true" />
+      <created>1741524930736</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1741524930736</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add user service initial and register">
+      <option name="closed" value="true" />
+      <created>1741525698587</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1741525698587</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Add more files to the project">
+      <option name="closed" value="true" />
+      <created>1741542921814</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1741542921814</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Add initial advert service and repository and create route for adding a new advert for the users.">
+      <option name="closed" value="true" />
+      <created>1742418297621</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1742418297621</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Add forms for the creating ads and saving them to the Advert Repository">
+      <option name="closed" value="true" />
+      <created>1742456139048</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1742456139048</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Add getting of the already created ads and displaying initial info on the home page.">
+      <option name="closed" value="true" />
+      <created>1742458267523</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1742458267523</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Cleanup of unused imports">
+      <option name="closed" value="true" />
+      <created>1742458544657</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1742458544657</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Add methods for getting all ads by page and sort">
+      <option name="closed" value="true" />
+      <created>1742495668434</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1742495668434</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Add my profile page and create footer fragment">
+      <option name="closed" value="true" />
+      <created>1742581029742</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1742581029742</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Add edit my profile form and updating of the user profile">
+      <option name="closed" value="true" />
+      <created>1742744373592</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1742744373592</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Add profile avatar">
+      <option name="closed" value="true" />
+      <created>1742744385469</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1742744385469</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Add users, subscriptions, wallets and transactions from the Wallet App. And will reuse them for the current app functionality">
+      <option name="closed" value="true" />
+      <created>1742807097669</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1742807097669</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Add more information about the ads. TODO: the bidding and buy now functionality.">
+      <option name="closed" value="true" />
+      <created>1743103759988</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1743103759989</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Make displaying of the ads better">
+      <option name="closed" value="true" />
+      <created>1743104522725</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1743104522725</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Update the ads information page">
+      <option name="closed" value="true" />
+      <created>1743105752340</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1743105752340</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Add update advert page">
+      <option name="closed" value="true" />
+      <created>1743151552834</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1743151552834</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Small fix for the new ads page">
+      <option name="closed" value="true" />
+      <created>1743151941153</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1743151941153</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Update pricing for the plans">
+      <option name="closed" value="true" />
+      <created>1743354521347</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1743354521347</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Fix the plans display on the subscriptions page.">
+      <option name="closed" value="true" />
+      <created>1743356217108</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1743356217108</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Small fix on subscriptions">
+      <option name="closed" value="true" />
+      <created>1743363659228</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1743363659228</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Add transactions, transaction-result file and clear the styling. Add also contact us page and about us page. Make everything look better.">
+      <option name="closed" value="true" />
+      <created>1743405034832</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1743405034832</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Add image and some side menu changes">
+      <option name="closed" value="true" />
+      <created>1743407373853</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1743407373853</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Update files for entities.">
+      <option name="closed" value="true" />
+      <created>1743426729860</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1743426729860</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Add bids for cars and make them work. Update side menu and show all bids for the user.">
+      <option name="closed" value="true" />
+      <created>1743489999821</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1743489999821</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Update bids service">
+      <option name="closed" value="true" />
+      <created>1743490826790</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1743490826790</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Add FeignClient information">
+      <option name="closed" value="true" />
+      <created>1743506691090</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1743506691090</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add user service initial and register" />
+    <MESSAGE value="Add more files to the project" />
+    <MESSAGE value="Add initial advert service and repository and create route for adding a new advert for the users." />
+    <MESSAGE value="Add forms for the creating ads and saving them to the Advert Repository" />
+    <MESSAGE value="Add getting of the already created ads and displaying initial info on the home page." />
+    <MESSAGE value="Cleanup of unused imports" />
+    <MESSAGE value="Add methods for getting all ads by page and sort" />
+    <MESSAGE value="Add my profile page and create footer fragment" />
+    <MESSAGE value="Add edit my profile form and updating of the user profile" />
+    <MESSAGE value="Add profile avatar" />
+    <MESSAGE value="Add users, subscriptions, wallets and transactions from the Wallet App. And will reuse them for the current app functionality" />
+    <MESSAGE value="Add more information about the ads. TODO: the bidding and buy now functionality." />
+    <MESSAGE value="Make displaying of the ads better" />
+    <MESSAGE value="Update the ads information page" />
+    <MESSAGE value="Add update advert page" />
+    <MESSAGE value="Small fix for the new ads page" />
+    <MESSAGE value="Update pricing for the plans" />
+    <MESSAGE value="Fix the plans display on the subscriptions page." />
+    <MESSAGE value="Small fix on subscriptions" />
+    <MESSAGE value="Add transactions, transaction-result file and clear the styling. Add also contact us page and about us page. Make everything look better." />
+    <MESSAGE value="Add image and some side menu changes" />
+    <MESSAGE value="Update files for entities." />
+    <MESSAGE value="Add bids for cars and make them work. Update side menu and show all bids for the user." />
+    <MESSAGE value="Update bids service" />
+    <MESSAGE value="Add FeignClient information" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add FeignClient information" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
