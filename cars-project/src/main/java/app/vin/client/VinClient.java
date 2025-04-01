@@ -1,13 +1,13 @@
 package app.vin.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "vin-service", url = "http://localhost:8082/vin-svc/api/v1")
-public class VinClient {
+public interface VinClient {
 
-    @PostMapping("get-vins")
-    public String getVINInformation() {
-        return "VINs";
-    }
+    @GetMapping ("get-vin")
+    ResponseEntity<String> getVINInformation(@RequestParam String vin);
 }
