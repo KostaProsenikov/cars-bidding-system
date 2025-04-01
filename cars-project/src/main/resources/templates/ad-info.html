@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+<!-- Header -->
+<th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
+
+<!-- Main Section -->
+<th:block th:insert="~{fragments/greeting :: greeting('Find the best car deals')}"></th:block>
+
+<div class="main-container container margin-25 flex flex-row items-start gap-4">
+    <th:block sec:authorize="isAuthenticated()"
+              th:insert="~{fragments/side-menu :: side-menu(${user})}">
+    </th:block>
+
+    <main class="flex-1 overflow-auto w-4/5">
+        <!-- Automobile Ads Section -->
+        <section class="bg-white rounded-lg p-6 shadow">
+            <h2 class="text-2xl font-bold text-center mb-6">Information About Advert: <span th:text="${advert.advertName}"></span></h2>
+
+            <div class="grid grid-cols-1 gap-6 w-full">
+                <!-- Example single card; repeats with Thymeleaf (th:each) -->
+                <div class=" antialiased bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between w-full">
+
+                    <!-- Brand & Model -->
+                    <h4 class="antialiased font-semibold text-lg mb-4">
+                        Brand and Model:
+                        <span class="font-extrabold"
+                              th:text="${advert.getCarBrand().name() + ' ' + advert.getCarModel()}">
+                        </span>
+                    </h4>
+
+                    <h2 class="antialiased text-gray-800 text-lg mb-4 font-semibold">
+                        <span>Price:</span>
+                        <span th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">N/A</span>
+                    </h2>
+
+                    <h3 class="viewed-count antialiased text-gray-800 text-lg mb-4 font-semibold">Viewed: <span class="font-medium" th:text="${advert.viewCount}">1000</span> times.</h3>
+
+                    <h3 class="antialiased text-gray-800 text-sm mb-4 font-semibold">Created on:
+                        <span class="font-medium" th:text="${#temporals.format(advert.createdOn, 'dd.MM.YYYY HH:mm')}">20.03.2025 19:01
+                        </span>
+                    </h3>
+
+                    <h3 class="antialiased text-gray-800 text-sm mb-4 font-semibold">Last updated on:
+                        <span class="font-medium" th:text="${#temporals.format(advert.updatedOn, 'dd.MM.YYYY HH:mm')}">20.03.2025 19:01
+                        </span>
+                    </h3>
+
+                    <div class="edit-advert" th:if="${advert.owner == user}">
+                        <a th:href="'/ads/' + ${advert.id} + '/edit'">
+                            <button
+                                    type="submit"
+                                    class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow">
+                                Edit your advert
+                            </button>
+                        </a>
+                    </div>
+
+                    <!-- Image -->
+                    <img
+                            alt="advert-picture"
+                            th:src="${#strings.isEmpty(advert.imageURL) ?
+                'https://img.freepik.com/free-psd/realistic-car-illustration_23-2151227626.jpg' : advert.imageURL}"
+                            class="w-full h-[350px] object-cover mb-4 rounded-lg"
+                    />
+
+                    <div class="flex items-center justify-between" th:if="${advert.owner != user}">
+                        <!-- Action Buttons -->
+                        <!-- Buy Now Button -->
+                        <form th:method="post" th:action="'/ads/' + ${advert.id} + '/reserve'">
+                            <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                            <button th:if="${advert.buyNowPrice != null}"
+                                    type="submit"
+                                    class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded shadow">
+                                Reserve Now for <span th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">N/A</span>
+                            </button>
+                        </form>
+
+                        <!-- Current Bid Section -->
+                        <div class="flex items-center space-x-2"
+                             th:if="${advert.biddingOpen == true && advert.minBidPrice != null && advert.lastBidder != user}">
+                            <form th:method="post" th:action="'/bids/' + ${advert.id}"
+                                  class="flex items-center space-x-2">
+                                <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+                                <label for="bidPrice" class="font-semibold">Place a Bid:</label>
+                                <input
+                                        type="number"
+                                        id="bidPrice"
+                                        th:name="bidPrice"
+                                        th:min="${advert.currentBidPrice != null ? advert.currentBidPrice : advert.minBidPrice}"
+                                        step="1"
+                                        class="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Bid Price"
+                                        th:value="${advert.currentBidPrice != null ? advert.currentBidPrice + 100 : advert.minBidPrice}"
+                                />
+                                <label for="maxBidPrice" class="font-semibold">Maximum Bid Price:</label>
+                                <input
+                                        type="number"
+                                        id="maxBidPrice"
+                                        th:name="maxBidPrice"
+                                        step="1"
+                                        class="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Maximum Bid"
+                                        th:value="${advert.currentBidPrice != null ? advert.currentBidPrice + 100 : advert.minBidPrice}"
+                                />
+                                <button
+                                        type="submit"
+                                        class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow">
+                                    Bid Now
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Manufacture Year -->
+                    <h3 class="mb-4 antialiased py-4-top text-gray-800 text-base mb-4 font-semibold">
+                        <span>Manufacture Year:</span>
+                        <span class="font-normal" th:text="${advert.manufactureYear}">2022</span>
+                    </h3>
+
+                    <!-- Current Bid -->
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold" th:if="${advert.biddingOpen}">
+                        <span class="font-semibold antialiased">Current Bid:</span>
+                        <span th:text="${advert.currentBidPrice > 0 ? '€' + advert.currentBidPrice : advert.minBidPrice}"></span>
+                    </h3>
+
+                    <br />
+
+                    <!-- Description -->
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
+                        Description:
+                        <span class="font-normal" th:text="${advert.description}"></span>
+                    </h3>
+
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
+                        Gearbox:
+                        <span class="font-normal" th:text="${advert.gearboxType.name()}"></span>
+                    </h3>
+
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
+                        Fuel Type:
+                        <span class="font-normal" th:text="${advert.fuelType.name()}"></span>
+                    </h3>
+
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
+                        Horse Power:
+                        <span class="font-normal" th:text="${advert.horsePower}"></span>
+                    </h3>
+
+
+                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
+                        Mileage:
+                        <span class="font-normal" th:text="${#strings.substring(advert.mileage, 0, #strings.length(advert.mileage)-3) + ' km'}"></span>
+                    </h3>
+
+                    <!-- Details Section -->
+                    <div class="text-left text-sm text-gray-700 space-y-4">
+                        <!-- Buy Now Price with Action Buttons -->
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
