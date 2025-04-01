@@ -10,17 +10,16 @@ import app.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Controller
-@RequestMapping("bids/")
+@RequestMapping("bids")
 public class BidsController {
 
     private final AdvertService advertService;
@@ -34,7 +33,28 @@ public class BidsController {
         this.bidsService = bidsService;
     }
 
-    @PostMapping ("{advertId}")
+    @GetMapping("")
+    public ModelAndView getBidsPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        User user = userService.getById(authenticationMetadata.getUserId());
+        List<Bid> bids = bidsService.getBidsForUserId(user);
+        ModelAndView modelAndView = new ModelAndView("bids");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("bids", bids);
+        return modelAndView;
+    }
+
+    @GetMapping("/{bidId}")
+    public ModelAndView getInformationAboutBigPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata,
+                                                   @PathVariable UUID bidId) {
+        User user = userService.getById(authenticationMetadata.getUserId());
+        Bid bid = bidsService.getById(bidId);
+        ModelAndView modelAndView = new ModelAndView("bid-info");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("bid", bid);
+        return modelAndView;
+    }
+
+    @PostMapping ("/{advertId}")
     public String addBid(@PathVariable UUID advertId, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata,
                          @RequestParam("bidPrice") BigDecimal bidPrice,
                          @RequestParam("maxBidPrice") BigDecimal maxBidPrice) {
@@ -46,8 +66,17 @@ public class BidsController {
                 .maxBidPrice(maxBidPrice)
                 .createdOn(now)
                 .updatedOn(now)
+                .isAccepted(false)
+                .bidder(user)
                 .build();
-        Bid createdBid = this.bidsService.createNewBidForAdvert(user, advert, bidToCreate);
-        return "redirect:/bids/" + createdBid.getId();
+        Bid createdBid = this.bidsService.createNewBidForAdvert(advert, bidToCreate);
+        if (createdBid != null) {
+            advert.setCurrentBidPrice(createdBid.getBidPrice());
+            advert.setLastBidder(user);
+            advert.setLastBidDate(now);
+            advertService.updateAdvert(advertId, advert);
+            return "redirect:/bids/" + createdBid.getId();
+        }
+        return "redirect:/ads/" + advertId;
     }
 }

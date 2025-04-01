@@ -44,9 +44,15 @@
         </a>
       </li>
       <li>
-        <a th:href="@{/ads/my-bids-and-reservations}"
+        <a th:href="@{/ads/my-reservations}"
            class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
-          Bids And Reserved Cars
+          Reserved Cars
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/bids}"
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
+          Bids
         </a>
       </li>
       <li sec:authorize="hasRole('ADMIN')">
