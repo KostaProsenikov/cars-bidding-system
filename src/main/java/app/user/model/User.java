@@ -60,13 +60,12 @@ public class User {
     @OrderBy("createdOn ASC")
     private List<Wallet> wallets = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bidder")
-    @OrderBy("createdOn DESC")
-    private List<Bid> bids = new ArrayList<>();
-
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
     @OrderBy("createdOn DESC")
     private List<Advert> adverts = new ArrayList<>();
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "bidder")
+    @OrderBy("createdOn DESC")
+    private List<Bid> bids = new ArrayList<>();
 
 }

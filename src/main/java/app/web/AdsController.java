@@ -2,6 +2,8 @@ package app.web;
 
 import app.advert.model.Advert;
 import app.advert.service.AdvertService;
+import app.bid.model.Bid;
+import app.bid.service.BidsService;
 import app.exception.DomainException;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
@@ -25,11 +27,13 @@ public class AdsController {
 
     private final AdvertService advertService;
     private final UserService userService;
+    private final BidsService bidsService;
 
     @Autowired
-    public AdsController(AdvertService advertService, UserService userService) {
+    public AdsController(AdvertService advertService, UserService userService, BidsService bidsService) {
         this.advertService = advertService;
         this.userService = userService;
+        this.bidsService = bidsService;
     }
 
     @GetMapping("")
@@ -60,6 +64,7 @@ public class AdsController {
         advert.setViewCount(advert.getViewCount() + 1);
         advertService.updateAdvert(id, advert);
         User user = userService.getById(authenticationMetadata.getUserId());
+        List<Bid> bids = bidsService.getBidsForAdvertIdAndUser(id, user);
         modelAndView.addObject("advert", advert);
         modelAndView.addObject("user", user);
         return modelAndView;
@@ -113,11 +118,11 @@ public class AdsController {
         return modelAndView;
     }
 
-    @GetMapping("/my-bids-and-reservations")
-    public ModelAndView getMyBidsAndReservationsPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    @GetMapping("/my-reservations")
+    public ModelAndView getMyReservationsPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         User user = userService.getById(authenticationMetadata.getUserId());
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("my-bids");
+        modelAndView.setViewName("my-reservations");
         List<Advert> reservedCarAdverts = advertService.getAdvertsByWinnerId(user.getId());
         modelAndView.addObject("reservedCars", reservedCarAdverts);
         modelAndView.addObject("user", user);

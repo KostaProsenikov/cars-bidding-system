@@ -44,6 +44,8 @@ public class DtoMapper {
                 .imageURL(advert.getImageURL())
                 .visible(advert.getVisible())
                 .isBiddingOpen(advert.getBiddingOpen())
+                .lastBidDate(advert.getLastBidDate())
+                .lastBidder(advert.getLastBidder())
                 .winner(null)
                 .build();
     }
@@ -69,6 +71,8 @@ public class DtoMapper {
                 .minBidPrice(createAdvertRequest.getMinBidPrice())
                 .mileage(createAdvertRequest.getMileage())
                 .currentBidPrice(createAdvertRequest.getCurrentBidPrice())
+                .lastBidDate(existingAdvert.getLastBidDate())
+                .lastBidder(existingAdvert.getLastBidder())
                 .owner(existingAdvert.getOwner())
                 .createdOn(existingAdvert.getCreatedOn())
                 .expireDate(existingAdvert.getExpireDate())

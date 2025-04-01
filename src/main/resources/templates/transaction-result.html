@@ -5,7 +5,7 @@
 <!-- Header -->
 <th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
 
-<th:block th:insert="~{fragments/greeting :: greeting('Your profile information')}"></th:block>
+<th:block th:insert="~{fragments/greeting :: greeting('Transaction information')}"></th:block>
 <!-- Transactions Status Section -->
 <div class="main-container container mx-auto flex flex-row items-start gap-4">
   <th:block sec:authorize="isAuthenticated()"

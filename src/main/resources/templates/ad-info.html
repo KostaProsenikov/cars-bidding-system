@@ -91,17 +91,18 @@
                                         step="1"
                                         class="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         placeholder="Bid Price"
-                                        th:value="${advert.currentBidPrice != null ? advert.currentBidPrice : advert.minBidPrice}"
+                                        th:value="${advert.currentBidPrice != null ? advert.currentBidPrice + 100 : advert.minBidPrice}"
                                 />
-<!--                                <input-->
-<!--                                        type="number"-->
-<!--                                        id="maxBidPrice"-->
-<!--                                        th:name="maxBidPrice"-->
-<!--                                        step="1"-->
-<!--                                        class="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"-->
-<!--                                        placeholder="Bid Price"-->
-<!--                                        th:value="*{maxBidPrice}"-->
-<!--                                />-->
+                                <label for="maxBidPrice" class="font-semibold">Maximum Bid Price:</label>
+                                <input
+                                        type="number"
+                                        id="maxBidPrice"
+                                        th:name="maxBidPrice"
+                                        step="1"
+                                        class="w-24 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        placeholder="Maximum Bid"
+                                        th:value="${advert.currentBidPrice != null ? advert.currentBidPrice + 100 : advert.minBidPrice}"
+                                />
                                 <button
                                         type="submit"
                                         class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded shadow">

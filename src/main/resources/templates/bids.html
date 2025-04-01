@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+<!-- Header -->
+<th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
+
+<th:block th:insert="~{fragments/greeting :: greeting('You bids on different cars')}"></th:block>
+<!-- Transactions Status Section -->
+<div class="main-container container margin-25 flex flex-row items-start gap-4">
+  <th:block sec:authorize="isAuthenticated()"
+            th:insert="~{fragments/side-menu :: side-menu(${user})}">
+  </th:block>
+  <main class="flex-1 overflow-hidden w-4/5">
+    <div class="home-section">
+      <div class="single-section-box transactions-container">
+        <h2 class="font-bold">Your most recent bids for car adverts</h2>
+        <h3 class="font-semibold py-3">
+          Total bids: <span th:text="${bids.size()}">10</span>
+        </h3>
+        <table class="styled-table">
+          <!-- Table Header -->
+          <thead>
+          <tr>
+            <th>Id</th>
+            <th>Bid Price</th>
+            <th>Max Bid Price</th>
+            <th>Advert</th>
+            <th>Current Advert Bid Price</th>
+            <th>Created On Date</th>
+          </tr>
+          </thead>
+          <!-- Table Body -->
+          <tbody>
+          <tr th:each="bid : ${bids}">
+            <td data-label="Id" th:text="${bid.id}"></td>
+            <td data-label="bidPrice" th:text="${bid.bidPrice + ' EUR'}">
+            </td>
+            <td data-label="Max Bid Price"
+                th:text="${bid.maxBidPrice + ' EUR'}">
+            </td>
+            <td data-label="Advert" th:if="${bid.advert.advertName}"
+                th:text="${bid.advert.advertName}">
+            </td>
+            <td data-label="Current Advert Bid" th:text="${bid.advert.currentBidPrice}"></td>
+            <td data-label="Date" th:text="${#temporals.format(bid.createdOn, 'dd MMM YYYY HH:mm')}">
+              30 Mar 2025 17:03
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</div>
+
+<th:block th:insert="~{fragments/footer :: footer}"></th:block>
+
+</body>
+</html>
