@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+    <!-- Header -->
+    <th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
+
+    <!-- Main Section -->
+    <th:block th:insert="~{fragments/greeting :: greeting('My Bids And Reservations')}"></th:block>
+
+    <div class="main-container container margin-25 flex flex-row items-start gap-4">
+        <th:block sec:authorize="isAuthenticated()"
+                  th:insert="~{fragments/side-menu :: side-menu(${user})}">
+        </th:block>
+
+        <main class="flex-1 overflow-auto w-4/5">
+
+            <div class="relative overflow-x-auto">
+
+                <h3 class="font-semibold py-3">Total reserved cars: <span th:text="${reservedCars.size()}">10</span></h3>
+
+                <table class="w-full text-sm text-left rtl:text-right dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-6 py-3">
+                            Advert Name
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Car Brand
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Car Model
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Price
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Car Manufacture Year
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Advert Created Date
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Reserved Car
+                        </th>
+                        <th scope="col" class="px-6 py-3">
+                            Actions
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="reservedCar : ${reservedCars}"
+                        th:classappend="${reservedCar.carStatus.name() == 'RESERVED'} ? 'decoration-stone-200' : 'text-red-600'"
+                        class="antialiased bg-white border-b dark:bg-gray-800 dark:border-gray-700 border-gray-200">
+                        <th scope="row" th:text="${reservedCar.advertName}" class="px-6 py-4 font-medium whitespace-nowrap">
+                        </th>
+                        <td th:text="${reservedCar.carBrand}" class="px-6 py-4 text-sky-900">
+                            Tesla
+                        </td>
+                        <td th:text="${reservedCar.carModel}" class="px-6 py-4">
+                            Model S
+                        </td>
+                        <td th:text="${#strings.substring(reservedCar.buyNowPrice, 0, #strings.length(reservedCar.buyNowPrice)-3) + ' EUR'}" class="px-6 py-4">
+                            30 000 EUR
+                        </td>
+                        <td th:text="${reservedCar.manufactureYear}" class="px-6 py-4">
+                            2024
+                        </td>
+                        <td th:text="${#temporals.format(reservedCar.createdOn, 'dd.MM.YYYY HH:mm')}" class="px-6 py-4">
+                            20.03.2025 12:00
+                        </td>
+                        <td th:text="${#strings.capitalize(#strings.toLowerCase(reservedCar.carStatus.name()))}" class="px-6 py-4">
+                            Reserved
+                        </td>
+                        <td>
+                            <a th:href="'/ads/' + ${reservedCar.id} + '/info'">
+                                <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                                    View Car Info
+                                </button>
+                            </a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </main>
+    </div>
+<th:block th:insert="~{fragments/footer :: footer}"></th:block>
+</body>
+</html>

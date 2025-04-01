@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="">
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+<!-- Header -->
+<th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
+
+<th:block th:insert="~{fragments/greeting :: greeting('Create a new car advert')}"></th:block>
+
+<div class="main-container container margin-25 flex flex-row items-start gap-4">
+    <th:block sec:authorize="isAuthenticated()"
+              th:insert="~{fragments/side-menu :: side-menu(${user})}">
+    </th:block>
+
+    <!-- Main Section -->
+    <main class="flex-1 overflow-auto w-4/5">
+        <!-- Main Section -->
+        <section class="flex items-center justify-center min-h-screen py-10">
+    <div class="bg-white rounded-lg shadow-lg p-8 max-w-2xl w-full">
+        <h2 class="text-2xl font-bold mb-6 text-center" th:if="${createAdvertRequest?.id == null}">Create a new car advert</h2>
+        <h2 class="text-2xl font-bold mb-6 text-center" th:if="${createAdvertRequest?.id != null}" th:text="'Update car advert: ' + ${createAdvertRequest.advertName}"></h2>
+        <form th:action="${createAdvertRequest.id != null} ? '/ads/' + ${createAdvertRequest.id} + '/update' : '/ads/new'"
+              th:method="${createAdvertRequest.id != null} ? 'put' : 'post'"
+              th:object="${createAdvertRequest}"
+              class="space-y-4">
+
+            <!-- Display all field errors at the top -->
+            <div class="alert alert-danger mb-4" th:if="${#fields.hasErrors()}">
+                <p class="error">There are errors in the form. Please fix the before continue:</p>
+                <ul class="error alert-warning">
+                    <li th:each="err : ${#fields.errors()}" th:text="${err}"></li>
+                </ul>
+            </div>
+
+            <!-- Advert Name -->
+            <div class="mb-4">
+                <label for="advertName" class="block text-gray-700 mb-2">Advert Name*</label>
+                <input
+                        type="text"
+                        id="advertName"
+                        name="advertName"
+                        th:field="*{advertName}"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                        placeholder="Enter Advert Name"
+                />
+                <p class="alert-warning" th:if="${#fields.hasErrors('advertName')}" th:errors="*{advertName}"></p>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-4">
+                <label for="description" class="block text-gray-700 mb-2">Description*</label>
+                <textarea
+                        id="description"
+                        name="description"
+                        th:field="*{description}"
+                        rows="4"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                        placeholder="Enter a brief description"
+                ></textarea>
+                <p class="alert-warning"
+                   th:if="${#fields.hasErrors('description')}"
+                   th:errors="*{description}"></p>
+            </div>
+
+            <!-- Visible -->
+            <div class="mb-4">
+                <label for="visible" class="block text-gray-700 mb-2">Visible</label>
+                <input
+                        type="checkbox"
+                        id="visible"
+                        name="visible"
+                        th:field="*{visible}"
+                        class="mr-2 align-middle"
+                />
+                <span class="text-gray-700">Check if advert should be visible</span>
+            </div>
+
+            <!-- Car Brand (enum) -->
+            <div class="mb-4">
+                <label for="carBrand" class="block text-gray-700 mb-2">Car Brand*</label>
+                <select
+                        id="carBrand"
+                        name="carBrand"
+                        th:field="*{carBrand}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                >
+                    <option value="">-- Select Brand --</option>
+                    <option value="BMW">BMW</option>
+                    <option value="AUDI">AUDI</option>
+                    <option value="TOYOTA">TOYOTA</option>
+                    <option value="MERCEDES">MERCEDES</option>
+                    <option value="VOLKSWAGEN">VOLKSWAGEN</option>
+                    <option value="TESLA">TESLA</option>
+                </select>
+                <p class="alert-warning" th:if="${#fields.hasErrors('carBrand')}" th:errors="*{carBrand}"></p>
+            </div>
+
+            <!-- Car Model -->
+            <div class="mb-4">
+                <label for="carModel" class="block text-gray-700 mb-2">Car Model</label>
+                <input
+                        type="text"
+                        id="carModel"
+                        name="carModel"
+                        th:field="*{carModel}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                        placeholder="Model of the Car"
+                />
+                <p class="alert-warning" th:if="${#fields.hasErrors('carModel')}" th:errors="*{carModel}"></p>
+            </div>
+
+            <!-- Release Year -->
+            <div class="mb-4">
+                <label for="manufactureYear" class="block text-gray-700 mb-2">Manufacture Year</label>
+                <input
+                        type="number"
+                        id="manufactureYear"
+                        name="manufactureYear"
+                        required
+                        th:field="*{manufactureYear}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                        placeholder="YYYY"
+                        min="1900"
+                        max="2025"
+                />
+                <p class="alert-warning" th:if="${#fields.hasErrors('manufactureYear')}" th:errors="*{manufactureYear}"></p>
+            </div>
+
+            <!-- Horse Power -->
+            <div class="mb-4">
+                <label for="horsePower" class="block text-gray-700 mb-2">Horse Power*</label>
+                <input
+                        type="number"
+                        id="horsePower"
+                        name="horsePower"
+                        th:field="*{horsePower}"
+                        step="1"
+                        min="10"
+                        max="1000"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                        placeholder="Enter the car horse power"
+                />
+                <p class="alert-warning" th:if="${#fields.hasErrors('horsePower')}" th:errors="*{horsePower}"></p>
+            </div>
+
+            <!-- Horse Power -->
+            <div class="mb-4">
+                <label for="mileage" class="block text-gray-700 mb-2">Car Mileage*</label>
+                <input
+                        type="number"
+                        id="mileage"
+                        name="mileage"
+                        th:field="*{mileage}"
+                        step="100"
+                        min="100"
+                        max="1000000"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                        placeholder="Enter the car mileage"
+                />
+                <p class="alert-warning" th:if="${#fields.hasErrors('mileage')}" th:errors="*{mileage}"></p>
+            </div>
+
+            <!-- Fuel Type (enum) -->
+            <div class="mb-4">
+                <label for="fuelType" class="block text-gray-700 mb-2">Fuel Type*</label>
+                <select
+                        id="fuelType"
+                        name="fuelType"
+                        th:field="*{fuelType}"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                >
+                    <option value="">-- Select Fuel Type --</option>
+                    <option value="GASOLINE">Gasoline</option>
+                    <option value="DIESEL">Diesel</option>
+                    <option value="ELECTRIC">Electric</option>
+                </select>
+                <p class="alert-warning" th:if="${#fields.hasErrors('fuelType')}" th:errors="*{fuelType}"></p>
+            </div>
+
+            <!-- Gearbox Type (enum) -->
+            <div class="mb-4">
+                <label for="gearboxType" class="block text-gray-700 mb-2">Gearbox Type*</label>
+                <select
+                        id="gearboxType"
+                        name="gearboxType"
+                        th:field="*{gearboxType}"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                >
+                    <option value="">-- Select Gearbox --</option>
+                    <option value="MANUAL">Manual</option>
+                    <option value="AUTOMATIC">Automatic</option>
+                </select>
+                <p class="alert-warning" th:if="${#fields.hasErrors('gearboxType')}" th:errors="*{gearboxType}"></p>
+            </div>
+
+            <!-- Image URL -->
+            <div class="mb-4">
+                <label for="imageURL" class="block text-gray-700 mb-2">Image URL</label>
+                <input
+                        type="url"
+                        id="imageURL"
+                        name="imageURL"
+                        th:field="*{imageURL}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                        placeholder="Link to car image"
+                />
+                <p class="alert-warning" th:if="${#fields.hasErrors('imageURL')}" th:errors="*{imageURL}"></p>
+            </div>
+
+            <!-- Buy Now Price -->
+            <div class="mb-4">
+                <label for="buyNowPrice" class="block text-gray-700 mb-2">Buy Now Price*</label>
+                <input
+                        type="number"
+                        step="10"
+                        id="buyNowPrice"
+                        name="buyNowPrice"
+                        th:field="*{buyNowPrice}"
+                        required
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                        placeholder="10000 EUR"
+                />
+                <p class="alert-warning" th:if="${#fields.hasErrors('buyNowPrice')}" th:errors="*{buyNowPrice}"></p>
+            </div>
+
+
+
+            <!-- Bidding Open -->
+            <div class="mb-4">
+                <label for="isBiddingOpen" class="block text-gray-700 mb-2">Bidding Open</label>
+                <input
+                        type="checkbox"
+                        id="isBiddingOpen"
+                        name="isBiddingOpen"
+                        th:field="*{isBiddingOpen}"
+                        class="mr-2 align-middle"
+                />
+                <span class="text-gray-700">Check if bidding should be enabled</span>
+                <p class="alert-warning" th:if="${#fields.hasErrors('isBiddingOpen')}" th:errors="*{isBiddingOpen}"></p>
+            </div>
+
+            <!-- Min Bid Price -->
+            <div class="mb-4">
+                <label for="minBidPrice" class="block text-gray-700 mb-2">Minimum Bid Price</label>
+                <input
+                        type="number"
+                        step="1"
+                        id="minBidPrice"
+                        name="minBidPrice"
+                        th:field="*{minBidPrice}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                        placeholder="0.00"
+                />
+                <p class="alert-warning" th:if="${#fields.hasErrors('minBidPrice')}" th:errors="*{minBidPrice}"></p>
+            </div>
+
+            <input
+                    type="hidden"
+                    id="carStatus"
+                    name="carStatus"
+                    th:field="*{carStatus}"
+                    value="AVAILABLE"
+                    class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                    placeholder="Model of the Car"
+            />
+            <input
+                    type="hidden"
+                    id="owner"
+                    name="owner"
+                    th:field="*{owner}"
+                    th:vaue="${createAdvertRequest.id != null} ? user : ''"
+                    class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
+                    placeholder="Model of the Car"
+            />
+
+            <!-- Submit Button -->
+            <div class="text-center">
+                <button
+                        type="submit"
+                        th:text="${createAdvertRequest.id != null} ? 'Update Advert' : 'Create Advert'"
+                        class="bg-blue-600 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700 focus:outline-none">
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+    </main>
+</div>
+
+<th:block th:insert="~{fragments/footer :: footer}"></th:block>
+</body>
+</html>

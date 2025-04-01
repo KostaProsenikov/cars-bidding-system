@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+<!-- Header -->
+    <th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
+
+    <th:block th:insert="~{fragments/greeting :: greeting('About Us')}"></th:block>
+
+    <div class="main-container container margin-25 flex flex-row items-start gap-4">
+        <th:block sec:authorize="isAuthenticated()"
+                  th:insert="~{fragments/side-menu :: side-menu(${user})}">
+        </th:block>
+        <section class="max-w-5xl margin-25 px-6 py-16">
+
+            <h1 class="text-4xl font-extrabold text-center text-indigo-700 mb-6">About Cars Bidding System</h1>
+
+            <p class="text-lg text-center mb-10">
+                Welcome to <strong>Cars Bidding System</strong> – the ultimate platform where car buyers and sellers meet in a secure, transparent, and competitive environment.
+            </p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                <!-- Our Mission -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-2xl font-bold text-indigo-600 mb-3">Our Mission</h2>
+                    <p>
+                        Our mission is simple: <em>“Empower everyone to buy and sell cars smarter.”</em>
+                        We believe that technology and trust can reshape the automotive industry — making it faster, fairer, and more accessible for all.
+                    </p>
+                </div>
+
+                <!-- Our Brand Promise -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h2 class="text-2xl font-bold text-indigo-600 mb-3">Our Brand Promise</h2>
+                    <div>
+                        At Cars Bidding System, we are committed to:
+                        <ul class="list-disc pl-6 mt-2 space-y-1 text-gray-700">
+                            <li>Clear and honest car listings</li>
+                            <li>Reliable bidding and ad systems</li>
+                            <li>Fair chances for all users – buyers and sellers alike</li>
+                            <li>Continuous platform improvement through feedback and innovation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-12 text-center">
+                <h3 class="text-xl font-semibold text-indigo-600 mb-2">“Drive the future, one bid at a time.”</h3>
+                <p class="text-gray-600 max-w-2xl mx-auto">
+                    Whether you're here to upgrade your ride or make your first sale, we welcome you to a community built on trust, ease, and empowerment.
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer Fragment -->
+    <th:block th:insert="~{fragments/footer :: footer}"></th:block>
+
+</body>
+</html>

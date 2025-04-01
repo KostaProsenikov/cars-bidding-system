@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+<!-- Header -->
+<th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
+
+<!-- Main Section -->
+<th:block th:insert="~{fragments/greeting :: greeting('Find the best car deals')}"></th:block>
+
+<div class="main-container container margin-25 flex flex-row items-start gap-4">
+    <th:block sec:authorize="isAuthenticated()"
+              th:insert="~{fragments/side-menu :: side-menu(${user})}">
+    </th:block>
+
+    <main class="flex-1 overflow-auto w-4/5">
+        <!-- Automobile Ads Section -->
+        <section class="bg-white rounded-lg p-6 shadow">
+            <h2 class="text-2xl font-bold text-center mb-6">Featured Cars</h2>
+
+            <!-- Ads grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Example single card; repeats with Thymeleaf (th:each) -->
+                <div class="bg-white shadow-md rounded-lg p-6 text-center
+                    transform transition duration-300
+                    hover:scale-105 hover:shadow-2xl"
+                     th:each="advert : ${adverts}">
+                    <h3 class="text-lg font-bold mb-1" th:text="${advert.advertName}">Car Name</h3>
+                    <h4 class="text-gray-700" th:text="${advert.getCarBrand().name() + ' ' + advert.getCarModel()}">
+                        Brand & Model
+                    </h4>
+
+                    <!-- Image -->
+                    <img
+                            alt="advert-picture"
+                            th:src="${#strings.isEmpty(advert.imageURL) ?
+              'https://img.freepik.com/free-psd/realistic-car-illustration_23-2151227626.jpg' : advert.imageURL}"
+                            class="w-full h-[350px] object-cover mb-4 rounded"
+                    />
+
+                    <!-- Description -->
+                    <p class="text-gray-700" th:text="${advert.description}">advert-description</p>
+                    <p class="text-gray-700" th:if="${advert.buyNowPrice}">
+                        Price: $<span th:text="${advert.buyNowPrice}"></span>
+                    </p>
+                    <p class="text-gray-700">
+                        Manufacture year: <span th:text="${advert.manufactureYear}"></span>
+                    </p>
+                    <p class="text-gray-700 mb-4" th:if="${advert.biddingOpen == true && advert.currentBidPrice > 0}">
+                        Current Bid: <span th:text="${advert.currentBidPrice}">N/A</span>
+                    </p>
+
+                    <button
+                            type="button"
+                            class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                        <a th:href="'/ads/' + ${advert.id} + '/info'">More Information</a>
+                    </button>
+                </div>
+                <!-- End repeat -->
+            </div>
+        </section>
+    </main>
+</div>
+
+<th:block th:insert="~{fragments/footer :: footer}"></th:block>
+</body>
+</html>
