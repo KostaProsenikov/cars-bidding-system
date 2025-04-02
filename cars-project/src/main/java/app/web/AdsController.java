@@ -2,14 +2,14 @@ package app.web;
 
 import app.advert.model.Advert;
 import app.advert.service.AdvertService;
-import app.bid.model.Bid;
-import app.bid.service.BidsService;
 import app.exception.DomainException;
 import app.security.AuthenticationMetadata;
 import app.subscription.service.SubscriptionService;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.vin.client.VinClient;
+import app.vin.model.VinHistory;
+import app.vin.service.VinHistoryService;
 import app.web.dto.CreateNewAdvertRequest;
 import app.web.mapper.DtoMapper;
 import jakarta.validation.Valid;
@@ -21,10 +21,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -33,18 +31,19 @@ public class AdsController {
 
     private final AdvertService advertService;
     private final UserService userService;
-    private final BidsService bidsService;
     private final VinClient vinClient;
-
     private final SubscriptionService subscriptionService;
+    private final VinHistoryService vinHistoryService;
 
     @Autowired
-    public AdsController(AdvertService advertService, UserService userService, BidsService bidsService, VinClient vinClient, SubscriptionService subscriptionService) {
+    public AdsController(AdvertService advertService, UserService userService,
+                        VinClient vinClient, SubscriptionService subscriptionService,
+                        VinHistoryService vinHistoryService) {
         this.advertService = advertService;
         this.userService = userService;
-        this.bidsService = bidsService;
         this.vinClient = vinClient;
         this.subscriptionService = subscriptionService;
+        this.vinHistoryService = vinHistoryService;
     }
 
     @GetMapping("")
@@ -211,39 +210,69 @@ public class AdsController {
         ModelAndView modelAndView = new ModelAndView("ad-info");
         
         // Check if VIN exists
-        if (advert.getVinNumber() != null && !advert.getVinNumber().isEmpty() && user.getSubscriptions().getFirst().getVinChecksLeft() > 0) {
-            try {
-                // Call VIN service
-                ResponseEntity<String> vinResponse = vinClient.getVINInformation(advert.getVinNumber());
-                String responseBody = vinResponse.getBody();
-                
-                // Store the raw response for debugging
-                modelAndView.addObject("vinInfo", responseBody);
-                
-                // Extract information from the JSON response for the view
-                if (responseBody != null && responseBody.contains("manufacturer")) {
-//                   // Reduce user vin checks with one
-                    subscriptionService.reduceVinChecksWithOne(user);
-                    // Extract manufacturer
-                    String manufacturer = extractJsonValue(responseBody, "manufacturer");
-                    modelAndView.addObject("vinManufacturer", manufacturer);
+        if (advert.getVinNumber() != null && !advert.getVinNumber().isEmpty()) {
+            // First check if this VIN was already checked by this user
+            Optional<VinHistory> existingCheck = vinHistoryService.findUserVinCheck(user.getId(), advert.getVinNumber());
+            
+            if (existingCheck.isPresent()) {
+                // VIN was already checked, use saved information
+                VinHistory vinHistory = existingCheck.get();
+                modelAndView.addObject("vinInfo", vinHistory.getResultJson());
+                modelAndView.addObject("vinManufacturer", vinHistory.getManufacturer());
+                modelAndView.addObject("vinModelYear", vinHistory.getModelYear());
+                modelAndView.addObject("vinAssemblyPlant", vinHistory.getAssemblyPlant());
+                modelAndView.addObject("vinStatus", vinHistory.getStatus());
+                modelAndView.addObject("vinCheckSuccess", true);
+                modelAndView.addObject("vinAlreadyChecked", true);
+            } 
+            else if (user.getSubscriptions().getFirst().getVinChecksLeft() > 0) {
+                try {
+                    // Call VIN service
+                    ResponseEntity<String> vinResponse = vinClient.getVINInformation(advert.getVinNumber());
+                    String responseBody = vinResponse.getBody();
                     
-                    // Extract model year
-                    String modelYear = extractJsonValue(responseBody, "model_year");
-                    modelAndView.addObject("vinModelYear", modelYear);
+                    // Store the raw response for debugging
+                    modelAndView.addObject("vinInfo", responseBody);
                     
-                    // Extract assembly plant
-                    String assemblyPlant = extractJsonValue(responseBody, "assembly_plant_code");
-                    modelAndView.addObject("vinAssemblyPlant", assemblyPlant);
-                    
-                    // Extract status
-                    String status = extractJsonValue(responseBody, "status");
-                    modelAndView.addObject("vinStatus", status);
-                    
-                    modelAndView.addObject("vinCheckSuccess", true);
+                    // Extract information from the JSON response for the view
+                    if (responseBody != null && responseBody.contains("manufacturer")) {
+                        // Reduce user vin checks with one
+                        subscriptionService.reduceVinChecksWithOne(user);
+                        
+                        // Extract manufacturer
+                        String manufacturer = extractJsonValue(responseBody, "manufacturer");
+                        modelAndView.addObject("vinManufacturer", manufacturer);
+                        
+                        // Extract model year
+                        String modelYear = extractJsonValue(responseBody, "model_year");
+                        modelAndView.addObject("vinModelYear", modelYear);
+                        
+                        // Extract assembly plant
+                        String assemblyPlant = extractJsonValue(responseBody, "assembly_plant_code");
+                        modelAndView.addObject("vinAssemblyPlant", assemblyPlant);
+                        
+                        // Extract status
+                        String status = extractJsonValue(responseBody, "status");
+                        modelAndView.addObject("vinStatus", status);
+                        
+                        // Save the check in history
+                        vinHistoryService.saveVinCheck(
+                            user, 
+                            advert.getVinNumber(), 
+                            responseBody, 
+                            manufacturer, 
+                            modelYear, 
+                            assemblyPlant, 
+                            status
+                        );
+                        
+                        modelAndView.addObject("vinCheckSuccess", true);
+                    }
+                } catch (Exception e) {
+                    modelAndView.addObject("vinCheckError", "Could not verify VIN: " + e.getMessage());
                 }
-            } catch (Exception e) {
-                modelAndView.addObject("vinCheckError", "Could not verify VIN: " + e.getMessage());
+            } else {
+                modelAndView.addObject("vinCheckError", "Not enough VIN checks left. Please upgrade your subscription.");
             }
         } else {
             modelAndView.addObject("vinCheckError", "No VIN number available for this vehicle");

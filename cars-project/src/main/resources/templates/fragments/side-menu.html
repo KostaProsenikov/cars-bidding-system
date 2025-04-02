@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="">
 <head>
     <meta charset="UTF-8">
     <title>Side Menu</title>
@@ -7,6 +7,11 @@
 <body>
 <aside th:fragment="side-menu(user)"
        class="text-white rounded-lg p-6 shadow-lg w-1/5" style="border: 2px solid #4299e1;">
+  <!-- Logo -->
+  <div class="flex justify-center mb-4">
+    <img src="/images/cars_bidding_logo_2.png" alt="logo" class="h-20 rounded-md" />
+  </div>
+  
   <!-- User Greeting -->
   <h2 class="text-2xl text-black font-bold mb-6" th:if="${user != null}">
     Welcome,
@@ -53,6 +58,12 @@
         <a th:href="@{/bids}"
            class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
           Bids
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/users/vin-history}"
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
+          VIN History
         </a>
       </li>
       <li sec:authorize="hasRole('ADMIN')">
