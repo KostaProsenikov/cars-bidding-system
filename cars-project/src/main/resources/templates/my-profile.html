@@ -46,6 +46,16 @@
                                 <strong class="text-gray-700">Last profile update: </strong>
                                 <p class="text-gray-600" th:text="${#temporals.format(user.updatedOn, 'dd.MM.YYYY HH:mm')}"></p>
                             </div>
+
+                            <div class="details-section-container flex flex-col items-center md:items-start">
+                                <strong class="text-gray-700">VIN Checks Left: </strong>
+                                <p class="text-gray-600" th:text="${user.subscriptions.getFirst().vinChecksLeft}"></p>
+                            </div>
+
+                            <div class="details-section-container flex flex-col items-center md:items-start">
+                                <strong class="text-gray-700">Balance in Wallet: </strong>
+                                <p class="text-gray-600" th:text="${user.wallets.getFirst().balance + ' EUR'}"></p>
+                            </div>
                         </div>
 
                         <!-- Edit Profile Form -->

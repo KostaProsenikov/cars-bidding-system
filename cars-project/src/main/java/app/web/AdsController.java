@@ -6,17 +6,23 @@ import app.bid.model.Bid;
 import app.bid.service.BidsService;
 import app.exception.DomainException;
 import app.security.AuthenticationMetadata;
+import app.subscription.service.SubscriptionService;
 import app.user.model.User;
 import app.user.service.UserService;
+import app.vin.client.VinClient;
 import app.web.dto.CreateNewAdvertRequest;
 import app.web.mapper.DtoMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import java.util.List;
 import java.util.UUID;
@@ -28,12 +34,17 @@ public class AdsController {
     private final AdvertService advertService;
     private final UserService userService;
     private final BidsService bidsService;
+    private final VinClient vinClient;
+
+    private final SubscriptionService subscriptionService;
 
     @Autowired
-    public AdsController(AdvertService advertService, UserService userService, BidsService bidsService) {
+    public AdsController(AdvertService advertService, UserService userService, BidsService bidsService, VinClient vinClient, SubscriptionService subscriptionService) {
         this.advertService = advertService;
         this.userService = userService;
         this.bidsService = bidsService;
+        this.vinClient = vinClient;
+        this.subscriptionService = subscriptionService;
     }
 
     @GetMapping("")
@@ -191,5 +202,86 @@ public class AdsController {
         }
         advertService.reserveCarAdvert(id, user);
         return new ModelAndView("redirect:/ads");
+    }
+    
+    @GetMapping("/{id}/check-vin")
+    public ModelAndView checkVin(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        Advert advert = advertService.getAdvertById(id);
+        User user = userService.getById(authenticationMetadata.getUserId());
+        ModelAndView modelAndView = new ModelAndView("ad-info");
+        
+        // Check if VIN exists
+        if (advert.getVinNumber() != null && !advert.getVinNumber().isEmpty() && user.getSubscriptions().getFirst().getVinChecksLeft() > 0) {
+            try {
+                // Call VIN service
+                ResponseEntity<String> vinResponse = vinClient.getVINInformation(advert.getVinNumber());
+                String responseBody = vinResponse.getBody();
+                
+                // Store the raw response for debugging
+                modelAndView.addObject("vinInfo", responseBody);
+                
+                // Extract information from the JSON response for the view
+                if (responseBody != null && responseBody.contains("manufacturer")) {
+//                   // Reduce user vin checks with one
+                    subscriptionService.reduceVinChecksWithOne(user);
+                    // Extract manufacturer
+                    String manufacturer = extractJsonValue(responseBody, "manufacturer");
+                    modelAndView.addObject("vinManufacturer", manufacturer);
+                    
+                    // Extract model year
+                    String modelYear = extractJsonValue(responseBody, "model_year");
+                    modelAndView.addObject("vinModelYear", modelYear);
+                    
+                    // Extract assembly plant
+                    String assemblyPlant = extractJsonValue(responseBody, "assembly_plant_code");
+                    modelAndView.addObject("vinAssemblyPlant", assemblyPlant);
+                    
+                    // Extract status
+                    String status = extractJsonValue(responseBody, "status");
+                    modelAndView.addObject("vinStatus", status);
+                    
+                    modelAndView.addObject("vinCheckSuccess", true);
+                }
+            } catch (Exception e) {
+                modelAndView.addObject("vinCheckError", "Could not verify VIN: " + e.getMessage());
+            }
+        } else {
+            modelAndView.addObject("vinCheckError", "No VIN number available for this vehicle");
+        }
+        
+        modelAndView.addObject("advert", advert);
+        modelAndView.addObject("user", user);
+        
+        return modelAndView;
+    }
+    
+    private String extractJsonValue(String json, String key) {
+        // Simple JSON value extractor
+        String searchKey = "\"" + key + "\":";
+        int keyIndex = json.indexOf(searchKey);
+        if (keyIndex == -1) {
+            return "N/A";
+        }
+        
+        int valueStart = keyIndex + searchKey.length();
+        int commaIndex = json.indexOf(",", valueStart);
+        int braceIndex = json.indexOf("}", valueStart);
+        
+        int valueEnd = Math.min(
+            commaIndex != -1 ? commaIndex : Integer.MAX_VALUE,
+            braceIndex != -1 ? braceIndex : Integer.MAX_VALUE
+        );
+        
+        if (valueEnd == Integer.MAX_VALUE) {
+            return "N/A";
+        }
+        
+        String value = json.substring(valueStart, valueEnd).trim();
+        // Remove quotes if present
+        if (value.startsWith("\"") && value.endsWith("\"")) {
+            value = value.substring(1, value.length() - 1);
+        }
+        
+        return value;
     }
 }
