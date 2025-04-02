@@ -36,12 +36,13 @@ nav[aria-label="Page navigation"] {
 .card {
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: 2px solid #e2e8f0;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 .card:hover {
-    transform: translateY(-5px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    background-color: #f0f7ff;
 }
 
 .edit-advert a {
@@ -287,8 +288,6 @@ nav[aria-label="Page navigation"] {
     padding: 20px;
     border-radius: 12px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    margin: 20px auto;
-    width: 100%;
     max-width: 1200px;
 }
 
@@ -396,9 +395,7 @@ nav[aria-label="Page navigation"] {
 }
 
 .transactions-container {
-    width: 90%;
     max-width: 1400px;
-    margin: 20px auto;
 }
 
 .styled-table {
@@ -600,6 +597,17 @@ nav[aria-label="Page navigation"] {
 .vin-info-value {
     color: #2d3748;
     width: 60%;
+}
+
+.vin-info-notice {
+    background-color: #e3f2fd;
+    color: #0d47a1;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    border-left: 4px solid #1976d2;
+    width: 100%;
 }
 
 .vin-info-status {
