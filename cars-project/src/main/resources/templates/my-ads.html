@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html lang="en"  xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6" xmlns:th="">
 <th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
 <body class="bg-gray-100">
 <!-- Header -->
@@ -13,7 +13,7 @@
               th:insert="~{fragments/side-menu :: side-menu(${user})}">
     </th:block>
     <!-- Automobile Ads Section -->
-    <main class="flex-1 overflow-hidden w-4/5">
+    <main class="flex-1 overflow-auto w-4/5 p-4" style="border: 2px solid #4299e1; border-radius: 0.5rem;">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Car 1: BMW M4 -->
             <div class="bg-white shadow-md rounded-lg p-6 text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl"
@@ -77,13 +77,9 @@
                 <!-- Next Button -->
                 <li>
                     <!-- Enabled version -->
-                    <a
-                            th:if="${currentPage} < ${totalPages}"
-                            th:href="@{'/ads/page/' + ${currentPage + 1}}"
-                            class="px-3 py-1 bg-white border border-gray-300
+                    <a class="px-3 py-1 bg-white border border-gray-300
                      text-gray-600 hover:bg-gray-200 rounded-r-md
-                     transition-colors duration-300"
-                    >
+                     transition-colors duration-300" th:href="@{'/ads/page/' + ${currentPage + 1}}" th:if="${currentPage} < ${totalPages}">
                         Next
                     </a>
                     <!-- Disabled version -->

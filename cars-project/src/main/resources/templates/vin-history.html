@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+
+<th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
+
+<th:block th:insert="~{fragments/greeting :: greeting('Your VIN Check History')}"></th:block>
+
+<div class="main-container container margin-25 flex flex-row items-start gap-4">
+    <!-- Side Menu -->
+    <th:block sec:authorize="isAuthenticated()"
+              th:insert="~{fragments/side-menu :: side-menu(${user})}">
+    </th:block>
+    
+    <!-- Main Content -->
+    <main class="flex-1 overflow-auto w-4/5 p-4" style="border: 2px solid #4299e1; border-radius: 0.5rem;">
+        <h1 class="text-2xl font-bold mb-6">VIN Check History</h1>
+                
+                <div th:if="${vinHistory.isEmpty()}" class="p-4 mb-4 text-center">
+                    <p class="text-gray-600">You haven't checked any VINs yet.</p>
+                </div>
+                
+                <div th:unless="${vinHistory.isEmpty()}" class="overflow-x-auto">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th class="py-2 px-4 text-left">VIN Number</th>
+                                <th class="py-2 px-4 text-left">Manufacturer</th>
+                                <th class="py-2 px-4 text-left">Model Year</th>
+                                <th class="py-2 px-4 text-left">Assembly Plant</th>
+                                <th class="py-2 px-4 text-left">Status</th>
+                                <th class="py-2 px-4 text-left">Checked On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="record : ${vinHistory}" class="border-b hover:bg-gray-50">
+                                <td class="py-2 px-4" th:text="${record.vinNumber}">1HGCM82633A123456</td>
+                                <td class="py-2 px-4" th:text="${record.manufacturer}">Honda</td>
+                                <td class="py-2 px-4" th:text="${record.modelYear}">2003</td>
+                                <td class="py-2 px-4" th:text="${record.assemblyPlant}">A</td>
+                                <td class="py-2 px-4" th:text="${record.status}">Verified</td>
+                                <td class="py-2 px-4" th:text="${#temporals.format(record.checkedOn, 'dd-MM-yyyy HH:mm')}">01-04-2025 14:30</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+        </main>
+    </div>
+
+<div th:replace="fragments/footer :: footer"></div>
+
+</body>
+</html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
 <th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
 <body class="bg-gray-100">
     <!-- Header -->
@@ -13,7 +13,7 @@
                   th:insert="~{fragments/side-menu :: side-menu(${user})}">
         </th:block>
 
-        <main class="flex-1 overflow-auto w-4/5">
+        <main class="flex-1 overflow-auto w-4/5 p-4" style="border: 2px solid #4299e1; border-radius: 0.5rem; ">
 
             <div class="relative overflow-x-auto">
 

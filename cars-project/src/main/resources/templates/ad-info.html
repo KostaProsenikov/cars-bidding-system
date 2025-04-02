@@ -202,6 +202,10 @@
                             
                             <!-- Success VIN Info -->
                             <div id="vinInfoContainer" class="vin-info-container" th:style="${vinInfo != null ? 'display: block' : 'display: none'}">
+                                <div class="vin-info-item" th:if="${vinAlreadyChecked != null && vinAlreadyChecked == true}">
+                                    <div class="vin-info-notice">This VIN has been previously checked. No credits were used.</div>
+                                </div>
+                                
                                 <div class="vin-info-item">
                                     <div class="vin-info-label">VIN Number:</div>
                                     <div id="vinNumberValue" class="vin-info-value" th:text="${advert != null ? advert.vinNumber : ''}"></div>
