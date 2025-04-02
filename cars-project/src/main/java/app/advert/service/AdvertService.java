@@ -126,6 +126,7 @@ public class AdvertService {
                 .updatedOn(LocalDateTime.now())
                 .visible(advert.getVisible())
                 .viewCount(advert.getViewCount())
+                .vinNumber(advert.getVinNumber())
                 .winner(advert.getWinner())
                 .carStatus(advert.getCarStatus())
                 .createdOn(advertToUpdate.getCreatedOn())

@@ -232,6 +232,24 @@ public class IndexControllerTest {
                 .andExpect(jsonPath("$.manufacturer", is("Volvo")));
     }
     
+    @Test
+    @DisplayName("Should identify Tesla Model 3/Y")
+    public void shouldIdentifyTeslaModelY() throws Exception {
+        String vin = "5YJ3E1EA1PF446330";
+        mockMvc.perform(get("/vin-svc/api/v1/get-vin").param("vin", vin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.manufacturer", is("Tesla")));
+    }
+    
+    @Test
+    @DisplayName("Should identify Tesla Model S/X")
+    public void shouldIdentifyTeslaModelS() throws Exception {
+        String vin = "7SAXS2349NF412280";
+        mockMvc.perform(get("/vin-svc/api/v1/get-vin").param("vin", vin))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.manufacturer", is("Tesla")));
+    }
+    
     @ParameterizedTest
     @DisplayName("Should correctly decode model years")
     @ValueSource(strings = {
@@ -295,7 +313,7 @@ public class IndexControllerTest {
         mockMvc.perform(get("/vin-svc/api/v1/get-vin")
                 .param("vin", unknownVin))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is("VALID")))
+                .andExpect(jsonPath("$.status", is("INVALID")))
                 .andExpect(jsonPath("$.manufacturer", is("Unknown manufacturer")));
     }
     

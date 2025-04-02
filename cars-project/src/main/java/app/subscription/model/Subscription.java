@@ -1,12 +1,23 @@
 package app.subscription.model;
 
-import app.user.model.User;
-import jakarta.persistence.*;
-import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import app.user.model.User;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 
 @Entity
@@ -46,4 +57,6 @@ public class Subscription {
     @Column(nullable = false)
     private LocalDateTime completedOn;
 
+    @Column(nullable = true)
+    private Integer vinChecksLeft;
 }

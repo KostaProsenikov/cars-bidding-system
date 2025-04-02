@@ -1,22 +1,22 @@
 package app.svc_vin_check.web;
 
+import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.regex.Pattern;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.regex.Pattern;
-
 @RestController
 @RequestMapping("/vin-svc/api/v1")
 public class IndexController {
 
     private static final Pattern VIN_PATTERN = Pattern.compile("^[A-HJ-NPR-Z0-9]{17}$");
-    
+
     @GetMapping("/get-vin")
     public ResponseEntity<?> getVinInfo(@RequestParam String vin) {
         // Basic VIN validation (standard VINs are 17 characters)
@@ -26,25 +26,34 @@ public class IndexController {
             error.put("status", "INVALID");
             return ResponseEntity.badRequest().body(error);
         }
-        
+
         // For demonstration, extract and return information from the VIN
         Map<String, Object> vinInfo = decodeVin(vin);
-        vinInfo.put("status", "VALID");
+        if(vinInfo.get("manufacturer").equals("Unknown manufacturer")) {
+            vinInfo.put("status", "INVALID");
+            Map<String, String> error = new HashMap<>();
+            error.put("error", "Invalid VIN format.");
+            error.put("status", "INVALID");
+            return ResponseEntity.badRequest().body(error);
+        } else {
+            vinInfo.put("status", "VALID");
+        }
+
         vinInfo.put("checked_at", LocalDateTime.now().toString());
-        
+
         return ResponseEntity.ok(vinInfo);
     }
-    
+
     private Map<String, Object> decodeVin(String vin) {
         Map<String, Object> info = new HashMap<>();
-        
+
         // Extract basic information from VIN (simplified for demonstration)
         // Real implementation would use more sophisticated decoding
-        
+
         // World Manufacturer Identifier (first 3 characters)
         String wmi = vin.substring(0, 3);
         info.put("manufacturer_code", wmi);
-        
+
         // Map common manufacturer codes
         switch (wmi) {
             case "1HD": info.put("manufacturer", "Harley-Davidson"); break;
@@ -65,29 +74,31 @@ public class IndexController {
             case "WBS": info.put("manufacturer", "BMW M"); break;
             case "WDD": info.put("manufacturer", "Mercedes-Benz"); break;
             case "YV1": info.put("manufacturer", "Volvo"); break;
+            case "5YJ": info.put("manufacturer", "Tesla"); break;
+            case "7SA": info.put("manufacturer", "Tesla"); break;
             default: info.put("manufacturer", "Unknown manufacturer");
         }
-        
+
         // Vehicle descriptor section (positions 4-8)
         String vds = vin.substring(3, 8);
         info.put("descriptor_section", vds);
-        
+
         // Model year (position 10)
         char yearCode = vin.charAt(9);
         String year = decodeModelYear(yearCode);
         info.put("model_year", year);
-        
+
         // Assembly plant (position 11)
         char plantCode = vin.charAt(10);
         info.put("assembly_plant_code", String.valueOf(plantCode));
-        
+
         // Production sequence (positions 12-17)
         String sequence = vin.substring(11);
         info.put("production_sequence", sequence);
-        
+
         return info;
     }
-    
+
     private String decodeModelYear(char yearCode) {
         // Simplified year decoding
         switch (yearCode) {

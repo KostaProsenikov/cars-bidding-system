@@ -1,6 +1,7 @@
 package app.web;
 
 import app.security.AuthenticationMetadata;
+import app.subscription.model.Subscription;
 import app.subscription.model.SubscriptionPeriod;
 import app.subscription.model.SubscriptionType;
 import app.subscription.service.SubscriptionService;

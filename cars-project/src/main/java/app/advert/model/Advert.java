@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import org.hibernate.validator.constraints.URL;
@@ -110,4 +111,8 @@ public class Advert {
     @Nullable
     @ManyToOne(fetch = FetchType.EAGER)
     private User winner;
+
+    @Nullable
+    @Size(min = 17, max = 17, message = "VIN number must be exactly 17 characters")
+    private String vinNumber;
 }

@@ -1,21 +1,27 @@
 package app.web.dto;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+import org.hibernate.validator.constraints.URL;
+
 import app.advert.model.CarBrand;
 import app.advert.model.CarStatus;
 import app.advert.model.FuelType;
 import app.advert.model.GearboxType;
 import app.user.model.User;
 import jakarta.annotation.Nullable;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.URL;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -96,4 +102,8 @@ public class CreateNewAdvertRequest {
     private User lastBidder;
 
     private LocalDateTime lastBidDate;
+
+    @Nullable
+    @Size(min = 17, max = 17, message = "VIN number must be exactly 17 characters")
+    private String vinNumber;
 }

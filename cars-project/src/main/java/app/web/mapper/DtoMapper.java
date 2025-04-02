@@ -1,13 +1,13 @@
 package app.web.mapper;
 
+import java.time.LocalDateTime;
+
 import app.advert.model.Advert;
 import app.advert.model.CarStatus;
 import app.user.model.User;
 import app.web.dto.CreateNewAdvertRequest;
 import app.web.dto.UserEditRequest;
 import lombok.experimental.UtilityClass;
-
-import java.time.LocalDateTime;
 
 @UtilityClass
 public class DtoMapper {
@@ -46,6 +46,7 @@ public class DtoMapper {
                 .isBiddingOpen(advert.getBiddingOpen())
                 .lastBidDate(advert.getLastBidDate())
                 .lastBidder(advert.getLastBidder())
+                .vinNumber(advert.getVinNumber())
                 .winner(null)
                 .build();
     }
@@ -78,6 +79,7 @@ public class DtoMapper {
                 .expireDate(existingAdvert.getExpireDate())
                 .viewCount(existingAdvert.getViewCount())
                 .winner(createAdvertRequest.getWinner())
+                .vinNumber(createAdvertRequest.getVinNumber())
                 .updatedOn(now)
                 .build();
     }
