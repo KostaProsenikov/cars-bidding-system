@@ -3,9 +3,12 @@ package app.web;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.user.service.UserService;
+import app.vin.model.VinHistory;
+import app.vin.service.VinHistoryService;
 import app.web.dto.UserEditRequest;
 import app.web.mapper.DtoMapper;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -14,14 +17,19 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+
 @Controller
 @RequestMapping ("/users")
 public class UserController {
 
     private final UserService userService;
+    private final VinHistoryService vinHistoryService;
 
-    public UserController(UserService userService) {
+    @Autowired
+    public UserController(UserService userService, VinHistoryService vinHistoryService) {
         this.userService = userService;
+        this.vinHistoryService = vinHistoryService;
     }
 
     @GetMapping ("/my-profile")
@@ -30,7 +38,25 @@ public class UserController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", user);
         modelAndView.addObject("userEditRequest", DtoMapper.mapUserToUserEditRequest(user));
+        
+        // Add VIN check history to the model
+        List<VinHistory> vinHistory = vinHistoryService.getUserVinHistory(user.getId());
+        modelAndView.addObject("vinHistory", vinHistory);
+        
         modelAndView.setViewName("my-profile");
+        return modelAndView;
+    }
+    
+    @GetMapping("/vin-history")
+    public ModelAndView getVinHistoryPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        User user = userService.getById(authenticationMetadata.getUserId());
+        List<VinHistory> vinHistory = vinHistoryService.getUserVinHistory(user.getId());
+        
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("vin-history");
+        modelAndView.addObject("user", user);
+        modelAndView.addObject("vinHistory", vinHistory);
+        
         return modelAndView;
     }
 

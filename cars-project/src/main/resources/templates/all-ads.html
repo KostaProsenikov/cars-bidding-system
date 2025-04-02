@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
 <body class="bg-gray-100">
 <!-- Header -->
@@ -16,7 +16,7 @@
     <main class="flex-1 overflow-hidden w-4/5">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Car 1: BMW M4 -->
-            <div class="bg-white shadow-md rounded-lg p-6 text-center transform transition duration-300 hover:scale-105 hover:shadow-2xl"
+            <div class="bg-white shadow-md rounded-lg p-6 text-center card" style="border: 2px solid #4299e1;"
                  th:each="advert : ${adverts}">
                 <h3 class="text-lg font-bold mb-1" th:text="${advert.advertName}"></h3>
                 <h3 class="text-gray-700" th:text="${advert.getCarBrand().name() + ' ' + advert.getCarModel()}"></h3>
