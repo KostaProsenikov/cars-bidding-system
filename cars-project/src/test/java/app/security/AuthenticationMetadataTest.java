@@ -34,10 +34,9 @@ class AuthenticationMetadataTest {
         
         // Assert
         assertEquals(userId, metadata.getUserId());
-        assertEquals(userId, metadata.getId());
         assertEquals(username, metadata.getUsername());
         assertEquals(password, metadata.getPassword());
-        assertEquals(role, metadata.getUserRole());
+        assertEquals(role, metadata.getRole());
         assertEquals(isActive, metadata.isEnabled());
     }
     

@@ -102,18 +102,18 @@ class UserServiceTest {
         
         testSubscription = Subscription.builder()
                 .id(UUID.randomUUID())
-                .user(testUser)
-                .type(SubscriptionType.BASIC)
+                .owner(testUser)
+                .type(SubscriptionType.DEFAULT)
                 .period(SubscriptionPeriod.MONTHLY)
                 .status(SubscriptionStatus.ACTIVE)
                 .price(BigDecimal.valueOf(9.99))
-                .startDate(LocalDateTime.now())
-                .endDate(LocalDateTime.now().plusMonths(1))
+                .createdOn(LocalDateTime.now())
+                .completedOn(LocalDateTime.now().plusMonths(1))
                 .build();
         
         testWallet = Wallet.builder()
                 .id(UUID.randomUUID())
-                .user(testUser)
+                .owner(testUser)
                 .balance(BigDecimal.valueOf(100))
                 .status(WalletStatus.ACTIVE)
                 .createdOn(LocalDateTime.now())
@@ -253,10 +253,10 @@ class UserServiceTest {
         assertTrue(result instanceof AuthenticationMetadata);
         AuthenticationMetadata authMetadata = (AuthenticationMetadata) result;
         
-        assertEquals(testUserId, authMetadata.getId());
+        assertEquals(testUserId, authMetadata.getUserId());
         assertEquals("testuser", authMetadata.getUsername());
         assertEquals("encoded-password", authMetadata.getPassword());
-        assertEquals(UserRole.USER, authMetadata.getUserRole());
+        assertEquals(UserRole.USER, authMetadata.getRole());
         assertTrue(authMetadata.isEnabled());
     }
 

@@ -86,13 +86,13 @@ public class SubscriptionService {
             return chargeResult;
         }
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime completedOn = LocalDateTime.now();
+        LocalDateTime completedOn;
         if (subscriptionPeriod == SubscriptionPeriod.MONTHLY) {
-            completedOn.plusMonths(1);
+            completedOn = now.plusMonths(1);
         } else if (subscriptionPeriod.equals(SubscriptionPeriod.YEARLY)) {
-            completedOn.plusYears(1);
-        }else {
-            completedOn.plusWeeks(1);
+            completedOn = now.plusYears(1);
+        } else {
+            completedOn = now.plusWeeks(1);
         }
 
         int vinChecksLeft = currentSubscription.getVinChecksLeft();
@@ -185,13 +185,13 @@ public class SubscriptionService {
         LocalDateTime now = LocalDateTime.now();
         newSubscription.setCreatedOn(now);
         newSubscription.setStatus(SubscriptionStatus.ACTIVE);
-        LocalDateTime completedOn = LocalDateTime.now();
+        LocalDateTime completedOn;
         if (subscription.getPeriod().name().equals(SubscriptionPeriod.WEEKLY.name())) {
-            completedOn.plusWeeks(1);
+            completedOn = now.plusWeeks(1);
         } else if (subscription.getPeriod().name().equals(SubscriptionPeriod.MONTHLY.name())) {
-            completedOn.plusMonths(1);
+            completedOn = now.plusMonths(1);
         } else {
-            completedOn.plusYears(1);
+            completedOn = now.plusYears(1);
         }
         newSubscription.setCompletedOn(completedOn);
         subscriptionRepository.save(newSubscription);

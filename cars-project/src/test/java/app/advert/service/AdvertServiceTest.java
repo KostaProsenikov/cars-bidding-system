@@ -79,9 +79,9 @@ class AdvertServiceTest {
                 .carBrand(CarBrand.BMW)
                 .carModel("X5")
                 .manufactureYear(2020)
-                .mileage(10000)
+                .mileage(BigDecimal.valueOf(10000))
                 .horsePower(300)
-                .fuelType(FuelType.PETROL)
+                .fuelType(FuelType.GASOLINE)
                 .gearboxType(GearboxType.AUTOMATIC)
                 .minBidPrice(BigDecimal.valueOf(15000))
                 .buyNowPrice(BigDecimal.valueOf(25000))
@@ -100,9 +100,9 @@ class AdvertServiceTest {
         createRequest.setCarBrand(CarBrand.BMW);
         createRequest.setCarModel("X5");
         createRequest.setManufactureYear(2020);
-        createRequest.setMileage(10000);
+        createRequest.setMileage(BigDecimal.valueOf(10000));
         createRequest.setHorsePower(300);
-        createRequest.setFuelType(FuelType.PETROL);
+        createRequest.setFuelType(FuelType.GASOLINE);
         createRequest.setGearboxType(GearboxType.AUTOMATIC);
         createRequest.setMinBidPrice(BigDecimal.valueOf(15000));
         createRequest.setBuyNowPrice(BigDecimal.valueOf(25000));
@@ -306,7 +306,7 @@ class AdvertServiceTest {
                 .carBrand(CarBrand.AUDI)
                 .carModel("A6")
                 .manufactureYear(2021)
-                .mileage(5000)
+                .mileage(BigDecimal.valueOf(5000))
                 .horsePower(400)
                 .fuelType(FuelType.DIESEL)
                 .gearboxType(GearboxType.MANUAL)
@@ -332,7 +332,7 @@ class AdvertServiceTest {
         assertEquals(CarBrand.AUDI, capturedAdvert.getCarBrand());
         assertEquals("A6", capturedAdvert.getCarModel());
         assertEquals(2021, capturedAdvert.getManufactureYear());
-        assertEquals(5000, capturedAdvert.getMileage());
+        assertEquals(BigDecimal.valueOf(5000), capturedAdvert.getMileage());
         assertFalse(capturedAdvert.getBiddingOpen());
         assertFalse(capturedAdvert.getVisible());
         assertNotNull(capturedAdvert.getUpdatedOn());

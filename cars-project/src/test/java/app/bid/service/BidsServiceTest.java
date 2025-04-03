@@ -79,7 +79,7 @@ class BidsServiceTest {
                 .id(testBidId)
                 .bidder(testUser)
                 .advert(testAdvert)
-                .bidAmount(BigDecimal.valueOf(16000))
+                .bidPrice(BigDecimal.valueOf(16000))
                 .createdOn(LocalDateTime.now())
                 .build();
     }
@@ -118,7 +118,7 @@ class BidsServiceTest {
         // Arrange
         Bid bidToCreate = Bid.builder()
                 .bidder(testUser)
-                .bidAmount(BigDecimal.valueOf(16000))
+                .bidPrice(BigDecimal.valueOf(16000))
                 .createdOn(LocalDateTime.now())
                 .build();
                 
