@@ -11,8 +11,20 @@
   <th:block sec:authorize="isAuthenticated()"
             th:insert="~{fragments/side-menu :: side-menu(${user})}">
   </th:block>
-  <main class="flex-1 overflow-auto w-4/5 p-4" style="border: 2px solid #4299e1; border-radius: 0.5rem;">
-    <div class="home-section">
+  <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
+    <!-- No bids message -->
+    <div th:if="${bids.empty}" class="flex flex-col items-center justify-center py-12">
+      <div class="bg-blue-50 border-l-4 border-blue-500 p-8 rounded-lg shadow-md text-center w-full max-w-2xl">
+        <h3 class="text-2xl font-bold text-blue-700 mb-3">You have not placed any bids yet</h3>
+        <p class="text-gray-600 mb-6">Start bidding on car advertisements to participate in auctions and potentially win vehicles.</p>
+        <a th:href="@{/ads}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow transition-colors">
+          Browse Available Cars
+        </a>
+      </div>
+    </div>
+    
+    <!-- Bids table - only shown when there are bids -->
+    <div th:if="${!bids.empty}" class="home-section">
       <div class="single-section-box transactions-container">
         <h2 class="font-bold">Your most recent bids for car adverts</h2>
         <h3 class="font-semibold py-3">

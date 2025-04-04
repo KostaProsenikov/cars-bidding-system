@@ -127,13 +127,13 @@
               th:insert="~{fragments/side-menu :: side-menu(${user})}">
     </th:block>
 
-    <main class="flex-1 overflow-auto w-4/5">
+    <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
         <!-- Automobile Ads Section -->
-        <section class="bg-white rounded-lg p-6 shadow ad-info-section">
+        <section class="bg-white rounded-lg p-6 ad-info-section">
             <h2 class="title">Information About Advert: <span th:text="${advert.advertName}"></span></h2>
 
             <div class="grid grid-cols-1 gap-6 w-full">
-                <div class="bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between w-full">
+                <div class="bg-white rounded-lg p-6 flex flex-col justify-between w-full">
                     
                     <!-- Edit button -->
                     <div class="edit-advert" th:if="${advert.owner == user}">
@@ -169,18 +169,28 @@
                         </div>
                     </div>
 
-                    <div class="ad-info-detail">
+                    <div class="ad-info-detail flex items-center">
                         <div class="ad-info-label">Car VIN Number:</div>
                         <div class="ad-info-value" 
                              th:text="${advert.vinNumber != null ? advert.vinNumber : 'N/A'}">
                         </div>
-                        <form th:action="@{'/ads/' + ${advert.id} + '/check-vin#vinInfo'}" method="get" style="display: inline;">
-                            <button th:if="${advert.vinNumber != null && !#strings.isEmpty(advert.vinNumber) && user.subscriptions.getFirst().vinChecksLeft > 0}"
-                                type="submit"
-                                class="vin-check-button">
-                                Check VIN
-                            </button>
-                        </form>
+                        <div class="flex-1 flex items-left">
+                            <form th:action="@{'/ads/' + ${advert.id} + '/check-vin#vinInfo'}" method="get" style="display: inline-block; margin-right: 10px;">
+                                <button th:if="${advert.vinNumber != null && !#strings.isEmpty(advert.vinNumber) && user != null && !user.subscriptions.empty && user.subscriptions.get(0).vinChecksLeft > 0}"
+                                    type="submit"
+                                    class="vin-check-button">
+                                    Check VIN
+                                </button>
+                            </form>
+                        </div>
+                        <div class="flex-1 flex justify-end">
+                            <div th:if="${user != null && !user.subscriptions.empty}" 
+                                 class="px-3 py-1 bg-blue-100 border border-blue-300 rounded-full inline-flex items-center">
+                                <span class="text-sm font-medium text-blue-800">VIN Checks Left: </span>
+                                <span class="ml-2 px-3 py-0.5 bg-blue-500 text-white text-sm font-bold rounded-full" 
+                                      th:text="${user.subscriptions.get(0).vinChecksLeft}">0</span>
+                            </div>
+                        </div>
                     </div>
                     
                     <!-- VIN Info Modal -->
@@ -204,6 +214,12 @@
                             <div id="vinInfoContainer" class="vin-info-container" th:style="${vinInfo != null ? 'display: block' : 'display: none'}">
                                 <div class="vin-info-item" th:if="${vinAlreadyChecked != null && vinAlreadyChecked == true}">
                                     <div class="vin-info-notice">This VIN has been previously checked. No credits were used.</div>
+                                </div>
+                                
+                                <div class="vin-info-item" th:if="${vinCheckWarning != null}">
+                                    <div class="vin-info-warning" style="background-color: #fff3cd; color: #856404; padding: 8px; border-radius: 4px; margin-bottom: 10px;">
+                                        <strong>Warning:</strong> <span th:text="${vinCheckWarning}">Warning message</span>
+                                    </div>
                                 </div>
                                 
                                 <div class="vin-info-item">
@@ -258,6 +274,39 @@
                         </div>
                     </div>
 
+
+                    <!-- Vehicle Details -->
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Manufacture Year:</div>
+                        <div class="ad-info-value" th:text="${advert.manufactureYear}"></div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Gearbox:</div>
+                        <div class="ad-info-value" th:text="${advert.gearboxType.name()}"></div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Fuel Type:</div>
+                        <div class="ad-info-value" th:text="${advert.fuelType.name()}"></div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Horse Power:</div>
+                        <div class="ad-info-value" th:text="${advert.horsePower}"></div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Mileage:</div>
+                        <div class="ad-info-value" th:text="${#strings.substring(advert.mileage, 0, #strings.length(advert.mileage)-3) + ' km'}"></div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="ad-info-description">
+                        <div class="ad-info-label">Description:</div>
+                        <div class="ad-info-value" th:text="${advert.description}"></div>
+                    </div>
+
                     <!-- Action buttons -->
                     <div class="ad-info-actions" th:if="${advert.owner != user}">
                         <!-- Buy Now Button -->
@@ -307,44 +356,13 @@
                     </div>
 
                     <!-- Current Bid Section -->
-                    <div class="ad-info-detail" th:if="${advert.biddingOpen}">
+                    <div class="ad-info-detail" th:if="${advert.biddingOpen && advert.currentBidPrice != null}">
                         <div class="ad-info-label">Current Bid:</div>
-                        <div class="ad-info-value ad-info-price" 
+                        <div class="ad-info-value ad-info-price"
                              th:text="${advert.currentBidPrice > 0 ? '€' + advert.currentBidPrice : '€' + advert.minBidPrice}">
                         </div>
                     </div>
 
-                    <!-- Vehicle Details -->
-                    <div class="ad-info-detail">
-                        <div class="ad-info-label">Manufacture Year:</div>
-                        <div class="ad-info-value" th:text="${advert.manufactureYear}"></div>
-                    </div>
-
-                    <div class="ad-info-detail">
-                        <div class="ad-info-label">Gearbox:</div>
-                        <div class="ad-info-value" th:text="${advert.gearboxType.name()}"></div>
-                    </div>
-
-                    <div class="ad-info-detail">
-                        <div class="ad-info-label">Fuel Type:</div>
-                        <div class="ad-info-value" th:text="${advert.fuelType.name()}"></div>
-                    </div>
-
-                    <div class="ad-info-detail">
-                        <div class="ad-info-label">Horse Power:</div>
-                        <div class="ad-info-value" th:text="${advert.horsePower}"></div>
-                    </div>
-
-                    <div class="ad-info-detail">
-                        <div class="ad-info-label">Mileage:</div>
-                        <div class="ad-info-value" th:text="${#strings.substring(advert.mileage, 0, #strings.length(advert.mileage)-3) + ' km'}"></div>
-                    </div>
-
-                    <!-- Description -->
-                    <div class="ad-info-description">
-                        <div class="ad-info-label">Description:</div>
-                        <div class="ad-info-value" th:text="${advert.description}"></div>
-                    </div>
                 </div>
             </div>
         </section>

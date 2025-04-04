@@ -106,6 +106,7 @@ public class Advert {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "advert")
     @OrderBy("createdOn DESC")
+    @Builder.Default
     private List<Bid> bids = new ArrayList<>();
 
     @Nullable

@@ -40,6 +40,7 @@ public class BidsController {
         ModelAndView modelAndView = new ModelAndView("bids");
         modelAndView.addObject("user", user);
         modelAndView.addObject("bids", bids);
+        modelAndView.addObject("currentUri", "/bids");
         return modelAndView;
     }
 
@@ -51,6 +52,7 @@ public class BidsController {
         ModelAndView modelAndView = new ModelAndView("bid-info");
         modelAndView.addObject("user", user);
         modelAndView.addObject("bid", bid);
+        modelAndView.addObject("currentUri", "/bids");
         return modelAndView;
     }
 

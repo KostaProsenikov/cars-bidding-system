@@ -13,10 +13,10 @@
               th:insert="~{fragments/side-menu :: side-menu(${user})}">
     </th:block>
     <!-- Automobile Ads Section -->
-    <main class="flex-1 overflow-hidden w-4/5">
+    <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Car 1: BMW M4 -->
-            <div class="bg-white shadow-md rounded-lg p-6 text-center card" style="border: 2px solid #4299e1;"
+            <div class="bg-white shadow-md rounded-lg p-6 text-center card"
                  th:each="advert : ${adverts}">
                 <h3 class="text-lg font-bold mb-1" th:text="${advert.advertName}"></h3>
                 <h3 class="text-gray-700" th:text="${advert.getCarBrand().name() + ' ' + advert.getCarModel()}"></h3>

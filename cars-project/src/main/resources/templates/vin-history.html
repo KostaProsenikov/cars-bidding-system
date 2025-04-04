@@ -14,7 +14,7 @@
     </th:block>
     
     <!-- Main Content -->
-    <main class="flex-1 overflow-auto w-4/5 p-4" style="border: 2px solid #4299e1; border-radius: 0.5rem;">
+    <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
         <h1 class="text-2xl font-bold mb-6">VIN Check History</h1>
                 
                 <div th:if="${vinHistory.isEmpty()}" class="p-4 mb-4 text-center">
@@ -35,12 +35,19 @@
                         </thead>
                         <tbody>
                             <tr th:each="record : ${vinHistory}" class="border-b hover:bg-gray-50">
-                                <td class="py-2 px-4" th:text="${record.vinNumber}">1HGCM82633A123456</td>
-                                <td class="py-2 px-4" th:text="${record.manufacturer}">Honda</td>
-                                <td class="py-2 px-4" th:text="${record.modelYear}">2003</td>
-                                <td class="py-2 px-4" th:text="${record.assemblyPlant}">A</td>
-                                <td class="py-2 px-4" th:text="${record.status}">Verified</td>
-                                <td class="py-2 px-4" th:text="${#temporals.format(record.checkedOn, 'dd-MM-yyyy HH:mm')}">01-04-2025 14:30</td>
+                                <!-- Simple property access -->
+                                <td class="py-2 px-4" th:text="${record['vinNumber']}">1HGCM82633A123456</td>
+                                <td class="py-2 px-4" th:text="${record['manufacturer']}">Honda</td>
+                                <td class="py-2 px-4" th:text="${record['modelYear']}">2003</td>
+                                <td class="py-2 px-4" th:text="${record['assemblyPlant']}">A</td>
+                                <td class="py-2 px-4">
+                                    <span th:with="status=${record['status']}">
+                                        <span th:if="${status == 'Error'}" class="text-red-600 font-semibold" th:text="${status}">Error</span>
+                                        <span th:if="${status == 'Invalid' || status == 'INVALID'}" class="text-orange-600 font-semibold" th:text="${status}">Invalid</span>
+                                        <span th:if="${status != 'Error' && status != 'Invalid' && status != 'INVALID'}" th:text="${status}">Verified</span>
+                                    </span>
+                                </td>
+                                <td class="py-2 px-4" th:text="${record['checkedAt']}">01-04-2025 14:30</td>
                             </tr>
                         </tbody>
                     </table>

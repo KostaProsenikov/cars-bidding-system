@@ -55,22 +55,27 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
     @OrderBy("createdOn DESC")
+    @Builder.Default
     private List<Subscription> subscriptions = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
     @OrderBy("createdOn ASC")
+    @Builder.Default
     private List<Wallet> wallets = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
     @OrderBy("createdOn DESC")
+    @Builder.Default
     private List<Advert> adverts = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bidder")
     @OrderBy("createdOn DESC")
+    @Builder.Default
     private List<Bid> bids = new ArrayList<>();
     
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     @OrderBy("checkedOn DESC")
+    @Builder.Default
     private List<VinHistory> vinHistory = new ArrayList<>();
 
 }

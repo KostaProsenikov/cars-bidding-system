@@ -8,6 +8,7 @@ import app.subscription.service.SubscriptionService;
 import app.transaction.model.Transaction;
 import app.user.model.User;
 import app.user.service.UserService;
+import app.wallet.service.WalletService;
 import app.web.dto.UpgradeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -23,11 +24,13 @@ public class SubscriptionsController {
 
     private final UserService userService;
     private final SubscriptionService subscriptionService;
+    private final WalletService walletService;
 
     @Autowired
-    public SubscriptionsController(UserService userService, SubscriptionService subscriptionService) {
+    public SubscriptionsController(UserService userService, SubscriptionService subscriptionService, WalletService walletService) {
         this.userService = userService;
         this.subscriptionService = subscriptionService;
+        this.walletService = walletService;
     }
 
     @GetMapping("")
@@ -36,6 +39,7 @@ public class SubscriptionsController {
         modelAndView.setViewName("subscriptions");
         User user = userService.getById(authenticationMetadata.getUserId());
         modelAndView.addObject("user", user);
+        modelAndView.addObject("currentUri", "/subscriptions");
         return modelAndView;
     }
 
@@ -48,7 +52,14 @@ public class SubscriptionsController {
             case 2 -> SubscriptionType.PROFESSIONAL;
             default -> SubscriptionType.DEFAULT;
         };
-        UUID walletId = user.getWallets().getFirst().getId();
+        UUID walletId;
+        if (user.getWallets() == null || user.getWallets().isEmpty()) {
+            // Create a wallet for the user if they don't have one
+            walletId = walletService.initializeFirstWallet(user).getId();
+            user = userService.getById(user.getId()); // Refresh user data
+        } else {
+            walletId = user.getWallets().get(0).getId();
+        }
         UpgradeRequest upgradeRequest = UpgradeRequest.builder()
                 .subscriptionPeriod(subscriptionPeriod)
                 .walletId(walletId)

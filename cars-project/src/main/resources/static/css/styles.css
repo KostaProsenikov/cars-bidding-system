@@ -7,6 +7,13 @@
     font-size: 20px;
 }
 
+/* Active menu item styling */
+.active-menu-item {
+    background-color: rgba(56, 161, 105, var(--bg-opacity, 1)) !important;
+    border-left: 4px solid #fff !important;
+    font-weight: bold !important;
+}
+
 .main-container {
     padding: 20px 0 20px 0;
     flex: 1;
@@ -440,6 +447,16 @@ nav[aria-label="Page navigation"] {
 
 .container {
     max-width: 95% !important;
+}
+
+/* Main content styling with responsive height */
+.main-content-panel {
+    border: 2px solid #4299e1;
+    border-radius: 0.5rem;
+    min-height: min(800px, calc(100vh - 250px));
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Ad info page specific styles */

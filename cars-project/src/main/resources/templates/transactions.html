@@ -11,9 +11,30 @@
   <th:block sec:authorize="isAuthenticated()"
             th:insert="~{fragments/side-menu :: side-menu(${user})}">
   </th:block>
-  <main class="flex-1 overflow-auto w-4/5 p-4" style="border: 2px solid #4299e1; border-radius: 0.5rem; ">
-    <div class="home-section">
+  <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
+    <!-- No transactions message -->
+    <div th:if="${transactions.empty}" class="flex flex-col items-center justify-center py-12">
+      <div class="bg-blue-50 border-l-4 border-blue-500 p-8 rounded-lg shadow-md text-center w-full max-w-2xl">
+        <h3 class="text-2xl font-bold text-blue-700 mb-3">You have no transactions yet</h3>
+        <p class="text-gray-600 mb-6">Add funds to your wallet to start bidding on vehicles or purchase subscriptions.</p>
+        <div class="flex flex-col space-y-4 sm:flex-row sm:space-y-0 sm:space-x-4 justify-center">
+          <a th:href="@{/users/my-profile}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow transition-colors">
+            Go to My Profile
+          </a>
+          <a th:href="@{/subscriptions}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg shadow transition-colors">
+            View Subscriptions
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Transactions table - only shown when there are transactions -->
+    <div th:if="${!transactions.empty}" class="home-section">
       <div class="single-section-box transactions-container">
+        <h2 class="font-bold mb-2">Your transaction history</h2>
+        <h3 class="font-semibold py-3">
+          Total transactions: <span th:text="${transactions.size()}">10</span>
+        </h3>
         <table class="styled-table">
           <!-- Table Header -->
           <thead>

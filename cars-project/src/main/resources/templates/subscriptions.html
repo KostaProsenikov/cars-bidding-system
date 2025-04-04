@@ -12,7 +12,7 @@
 <div class="main-container container margin-25 flex flex-row items-start gap-4">
     <th:block th:insert="~{fragments/side-menu :: side-menu(${user})}"></th:block>
     <!-- Subscription Section -->
-    <section class="w-4/5 flex-1">
+    <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
         <div class="container mx-auto px-4">
             <h1 class="text-3xl font-bold text-center mb-8 text-gray-700">Our Subscription Plans</h1>
 
@@ -20,7 +20,7 @@
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
 
                 <!-- Default (Free) Plan -->
-                <div class="bg-indigo-50 rounded-lg shadow p-6 flex flex-col text-center">
+                <div class="bg-indigo-50 rounded-lg shadow p-6 flex flex-col text-center" style="border: 2px solid #4299e1;">
                     <h2 class="text-xl font-bold mb-2 text-indigo-600">Default</h2>
                     <p class="text-3xl font-bold mb-4 text-gray-700">Free</p>
                     <ul class="text-gray-700 space-y-2 flex-1">
@@ -31,10 +31,10 @@
                         <li>No free VIN checks for the cars</li>
                         <li>Bid on 1 advert max</li>
                     </ul>
-                    <span class="mt-6 bg-indigo-500 text-white py-2 px-6 rounded hover:bg-indigo-600 transition-colors" th:if="${user.subscriptions.get(0).type.name() == 'DEFAULT'}">
+                    <span class="mt-6 bg-indigo-500 text-white py-2 px-6 rounded hover:bg-indigo-600 transition-colors" th:if="${!user.subscriptions.isEmpty() && user.subscriptions.get(0).type.name() == 'DEFAULT'}">
                         Your Current Plan
                     </span>
-                    <button th:if="${user.subscriptions.get(0).type.name() != 'DEFAULT'}"
+                    <button th:if="${user.subscriptions.isEmpty() || user.subscriptions.get(0).type.name() != 'DEFAULT'}"
                         class="mt-6 bg-indigo-500 text-white py-2 px-6 rounded hover:bg-indigo-600 transition-colors"
                     >
                         <span>
@@ -44,7 +44,7 @@
                 </div>
 
                 <!-- Plus ($30/month) Plan -->
-                <div class="bg-blue-50 rounded-lg shadow p-6 flex flex-col text-center">
+                <div class="bg-blue-50 rounded-lg shadow p-6 flex flex-col text-center" style="border: 2px solid #4299e1;">
                     <h2 class="text-xl font-bold mb-2 text-blue-600">Plus</h2>
                     <p class="text-3xl font-bold mb-4 text-gray-700">
                         Price: $ <span id="subscriptionPrice1">29.99</span>
@@ -57,10 +57,10 @@
                         <li>Bid on up to 5 adverts</li>
                     </ul>
                     <span class="mt-6 bg-indigo-500 text-white py-2 px-6 rounded hover:bg-indigo-600 transition-colors"
-                           th:if="${user.subscriptions.get(0).type.name() == 'PLUS'}">
+                           th:if="${!user.subscriptions.isEmpty() && user.subscriptions.get(0).type.name() == 'PLUS'}">
                         Your Current Plan
                     </span>
-                    <div th:if="${user.subscriptions.get(0).type.name() != 'PLUS' && user.subscriptions.get(0).type.name() != 'PROFESSIONAL'}">
+                    <div th:if="${user.subscriptions.isEmpty() || (user.subscriptions.get(0).type.name() != 'PLUS' && user.subscriptions.get(0).type.name() != 'PROFESSIONAL')}">
                         <form th:action="@{/subscriptions/change/1}" th:method="post">
                             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                             <input type="hidden" name="subscriptionType" value="PLUS"/>
@@ -72,7 +72,7 @@
                                 <select
                                         id="period1"
                                         name="period"
-                                        th:value="${user.subscriptions.get(0).period}"
+                                        th:value="${!user.subscriptions.isEmpty() ? user.subscriptions.get(0).period : 'MONTHLY'}"
                                         required
                                         autofocus
                                         class="block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none transition duration-300"
@@ -91,7 +91,7 @@
                 </div>
 
                 <!-- Professional ($50/month) Plan -->
-                <div class="bg-green-50 rounded-lg shadow p-6 flex flex-col text-center">
+                <div class="bg-green-50 rounded-lg shadow p-6 flex flex-col text-center" style="border: 2px solid #4299e1;">
                     <h2 class="text-xl font-bold mb-2 text-green-600">Professional</h2>
                     <p class="text-3xl font-bold mb-4 text-gray-700">
                         Price: $ <span id="subscriptionPrice2">49.99</span>
@@ -105,10 +105,10 @@
                         <li>See previous bidders & max bids</li>
                     </ul>
                     <span class="mt-6 bg-indigo-500 text-white py-2 px-6 rounded hover:bg-indigo-600 transition-colors"
-                          th:if="${user.subscriptions.get(0).type.name() == 'PROFESSIONAL'}">
+                          th:if="${!user.subscriptions.isEmpty() && user.subscriptions.get(0).type.name() == 'PROFESSIONAL'}">
                         Your Current Plan
                     </span>
-                    <div th:if="${user.subscriptions.get(0).type.name() != 'PROFESSIONAL'}">
+                    <div th:if="${user.subscriptions.isEmpty() || user.subscriptions.get(0).type.name() != 'PROFESSIONAL'}">
                         <form th:action="@{/subscriptions/change/2}" th:method="post">
                             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
                             <input type="hidden" name="subscriptionType" value="PROFESSIONAL"/>
@@ -120,7 +120,7 @@
                                 <select
                                         id="period2"
                                         name="period"
-                                        th:value="${user.subscriptions.get(0).period}"
+                                        th:value="${!user.subscriptions.isEmpty() ? user.subscriptions.get(0).period : 'MONTHLY'}"
                                         required
                                         autofocus
                                         class="block w-full rounded-lg border border-gray-300 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 focus:outline-none transition duration-300"
@@ -140,7 +140,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </main>
 </div>
 
 <script>

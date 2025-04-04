@@ -57,7 +57,10 @@ public class SubscriptionService {
     }
 
     public void reduceVinChecksWithOne(User user) {
-        Subscription subscription = user.getSubscriptions().getFirst();
+        if (user.getSubscriptions().isEmpty()) {
+            throw new DomainException("User has no active subscription");
+        }
+        Subscription subscription = user.getSubscriptions().get(0);
         int vinCheckLeft = subscription.getVinChecksLeft() - 1;
         subscription.setVinChecksLeft(vinCheckLeft);
         subscriptionRepository.save(subscription);
@@ -67,10 +70,15 @@ public class SubscriptionService {
     public Transaction upgrade(User user, SubscriptionType subscriptionType, UpgradeRequest upgradeRequest) {
 
         Optional<Subscription> optionalSubscription = subscriptionRepository.findByStatusAndOwnerId(SubscriptionStatus.ACTIVE, user.getId());
+        Subscription currentSubscription;
+        
         if (optionalSubscription.isEmpty()) {
-            throw new DomainException("No active subscription has been found for user [%s] with id [%s]!".formatted(user.getUsername(), user.getId()));
+            log.warn("No active subscription found for user [{}] with id [{}], creating a default one", user.getUsername(), user.getId());
+            currentSubscription = createDefaultSubscription(user);
+            user.getSubscriptions().add(currentSubscription);
+        } else {
+            currentSubscription = optionalSubscription.get();
         }
-        Subscription currentSubscription = optionalSubscription.get();
 
         SubscriptionPeriod subscriptionPeriod = upgradeRequest.getSubscriptionPeriod();
 

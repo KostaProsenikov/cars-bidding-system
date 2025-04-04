@@ -2,20 +2,40 @@ package app.svc_vin_check.web;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import app.svc_vin_check.dto.VinCheckRequest;
+import app.svc_vin_check.dto.VinCheckResponse;
+import app.svc_vin_check.model.VinCheck;
+import app.svc_vin_check.repository.VinCheckRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/vin-svc/api/v1")
 public class IndexController {
 
     private static final Pattern VIN_PATTERN = Pattern.compile("^[A-HJ-NPR-Z0-9]{17}$");
+    
+    @Autowired
+    private VinCheckRepository vinCheckRepository;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @GetMapping("/get-vin")
     public ResponseEntity<?> getVinInfo(@RequestParam String vin) {
@@ -42,6 +62,117 @@ public class IndexController {
         vinInfo.put("checked_at", LocalDateTime.now().toString());
 
         return ResponseEntity.ok(vinInfo);
+    }
+    
+    /**
+     * Create a new VIN check record
+     * 
+     * @param request The VIN check request containing VIN number and user ID
+     * @return Response with the created VIN check record
+     */
+    @PostMapping("/save-vin-check")
+    public ResponseEntity<VinCheckResponse> saveVinCheck(@Valid @RequestBody VinCheckRequest request) {
+        try {
+            // Get VIN information first
+            String vin = request.getVinNumber();
+            
+            // Basic VIN validation
+            boolean isValid = vin != null && VIN_PATTERN.matcher(vin).matches();
+            
+            // Default values for invalid VINs
+            String manufacturer = "Unknown";
+            String modelYear = "Unknown";
+            String assemblyPlant = "Unknown";
+            String status = "INVALID";
+            String resultJson = "{\"error\": \"Invalid VIN format\", \"status\": \"INVALID\"}";
+            
+            // If valid, get real VIN info
+            if (isValid) {
+                Map<String, Object> vinInfo = decodeVin(vin);
+                
+                // Check if manufacturer is known
+                if (!vinInfo.get("manufacturer").equals("Unknown manufacturer")) {
+                    manufacturer = (String) vinInfo.get("manufacturer");
+                    modelYear = (String) vinInfo.get("model_year");
+                    assemblyPlant = (String) vinInfo.get("assembly_plant_code");
+                    status = "VALID";
+                    
+                    // Convert the map to JSON string
+                    vinInfo.put("checked_at", LocalDateTime.now().toString());
+                    vinInfo.put("status", status);
+                    resultJson = objectMapper.writeValueAsString(vinInfo);
+                }
+            }
+            
+            // Create and save the VIN check record
+            VinCheck vinCheck = VinCheck.builder()
+                    .vinNumber(vin)
+                    .userId(request.getUserId())
+                    .checkedAt(LocalDateTime.now())
+                    .manufacturer(manufacturer)
+                    .modelYear(modelYear)
+                    .assemblyPlant(assemblyPlant)
+                    .status(status)
+                    .resultJson(resultJson)
+                    .build();
+            
+            VinCheck savedCheck = vinCheckRepository.save(vinCheck);
+            
+            // Map to response DTO
+            VinCheckResponse response = VinCheckResponse.builder()
+                    .id(savedCheck.getId())
+                    .vinNumber(savedCheck.getVinNumber())
+                    .userId(savedCheck.getUserId())
+                    .checkedAt(savedCheck.getCheckedAt())
+                    .manufacturer(savedCheck.getManufacturer())
+                    .modelYear(savedCheck.getModelYear())
+                    .assemblyPlant(savedCheck.getAssemblyPlant())
+                    .status(savedCheck.getStatus())
+                    .resultJson(savedCheck.getResultJson())
+                    .build();
+            
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    
+    /**
+     * Get the VIN check history for a user
+     * 
+     * @param userId The user ID
+     * @return List of VIN check records for the user
+     */
+    @GetMapping("/user-vin-history")
+    public ResponseEntity<List<VinCheck>> getUserVinHistory(@RequestParam UUID userId) {
+        List<VinCheck> vinChecks = vinCheckRepository.findByUserIdOrderByCheckedAtDesc(userId);
+        return ResponseEntity.ok(vinChecks);
+    }
+    
+    /**
+     * Check if a user has already checked a specific VIN number
+     * 
+     * @param vinNumber The VIN number to check
+     * @param userId The user ID
+     * @return True if the user has already checked this VIN number, false otherwise
+     */
+    @GetMapping("/has-checked-vin")
+    public ResponseEntity<Boolean> hasUserCheckedVin(@RequestParam String vinNumber, @RequestParam UUID userId) {
+        List<VinCheck> vinChecks = vinCheckRepository.findByUserIdAndVinNumber(userId, vinNumber);
+        boolean hasChecked = !vinChecks.isEmpty();
+        return ResponseEntity.ok(hasChecked);
+    }
+    
+    /**
+     * Get the VIN check history for a specific VIN number
+     * 
+     * @param vinNumber The VIN number
+     * @return List of VIN check records for the VIN number
+     */
+    @GetMapping("/vin-history")
+    public ResponseEntity<List<VinCheck>> getVinHistory(@RequestParam String vinNumber) {
+        List<VinCheck> vinChecks = vinCheckRepository.findByVinNumberOrderByCheckedAtDesc(vinNumber);
+        return ResponseEntity.ok(vinChecks);
     }
 
     private Map<String, Object> decodeVin(String vin) {
