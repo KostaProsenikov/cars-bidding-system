@@ -35,7 +35,8 @@ public class IndexController {
     }
 
     @GetMapping("")
-    public ModelAndView getIndexPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView getIndexPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata,
+                                   @RequestParam(required = false) String path) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("index");
         User user = new User();
@@ -45,6 +46,7 @@ public class IndexController {
         List<Advert> adverts = advertService.getFirst20VisibleAdverts();
         modelAndView.addObject("user", user);
         modelAndView.addObject("adverts", adverts);
+        modelAndView.addObject("currentUri", path != null ? path : "/");
         return modelAndView;
     }
 
@@ -53,6 +55,7 @@ public class IndexController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
         modelAndView.addObject("loginRequest", new LoginRequest());
+        modelAndView.addObject("currentUri", "/login");
 
         if (errorParam != null) {
             modelAndView.addObject("errorMessage", "Invalid username or password!");
@@ -66,6 +69,7 @@ public class IndexController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("register");
         modelAndView.addObject("registerRequest", new RegisterRequest());
+        modelAndView.addObject("currentUri", "/register");
         return modelAndView;
     }
 
@@ -87,6 +91,7 @@ public class IndexController {
             user = userService.getById(authenticationMetadata.getUserId());
         }
         modelAndView.addObject("user", user);
+        modelAndView.addObject("currentUri", "/" + viewName);
         return modelAndView;
     }
 

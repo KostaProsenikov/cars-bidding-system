@@ -1,14 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="">
 <head>
     <meta charset="UTF-8">
     <title>Side Menu</title>
 </head>
 <body>
 <aside th:fragment="side-menu(user)"
-       class="bg-gradient-to-br from-indigo-500 from-10% via-sky-500 via-30% to-emerald-500 to-90% text-white rounded-lg p-6 shadow-lg w-1/5">
+       class="text-white rounded-lg p-6 shadow-lg w-1/5" style="border: 2px solid #4299e1;">
+  <!-- Logo -->
+  <div class="flex justify-center mb-4">
+    <img src="/images/cars_bidding_logo_2.png" alt="logo" class="h-20 rounded-md" />
+  </div>
+  
   <!-- User Greeting -->
-  <h2 class="text-2xl font-bold mb-6" th:if="${user != null}">
+  <h2 class="text-2xl text-black font-bold mb-6" th:if="${user != null}">
     Welcome,
     <span th:text="${user?.firstName != null ? user.firstName : user.username}" class="font-light">User</span>
   </h2>
@@ -17,48 +22,75 @@
   <nav sec:authorize="isAuthenticated()">
     <ul class="space-y-3">
       <li>
-        <a th:href="@{/ads}"
-           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
+        <a th:href="@{/ads}" 
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors"
+           th:classappend="${#strings.equals(#vars.currentUri ?: '', '/ads') ? 'active-menu-item' : ''}">
           Show All Ads
         </a>
       </li>
       <li>
-        <a th:href="@{/ads/my-ads}"
-           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
+        <a th:href="@{/ads/my-ads}" 
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors"
+           th:classappend="${#strings.equals(#vars.currentUri ?: '', '/ads/my-ads') ? 'active-menu-item' : ''}">
           View My Ads
         </a>
       </li>
       <li>
-        <a th:href="@{/ads/new}" class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">Create Ad</a>
+        <a th:href="@{/ads/new}" 
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors"
+           th:classappend="${#strings.equals(#vars.currentUri ?: '', '/ads/new') ? 'active-menu-item' : ''}">
+          Create Ad
+        </a>
       </li>
       <li>
-        <a th:href="@{/subscriptions}"
-           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
+        <a th:href="@{/subscriptions}" 
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors"
+           th:classappend="${#strings.equals(#vars.currentUri ?: '', '/subscriptions') ? 'active-menu-item' : ''}">
           Subscriptions
         </a>
       </li>
       <li>
-        <a th:href="@{/transactions}"
-           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
+        <a th:href="@{/transactions}" 
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors"
+           th:classappend="${#strings.equals(#vars.currentUri ?: '', '/transactions') ? 'active-menu-item' : ''}">
           Transactions
         </a>
       </li>
       <li>
-        <a th:href="@{/ads/my-reservations}"
-           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
+        <a th:href="@{/transactions/top-up}" 
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors"
+           th:classappend="${#strings.equals(#vars.currentUri ?: '', '/transactions/top-up') ? 'active-menu-item' : ''}">
+          Top Up Wallet
+        </a>
+      </li>
+      <li>
+        <a th:href="@{/ads/my-reservations}" 
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors"
+           th:classappend="${#strings.equals(#vars.currentUri ?: '', '/ads/my-reservations') ? 'active-menu-item' : ''}">
           Reserved Cars
         </a>
       </li>
       <li>
-        <a th:href="@{/bids}"
-           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
+        <a th:href="@{/bids}" 
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors"
+           th:classappend="${#strings.equals(#vars.currentUri ?: '', '/bids') ? 'active-menu-item' : ''}">
           Bids
         </a>
       </li>
+      <li>
+        <a th:href="@{/users/vin-history}" 
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors"
+           th:classappend="${#strings.equals(#vars.currentUri ?: '', '/users/vin-history') ? 'active-menu-item' : ''}">
+          VIN History
+        </a>
+      </li>
+      <!-- Admin Section -->
       <li sec:authorize="hasRole('ADMIN')">
-        <a th:href="@{/admin}"
-           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors">
-          Admin Page
+        <h3 class="text-lg font-bold text-blue-800 mt-6 mb-3">Admin Panel</h3>
+        <a th:href="@{/users}" 
+           class="block py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 shadow-md transition-colors"
+           th:classappend="${#strings.equals(#vars.currentUri ?: '', '/users') ? 'active-menu-item' : ''}">
+          Manage Users
         </a>
       </li>
       <li>

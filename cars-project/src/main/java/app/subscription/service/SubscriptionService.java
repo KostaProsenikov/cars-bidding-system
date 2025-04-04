@@ -1,5 +1,13 @@
 package app.subscription.service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import app.exception.DomainException;
 import app.subscription.model.Subscription;
 import app.subscription.model.SubscriptionPeriod;
@@ -13,13 +21,6 @@ import app.wallet.service.WalletService;
 import app.web.dto.UpgradeRequest;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -47,6 +48,7 @@ public class SubscriptionService {
                 .status(SubscriptionStatus.ACTIVE)
                 .period(SubscriptionPeriod.MONTHLY)
                 .type(SubscriptionType.DEFAULT)
+                .vinChecksLeft(0)
                 .price(new BigDecimal("0.00"))
                 .renewalAllowed(true)
                 .createdOn(now)
@@ -54,14 +56,29 @@ public class SubscriptionService {
                 .build();
     }
 
+    public void reduceVinChecksWithOne(User user) {
+        if (user.getSubscriptions().isEmpty()) {
+            throw new DomainException("User has no active subscription");
+        }
+        Subscription subscription = user.getSubscriptions().get(0);
+        int vinCheckLeft = subscription.getVinChecksLeft() - 1;
+        subscription.setVinChecksLeft(vinCheckLeft);
+        subscriptionRepository.save(subscription);
+    }
+
     @Transactional
     public Transaction upgrade(User user, SubscriptionType subscriptionType, UpgradeRequest upgradeRequest) {
 
         Optional<Subscription> optionalSubscription = subscriptionRepository.findByStatusAndOwnerId(SubscriptionStatus.ACTIVE, user.getId());
+        Subscription currentSubscription;
+        
         if (optionalSubscription.isEmpty()) {
-            throw new DomainException("No active subscription has been found for user [%s] with id [%s]!".formatted(user.getUsername(), user.getId()));
+            log.warn("No active subscription found for user [{}] with id [{}], creating a default one", user.getUsername(), user.getId());
+            currentSubscription = createDefaultSubscription(user);
+            user.getSubscriptions().add(currentSubscription);
+        } else {
+            currentSubscription = optionalSubscription.get();
         }
-        Subscription currentSubscription = optionalSubscription.get();
 
         SubscriptionPeriod subscriptionPeriod = upgradeRequest.getSubscriptionPeriod();
 
@@ -77,13 +94,36 @@ public class SubscriptionService {
             return chargeResult;
         }
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime completedOn = LocalDateTime.now();
+        LocalDateTime completedOn;
         if (subscriptionPeriod == SubscriptionPeriod.MONTHLY) {
-            completedOn.plusMonths(1);
+            completedOn = now.plusMonths(1);
         } else if (subscriptionPeriod.equals(SubscriptionPeriod.YEARLY)) {
-            completedOn.plusYears(1);
-        }else {
-            completedOn.plusWeeks(1);
+            completedOn = now.plusYears(1);
+        } else {
+            completedOn = now.plusWeeks(1);
+        }
+
+        int vinChecksLeft = currentSubscription.getVinChecksLeft();
+
+        switch (subscriptionPeriod) {
+            case WEEKLY:
+                if (subscriptionType == SubscriptionType.PLUS) {
+                    vinChecksLeft = vinChecksLeft +  1;
+                } else if (subscriptionType == SubscriptionType.PROFESSIONAL) {
+                    vinChecksLeft = vinChecksLeft + 2;
+                }   break;
+            case MONTHLY:
+                if (subscriptionType == SubscriptionType.PLUS) {
+                    vinChecksLeft = vinChecksLeft + 4;
+                } else if (subscriptionType == SubscriptionType.PROFESSIONAL) {
+                    vinChecksLeft = vinChecksLeft + 8;
+                }   break;
+            default:
+                if (subscriptionType == SubscriptionType.PLUS) {
+                    vinChecksLeft = vinChecksLeft + (4 * 12);
+                } else if (subscriptionType == SubscriptionType.PROFESSIONAL) {
+                    vinChecksLeft = vinChecksLeft + (8 * 12);
+                }   break;
         }
 
         Subscription newSubscription = Subscription.builder()
@@ -92,6 +132,7 @@ public class SubscriptionService {
                 .period(subscriptionPeriod)
                 .type(subscriptionType)
                 .price(subscriptionPrice)
+                .vinChecksLeft(vinChecksLeft)
                 .renewalAllowed(subscriptionPeriod == SubscriptionPeriod.MONTHLY)
                 .createdOn(now)
                 .completedOn(completedOn)
@@ -144,5 +185,25 @@ public class SubscriptionService {
         subscription.setStatus(SubscriptionStatus.TERMINATED);
         subscription.setCompletedOn(LocalDateTime.now());
         subscriptionRepository.save(subscription);
+    }
+
+    public void renewSubscription(Subscription subscription) {
+        Subscription newSubscription = subscription;
+        newSubscription.setPeriod(subscription.getPeriod());
+        LocalDateTime now = LocalDateTime.now();
+        newSubscription.setCreatedOn(now);
+        newSubscription.setStatus(SubscriptionStatus.ACTIVE);
+        LocalDateTime completedOn;
+        if (subscription.getPeriod().name().equals(SubscriptionPeriod.WEEKLY.name())) {
+            completedOn = now.plusWeeks(1);
+        } else if (subscription.getPeriod().name().equals(SubscriptionPeriod.MONTHLY.name())) {
+            completedOn = now.plusMonths(1);
+        } else {
+            completedOn = now.plusYears(1);
+        }
+        newSubscription.setCompletedOn(completedOn);
+        subscriptionRepository.save(newSubscription);
+        System.out.printf("Subscription [%s] has been renewed for [%s].".formatted(subscription.getId(), subscription.getPeriod()));
+        this.markSubscriptionAsTerminated(subscription);
     }
 }

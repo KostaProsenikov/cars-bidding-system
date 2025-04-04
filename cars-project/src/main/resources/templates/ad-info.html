@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
 <body class="bg-gray-100">
 <!-- Header -->
@@ -8,45 +8,134 @@
 <!-- Main Section -->
 <th:block th:insert="~{fragments/greeting :: greeting('Find the best car deals')}"></th:block>
 
+<script>
+    // Function to close the VIN info modal
+    function closeVinModal() {
+        const modal = document.getElementById('vinInfoModal');
+        if (modal) {
+            modal.classList.remove('show');
+            // Remove the hash from URL when closing the modal
+            if (window.location.hash === '#vinInfo') {
+                history.replaceState(null, '', window.location.pathname);
+            }
+        }
+    }
+    
+    // Function to open the VIN info modal
+    function openVinModal() {
+        const modal = document.getElementById('vinInfoModal');
+        if (modal) {
+            modal.classList.add('show');
+        }
+    }
+    
+    // Close modal when clicking outside of the modal content
+    document.addEventListener('click', function(event) {
+        const modal = document.getElementById('vinInfoModal');
+        if (modal && event.target === modal) {
+            closeVinModal();
+        }
+    });
+    
+    // Close modal with ESC key
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            closeVinModal();
+        }
+    });
+    
+    // Show modal on page load when it contains VIN data
+    document.addEventListener('DOMContentLoaded', function() {
+        // Check if we have VIN information in the model
+        const hasVinInfo = document.getElementById('vinInfoContainer') && 
+                          (document.getElementById('vinInfoContainer').style.display === 'block' || 
+                           window.getComputedStyle(document.getElementById('vinInfoContainer')).display === 'block');
+                           
+        const hasVinError = document.getElementById('vinErrorMessage') && 
+                           (document.getElementById('vinErrorMessage').style.display === 'block' || 
+                            window.getComputedStyle(document.getElementById('vinErrorMessage')).display === 'block');
+        
+        // Check hash in URL
+        const hasVinHash = window.location.hash === '#vinInfo';
+        
+        // Show modal if any condition is true
+        if (hasVinInfo || hasVinError || hasVinHash) {
+            document.getElementById('vinInfoModal').classList.add('show');
+        }
+        
+        // Add click event listeners to all VIN check buttons
+        const vinCheckButtons = document.querySelectorAll('.vin-check-button');
+        vinCheckButtons.forEach(button => {
+            // Remove default form action with hash
+            const form = button.closest('form');
+            if (form) {
+                form.addEventListener('submit', function(e) {
+                    // Keep original URL for form submission but prevent default navigation
+                    const originalAction = this.action;
+                    // Show loading indicator
+                    document.getElementById('vinLoadingIndicator').style.display = 'flex';
+                    document.getElementById('vinInfoContainer').style.display = 'none';
+                    document.getElementById('vinErrorMessage').style.display = 'none';
+                    // Open modal with loading state
+                    openVinModal();
+                    // Submit the form with AJAX
+                    e.preventDefault();
+                    fetch(originalAction)
+                        .then(response => response.text())
+                        .then(html => {
+                            // Extract the VIN info from the response
+                            const parser = new DOMParser();
+                            const doc = parser.parseFromString(html, 'text/html');
+                            
+                            // Update the VIN modal content
+                            const vinInfoContainer = doc.getElementById('vinInfoContainer');
+                            const vinErrorMessage = doc.getElementById('vinErrorMessage');
+                            
+                            if (vinInfoContainer) {
+                                document.getElementById('vinInfoContainer').innerHTML = vinInfoContainer.innerHTML;
+                                document.getElementById('vinInfoContainer').style.display = 'block';
+                            }
+                            
+                            if (vinErrorMessage && vinErrorMessage.textContent.trim() !== '') {
+                                  document.getElementById('vinErrorMessage').textContent = vinErrorMessage.textContent;
+                                  document.getElementById('vinErrorMessage').style.display = 'block';
+                              } else {
+                                  document.getElementById('vinErrorMessage').style.display = 'none';
+                              }
+                            
+                            // Hide loading indicator
+                            document.getElementById('vinLoadingIndicator').style.display = 'none';
+                            
+                            // Show the modal
+                            openVinModal();
+                        })
+                        .catch(error => {
+                            console.error('Error fetching VIN info:', error);
+                            document.getElementById('vinErrorMessage').textContent = 'Error loading VIN information. Please try again.';
+                            document.getElementById('vinErrorMessage').style.display = 'block';
+                            document.getElementById('vinLoadingIndicator').style.display = 'none';
+                            openVinModal();
+                        });
+                });
+            }
+        });
+    });
+</script>
+
 <div class="main-container container margin-25 flex flex-row items-start gap-4">
     <th:block sec:authorize="isAuthenticated()"
               th:insert="~{fragments/side-menu :: side-menu(${user})}">
     </th:block>
 
-    <main class="flex-1 overflow-auto w-4/5">
+    <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
         <!-- Automobile Ads Section -->
-        <section class="bg-white rounded-lg p-6 shadow">
-            <h2 class="text-2xl font-bold text-center mb-6">Information About Advert: <span th:text="${advert.advertName}"></span></h2>
+        <section class="bg-white rounded-lg p-6 ad-info-section">
+            <h2 class="title">Information About Advert: <span th:text="${advert.advertName}"></span></h2>
 
             <div class="grid grid-cols-1 gap-6 w-full">
-                <!-- Example single card; repeats with Thymeleaf (th:each) -->
-                <div class=" antialiased bg-white shadow-lg rounded-lg p-6 flex flex-col justify-between w-full">
-
-                    <!-- Brand & Model -->
-                    <h4 class="antialiased font-semibold text-lg mb-4">
-                        Brand and Model:
-                        <span class="font-extrabold"
-                              th:text="${advert.getCarBrand().name() + ' ' + advert.getCarModel()}">
-                        </span>
-                    </h4>
-
-                    <h2 class="antialiased text-gray-800 text-lg mb-4 font-semibold">
-                        <span>Price:</span>
-                        <span th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">N/A</span>
-                    </h2>
-
-                    <h3 class="viewed-count antialiased text-gray-800 text-lg mb-4 font-semibold">Viewed: <span class="font-medium" th:text="${advert.viewCount}">1000</span> times.</h3>
-
-                    <h3 class="antialiased text-gray-800 text-sm mb-4 font-semibold">Created on:
-                        <span class="font-medium" th:text="${#temporals.format(advert.createdOn, 'dd.MM.YYYY HH:mm')}">20.03.2025 19:01
-                        </span>
-                    </h3>
-
-                    <h3 class="antialiased text-gray-800 text-sm mb-4 font-semibold">Last updated on:
-                        <span class="font-medium" th:text="${#temporals.format(advert.updatedOn, 'dd.MM.YYYY HH:mm')}">20.03.2025 19:01
-                        </span>
-                    </h3>
-
+                <div class="bg-white rounded-lg p-6 flex flex-col justify-between w-full">
+                    
+                    <!-- Edit button -->
                     <div class="edit-advert" th:if="${advert.owner == user}">
                         <a th:href="'/ads/' + ${advert.id} + '/edit'">
                             <button
@@ -62,11 +151,164 @@
                             alt="advert-picture"
                             th:src="${#strings.isEmpty(advert.imageURL) ?
                 'https://img.freepik.com/free-psd/realistic-car-illustration_23-2151227626.jpg' : advert.imageURL}"
-                            class="w-full h-[350px] object-cover mb-4 rounded-lg"
+                            class="ad-info-image"
                     />
 
-                    <div class="flex items-center justify-between" th:if="${advert.owner != user}">
-                        <!-- Action Buttons -->
+                    <!-- Key Information section -->
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Brand and Model:</div>
+                        <div class="ad-info-value font-bold" 
+                             th:text="${advert.getCarBrand().name() + ' ' + advert.getCarModel()}">
+                        </div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Price:</div>
+                        <div class="ad-info-value ad-info-price" 
+                             th:text="${advert.buyNowPrice != null ? '$' + advert.buyNowPrice : 'N/A'}">
+                        </div>
+                    </div>
+
+                    <div class="ad-info-detail flex items-center">
+                        <div class="ad-info-label">Car VIN Number:</div>
+                        <div class="ad-info-value" 
+                             th:text="${advert.vinNumber != null ? advert.vinNumber : 'N/A'}">
+                        </div>
+                        <div class="flex-1 flex items-left">
+                            <form th:action="@{'/ads/' + ${advert.id} + '/check-vin#vinInfo'}" method="get" style="display: inline-block; margin-right: 10px;">
+                                <button th:if="${advert.vinNumber != null && !#strings.isEmpty(advert.vinNumber) && user != null && !user.subscriptions.empty && user.subscriptions.get(0).vinChecksLeft > 0}"
+                                    type="submit"
+                                    class="vin-check-button">
+                                    Check VIN
+                                </button>
+                            </form>
+                        </div>
+                        <div class="flex-1 flex justify-end">
+                            <div th:if="${user != null && !user.subscriptions.empty}" 
+                                 class="px-3 py-1 bg-blue-100 border border-blue-300 rounded-full inline-flex items-center">
+                                <span class="text-sm font-medium text-blue-800">VIN Checks Left: </span>
+                                <span class="ml-2 px-3 py-0.5 bg-blue-500 text-white text-sm font-bold rounded-full" 
+                                      th:text="${user.subscriptions.get(0).vinChecksLeft}">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- VIN Info Modal -->
+                    <div id="vinInfo"></div>
+                    <div th:class="${vinInfo != null || vinCheckError != null ? 'vin-info-modal show' : 'vin-info-modal'}" id="vinInfoModal">
+                        <div class="vin-modal-content">
+                            <span class="vin-modal-close" onclick="closeVinModal()">×</span>
+                            <h3 class="vin-modal-title">VIN Verification Results</h3>
+                            
+                            <!-- Loading indicator (only shown before iframe loads) -->
+                            <div id="vinLoadingIndicator" class="vin-loading" th:style="${vinInfo == null && vinCheckError == null ? 'display: flex' : 'display: none'}">
+                                <div class="vin-spinner"></div>
+                                <p>Verifying VIN number...</p>
+                            </div>
+                            
+                            <!-- Error Message -->
+                            <div id="vinErrorMessage" class="vin-modal-error" th:style="${vinCheckError != null ? 'display: block' : 'display: none'}"
+                                 th:text="${vinCheckError}"></div>
+                            
+                            <!-- Success VIN Info -->
+                            <div id="vinInfoContainer" class="vin-info-container" th:style="${vinInfo != null ? 'display: block' : 'display: none'}">
+                                <div class="vin-info-item" th:if="${vinAlreadyChecked != null && vinAlreadyChecked == true}">
+                                    <div class="vin-info-notice">This VIN has been previously checked. No credits were used.</div>
+                                </div>
+                                
+                                <div class="vin-info-item" th:if="${vinCheckWarning != null}">
+                                    <div class="vin-info-warning" style="background-color: #fff3cd; color: #856404; padding: 8px; border-radius: 4px; margin-bottom: 10px;">
+                                        <strong>Warning:</strong> <span th:text="${vinCheckWarning}">Warning message</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="vin-info-item">
+                                    <div class="vin-info-label">VIN Number:</div>
+                                    <div id="vinNumberValue" class="vin-info-value" th:text="${advert != null ? advert.vinNumber : ''}"></div>
+                                </div>
+                                
+                                <div class="vin-info-item">
+                                    <div class="vin-info-label">Manufacturer:</div>
+                                    <div id="vinManufacturerValue" class="vin-info-value" th:text="${vinManufacturer != null ? vinManufacturer : 'N/A'}"></div>
+                                </div>
+                                
+                                <div class="vin-info-item">
+                                    <div class="vin-info-label">Model Year:</div>
+                                    <div id="vinModelYearValue" class="vin-info-value" th:text="${vinModelYear != null ? vinModelYear : 'N/A'}"></div>
+                                </div>
+                                
+                                <div class="vin-info-item">
+                                    <div class="vin-info-label">Assembly Plant:</div>
+                                    <div id="vinAssemblyPlantValue" class="vin-info-value" th:text="${vinAssemblyPlant != null ? vinAssemblyPlant : 'N/A'}"></div>
+                                </div>
+                                
+                                <div class="vin-info-item">
+                                    <div class="vin-info-label">Status:</div>
+                                    <div class="vin-info-value">
+                                        <span id="vinStatusValid" class="vin-info-status valid"
+                                              th:style="${vinStatus != null && vinStatus == 'VALID' ? 'display: inline-block' : 'display: none'}">Valid</span>
+                                        <span id="vinStatusInvalid" class="vin-info-status invalid"
+                                              th:style="${vinStatus == null || vinStatus != 'VALID' ? 'display: inline-block' : 'display: none'}">Invalid</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Views:</div>
+                        <div class="ad-info-value" th:text="${advert.viewCount + ' times'}"></div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Created on:</div>
+                        <div class="ad-info-value" 
+                             th:text="${#temporals.format(advert.createdOn, 'dd.MM.YYYY HH:mm')}">
+                        </div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Last updated on:</div>
+                        <div class="ad-info-value" 
+                             th:text="${#temporals.format(advert.updatedOn, 'dd.MM.YYYY HH:mm')}">
+                        </div>
+                    </div>
+
+
+                    <!-- Vehicle Details -->
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Manufacture Year:</div>
+                        <div class="ad-info-value" th:text="${advert.manufactureYear}"></div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Gearbox:</div>
+                        <div class="ad-info-value" th:text="${advert.gearboxType.name()}"></div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Fuel Type:</div>
+                        <div class="ad-info-value" th:text="${advert.fuelType.name()}"></div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Horse Power:</div>
+                        <div class="ad-info-value" th:text="${advert.horsePower}"></div>
+                    </div>
+
+                    <div class="ad-info-detail">
+                        <div class="ad-info-label">Mileage:</div>
+                        <div class="ad-info-value" th:text="${#strings.substring(advert.mileage, 0, #strings.length(advert.mileage)-3) + ' km'}"></div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="ad-info-description">
+                        <div class="ad-info-label">Description:</div>
+                        <div class="ad-info-value" th:text="${advert.description}"></div>
+                    </div>
+
+                    <!-- Action buttons -->
+                    <div class="ad-info-actions" th:if="${advert.owner != user}">
                         <!-- Buy Now Button -->
                         <form th:method="post" th:action="'/ads/' + ${advert.id} + '/reserve'">
                             <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
@@ -113,54 +355,18 @@
                         </div>
                     </div>
 
-                    <!-- Manufacture Year -->
-                    <h3 class="mb-4 antialiased py-4-top text-gray-800 text-base mb-4 font-semibold">
-                        <span>Manufacture Year:</span>
-                        <span class="font-normal" th:text="${advert.manufactureYear}">2022</span>
-                    </h3>
-
-                    <!-- Current Bid -->
-                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold" th:if="${advert.biddingOpen}">
-                        <span class="font-semibold antialiased">Current Bid:</span>
-                        <span th:text="${advert.currentBidPrice > 0 ? '€' + advert.currentBidPrice : advert.minBidPrice}"></span>
-                    </h3>
-
-                    <br />
-
-                    <!-- Description -->
-                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
-                        Description:
-                        <span class="font-normal" th:text="${advert.description}"></span>
-                    </h3>
-
-                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
-                        Gearbox:
-                        <span class="font-normal" th:text="${advert.gearboxType.name()}"></span>
-                    </h3>
-
-                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
-                        Fuel Type:
-                        <span class="font-normal" th:text="${advert.fuelType.name()}"></span>
-                    </h3>
-
-                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
-                        Horse Power:
-                        <span class="font-normal" th:text="${advert.horsePower}"></span>
-                    </h3>
-
-
-                    <h3 class="mb-4 antialiased text-gray-800 text-base mb-4 font-semibold">
-                        Mileage:
-                        <span class="font-normal" th:text="${#strings.substring(advert.mileage, 0, #strings.length(advert.mileage)-3) + ' km'}"></span>
-                    </h3>
-
-                    <!-- Details Section -->
-                    <div class="text-left text-sm text-gray-700 space-y-4">
-                        <!-- Buy Now Price with Action Buttons -->
-
+                    <!-- Current Bid Section -->
+                    <div class="ad-info-detail" th:if="${advert.biddingOpen && advert.currentBidPrice != null}">
+                        <div class="ad-info-label">Current Bid:</div>
+                        <div class="ad-info-value ad-info-price"
+                             th:text="${advert.currentBidPrice > 0 ? '€' + advert.currentBidPrice : '€' + advert.minBidPrice}">
+                        </div>
                     </div>
+
                 </div>
             </div>
         </section>
     </main>
 </div>
+</body>
+</html>

@@ -11,7 +11,7 @@
   <th:block sec:authorize="isAuthenticated()"
             th:insert="~{fragments/side-menu :: side-menu(${user})}">
   </th:block>
-    <main class="flex-1 overflow-hidden w-4/5">
+    <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
       <div class="transaction-container">
         <!-- Transaction ID -->
         <div class="transaction-id mb-4">

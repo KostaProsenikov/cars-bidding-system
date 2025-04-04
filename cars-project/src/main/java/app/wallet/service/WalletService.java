@@ -41,9 +41,12 @@ public class WalletService {
     }
 
     public void unlockNewWallet(User user) {
-
         List<Wallet> allUserWallets = walletRepository.findAllByOwnerUsername(user.getUsername());
-        Subscription activeSubscription = user.getSubscriptions().getFirst();
+        
+        if (user.getSubscriptions().isEmpty()) {
+            throw new DomainException("User has no active subscription");
+        }
+        Subscription activeSubscription = user.getSubscriptions().get(0);
 
         boolean isDefaultPlanAndMaxWalletsUnlocked = activeSubscription.getType() == SubscriptionType.DEFAULT && allUserWallets.size() == 1;
 

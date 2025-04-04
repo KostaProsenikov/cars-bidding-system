@@ -1,0 +1,176 @@
+package app.web;
+
+import app.security.AuthenticationMetadata;
+import app.user.model.User;
+import app.user.model.UserRole;
+import app.user.service.UserService;
+import app.vin.model.VinHistory;
+import app.vin.service.VinHistoryService;
+import app.web.dto.UserEditRequest;
+import app.web.mapper.DtoMapper;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.servlet.ModelAndView;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class UserControllerTest {
+
+    @Mock
+    private UserService userService;
+
+    @Mock
+    private VinHistoryService vinHistoryService;
+
+    @Mock
+    private AuthenticationMetadata authenticationMetadata;
+
+    @Mock
+    private BindingResult bindingResult;
+
+    @InjectMocks
+    private UserController userController;
+
+    private User testUser;
+    private UUID userId;
+    private List<VinHistory> vinHistoryList;
+    private UserEditRequest userEditRequest;
+
+    @BeforeEach
+    void setUp() {
+        userId = UUID.randomUUID();
+        testUser = User.builder()
+                .id(userId)
+                .username("testuser")
+                .firstName("Test")
+                .lastName("User")
+                .email("test@example.com")
+                .role(UserRole.USER)
+                .password("password")
+                .isActive(true)
+                .createdOn(LocalDateTime.now())
+                .updatedOn(LocalDateTime.now())
+                .build();
+
+        vinHistoryList = new ArrayList<>();
+        VinHistory vinHistory = VinHistory.builder()
+                .id(UUID.randomUUID())
+                .user(testUser)
+                .vinNumber("WBAWL73589P473158")
+                .checkedOn(LocalDateTime.now())
+                .resultJson("{\"status\":\"VALID\"}")
+                .manufacturer("BMW")
+                .modelYear("2009")
+                .assemblyPlant("P")
+                .status("VALID")
+                .build();
+        vinHistoryList.add(vinHistory);
+
+        userEditRequest = new UserEditRequest();
+        userEditRequest.setFirstName("Test");
+        userEditRequest.setLastName("User");
+        userEditRequest.setEmail("test@example.com");
+    }
+
+    @Test
+    @DisplayName("Should get profile page")
+    void shouldGetProfilePage() {
+        // Arrange
+        when(authenticationMetadata.getUserId()).thenReturn(userId);
+        when(userService.getById(userId)).thenReturn(testUser);
+        when(vinHistoryService.getUserVinHistory(userId)).thenReturn(vinHistoryList);
+        
+        try (MockedStatic<DtoMapper> mockedStatic = mockStatic(DtoMapper.class)) {
+            mockedStatic.when(() -> DtoMapper.mapUserToUserEditRequest(testUser))
+                    .thenReturn(userEditRequest);
+            
+            // Act
+            ModelAndView result = userController.getProfilePage(authenticationMetadata, new UserEditRequest());
+            
+            // Assert
+            assertNotNull(result);
+            assertEquals("my-profile", result.getViewName());
+            assertEquals(testUser, result.getModel().get("user"));
+            assertEquals(userEditRequest, result.getModel().get("userEditRequest"));
+            assertEquals(vinHistoryList, result.getModel().get("vinHistory"));
+            
+            verify(userService).getById(userId);
+            verify(vinHistoryService).getUserVinHistory(userId);
+        }
+    }
+
+    @Test
+    @DisplayName("Should get VIN history page")
+    void shouldGetVinHistoryPage() {
+        // Arrange
+        when(authenticationMetadata.getUserId()).thenReturn(userId);
+        when(userService.getById(userId)).thenReturn(testUser);
+        when(vinHistoryService.getUserVinHistory(userId)).thenReturn(vinHistoryList);
+        
+        // Act
+        ModelAndView result = userController.getVinHistoryPage(authenticationMetadata);
+        
+        // Assert
+        assertNotNull(result);
+        assertEquals("vin-history", result.getViewName());
+        assertEquals(testUser, result.getModel().get("user"));
+        assertEquals(vinHistoryList, result.getModel().get("vinHistory"));
+        
+        verify(userService).getById(userId);
+        verify(vinHistoryService).getUserVinHistory(userId);
+    }
+
+    @Test
+    @DisplayName("Should update user profile when validation passes")
+    void shouldUpdateUserProfileWhenValidationPasses() {
+        // Arrange
+        when(bindingResult.hasErrors()).thenReturn(false);
+        when(authenticationMetadata.getUserId()).thenReturn(userId);
+        
+        // Act
+        ModelAndView result = userController.getProfilePage(authenticationMetadata, userEditRequest, bindingResult);
+        
+        // Assert
+        assertNotNull(result);
+        assertEquals("redirect:/users/my-profile", result.getViewName());
+        
+        verify(userService).updateUserDetails(userId, userEditRequest);
+    }
+
+    @Test
+    @DisplayName("Should return to profile page with errors when validation fails")
+    void shouldReturnToProfilePageWithErrorsWhenValidationFails() {
+        // Arrange
+        when(bindingResult.hasErrors()).thenReturn(true);
+        when(authenticationMetadata.getUserId()).thenReturn(userId);
+        when(userService.getById(userId)).thenReturn(testUser);
+        
+        // Act
+        ModelAndView result = userController.getProfilePage(authenticationMetadata, userEditRequest, bindingResult);
+        
+        // Assert
+        assertNotNull(result);
+        assertEquals("my-profile", result.getViewName());
+        assertEquals(testUser, result.getModel().get("user"));
+        assertEquals(userEditRequest, result.getModel().get("userEditRequest"));
+        
+        verify(userService).getById(userId);
+        verify(userService, never()).updateUserDetails(any(), any());
+    }
+}

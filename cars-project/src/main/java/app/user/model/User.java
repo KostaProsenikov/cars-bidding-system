@@ -3,6 +3,7 @@ package app.user.model;
 import app.advert.model.Advert;
 import app.bid.model.Bid;
 import app.subscription.model.Subscription;
+import app.vin.model.VinHistory;
 import app.wallet.model.Wallet;
 import jakarta.persistence.*;
 import lombok.*;
@@ -54,18 +55,27 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
     @OrderBy("createdOn DESC")
+    @Builder.Default
     private List<Subscription> subscriptions = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
     @OrderBy("createdOn ASC")
+    @Builder.Default
     private List<Wallet> wallets = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "owner")
     @OrderBy("createdOn DESC")
+    @Builder.Default
     private List<Advert> adverts = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "bidder")
     @OrderBy("createdOn DESC")
+    @Builder.Default
     private List<Bid> bids = new ArrayList<>();
+    
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @OrderBy("checkedOn DESC")
+    @Builder.Default
+    private List<VinHistory> vinHistory = new ArrayList<>();
 
 }
