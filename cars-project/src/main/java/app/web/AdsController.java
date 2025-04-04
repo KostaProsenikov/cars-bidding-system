@@ -8,7 +8,6 @@ import app.subscription.service.SubscriptionService;
 import app.user.model.User;
 import app.user.service.UserService;
 import app.vin.client.VinClient;
-import app.vin.model.VinHistory;
 import app.vin.service.VinHistoryService;
 import app.web.dto.CreateNewAdvertRequest;
 import app.web.mapper.DtoMapper;
@@ -23,7 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -207,29 +205,25 @@ public class AdsController {
         advertService.reserveCarAdvert(id, user);
         return new ModelAndView("redirect:/ads");
     }
-    
+
     @GetMapping("/{id}/check-vin")
     public ModelAndView checkVin(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         Advert advert = advertService.getAdvertById(id);
         User user = userService.getById(authenticationMetadata.getUserId());
         ModelAndView modelAndView = new ModelAndView("ad-info");
-        
+
         // Check if VIN exists
         if (advert.getVinNumber() != null && !advert.getVinNumber().isEmpty()) {
-            // First check if user has already checked this VIN
             boolean alreadyChecked = vinClient.hasUserCheckedVin(advert.getVinNumber(), user.getId());
-            
+
             if (alreadyChecked) {
-                // User already checked this VIN, show the information without deducting VIN checks
                 System.out.println("User already checked this VIN: " + advert.getVinNumber());
                 modelAndView.addObject("vinAlreadyChecked", true);
-                
-                // Get VIN information from microservice again
+
                 ResponseEntity<String> vinResponse = vinClient.getVINInformation(advert.getVinNumber());
                 String responseBody = vinResponse.getBody();
                 modelAndView.addObject("vinInfo", responseBody);
-                
-                // Set view attributes for display
+
                 if (responseBody != null && responseBody.contains("manufacturer")) {
                     modelAndView.addObject("vinManufacturer", extractJsonValue(responseBody, "manufacturer"));
                     modelAndView.addObject("vinModelYear", extractJsonValue(responseBody, "model_year"));
@@ -238,44 +232,36 @@ public class AdsController {
                     modelAndView.addObject("vinCheckSuccess", true);
                 }
             }
-            // Check if user has sufficient VIN checks for new checks
             else if (!user.getSubscriptions().isEmpty() && user.getSubscriptions().get(0).getVinChecksLeft() > 0) {
                 try {
                     // Reduce user vin checks count - only for new checks
                     subscriptionService.reduceVinChecksWithOne(user);
-                    
+
+                    user = userService.getById(authenticationMetadata.getUserId());
                     // First get basic VIN information from microservice
                     ResponseEntity<String> vinResponse = vinClient.getVINInformation(advert.getVinNumber());
                     String responseBody = vinResponse.getBody();
-                    
+
                     // Store the raw response for debugging
                     modelAndView.addObject("vinInfo", responseBody);
-                    
+
                     // Default values for invalid/error cases
                     String manufacturer = "Unknown";
                     String modelYear = "Unknown";
                     String assemblyPlant = "Unknown";
                     String status = "Invalid";
                     boolean isValid = false;
-                    
+
                     // Extract information from the JSON response for the view
                     if (responseBody != null && responseBody.contains("manufacturer")) {
-                        // Extract manufacturer
                         manufacturer = extractJsonValue(responseBody, "manufacturer");
                         modelAndView.addObject("vinManufacturer", manufacturer);
-                        
-                        // Extract model year
                         modelYear = extractJsonValue(responseBody, "model_year");
                         modelAndView.addObject("vinModelYear", modelYear);
-                        
-                        // Extract assembly plant
                         assemblyPlant = extractJsonValue(responseBody, "assembly_plant_code");
                         modelAndView.addObject("vinAssemblyPlant", assemblyPlant);
-                        
-                        // Extract status
                         status = extractJsonValue(responseBody, "status");
                         modelAndView.addObject("vinStatus", status);
-                        
                         isValid = true;
                     } else {
                         // Set view attributes for invalid VIN
@@ -284,7 +270,7 @@ public class AdsController {
                         modelAndView.addObject("vinAssemblyPlant", assemblyPlant);
                         modelAndView.addObject("vinStatus", status);
                     }
-                    
+
                     // Save the VIN check using the microservice's POST endpoint
                     try {
                         System.out.println("Before calling VIN microservice save for: " + advert.getVinNumber());
@@ -297,7 +283,7 @@ public class AdsController {
                         ex.printStackTrace();
                         System.out.println("VIN check not saved due to microservice error");
                     }
-                    
+
                     modelAndView.addObject("vinCheckSuccess", isValid);
                     if (!isValid) {
                         modelAndView.addObject("vinCheckWarning", "The VIN appears to be invalid or could not be verified. The check has been recorded in your history.");
@@ -309,22 +295,19 @@ public class AdsController {
                     } catch (Exception ex) {
                         // If microservice completely fails, fall back to local save
                         vinHistoryService.saveVinCheck(
-                            user, 
-                            advert.getVinNumber(), 
-                            "Error: " + e.getMessage(), 
-                            "Error", 
-                            "Error", 
-                            "Error", 
+                            user,
+                            advert.getVinNumber(),
+                            "Error: " + e.getMessage(),
+                            "Error",
+                            "Error",
+                            "Error",
                             "Error"
                         );
                     }
-                    
+
+                    modelAndView.addObject("user", user);
                     modelAndView.addObject("vinCheckError", "Could not verify VIN: " + e.getMessage());
                 }
-            } 
-            else if (alreadyChecked) {
-                // This case shouldn't happen since we're checking earlier, but just in case
-                modelAndView.addObject("vinAlreadyChecked", true);
             }
             else {
                 modelAndView.addObject("vinCheckError", "Not enough VIN checks left. Please upgrade your subscription.");
@@ -332,13 +315,13 @@ public class AdsController {
         } else {
             modelAndView.addObject("vinCheckError", "No VIN number available for this vehicle");
         }
-        
+
         modelAndView.addObject("advert", advert);
         modelAndView.addObject("user", user);
-        
+
         return modelAndView;
     }
-    
+
     private String extractJsonValue(String json, String key) {
         // Simple JSON value extractor
         String searchKey = "\"" + key + "\":";

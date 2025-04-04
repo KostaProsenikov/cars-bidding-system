@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.w3.org/1999/xhtml">
+<html lang="en" xmlns:sec="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
 <body class="bg-gray-100">
 <!-- Header -->
@@ -29,7 +29,7 @@
         }
     }
     
-    // Close modal when clicking outside of the modal content
+    // Close modal when clicking outside the modal content
     document.addEventListener('click', function(event) {
         const modal = document.getElementById('vinInfoModal');
         if (modal && event.target === modal) {
@@ -86,26 +86,42 @@
                             // Extract the VIN info from the response
                             const parser = new DOMParser();
                             const doc = parser.parseFromString(html, 'text/html');
-                            
+
                             // Update the VIN modal content
                             const vinInfoContainer = doc.getElementById('vinInfoContainer');
                             const vinErrorMessage = doc.getElementById('vinErrorMessage');
-                            
+                            const vinAlreadyChecked = doc.querySelector('.vin-info-notice');
+
                             if (vinInfoContainer) {
                                 document.getElementById('vinInfoContainer').innerHTML = vinInfoContainer.innerHTML;
                                 document.getElementById('vinInfoContainer').style.display = 'block';
                             }
-                            
+
                             if (vinErrorMessage && vinErrorMessage.textContent.trim() !== '') {
-                                  document.getElementById('vinErrorMessage').textContent = vinErrorMessage.textContent;
-                                  document.getElementById('vinErrorMessage').style.display = 'block';
-                              } else {
-                                  document.getElementById('vinErrorMessage').style.display = 'none';
-                              }
-                            
+                                document.getElementById('vinErrorMessage').textContent = vinErrorMessage.textContent;
+                                document.getElementById('vinErrorMessage').style.display = 'block';
+                            } else {
+                                document.getElementById('vinErrorMessage').style.display = 'none';
+                            }
+
+                            if (!vinAlreadyChecked) {
+                                const vinChecksElements = document.querySelectorAll('#vin-checks');
+                                const newVinChecksCount = doc.querySelector('#vin-checks');
+
+                                if (vinChecksElements.length > 0) {
+                                    const newCount = Number(vinChecksElements?.[0]?.textContent - 1).toString();
+                                    if (newVinChecksCount) {
+                                        // Update all instances of the VIN checks counter on the page
+                                        vinChecksElements.forEach(element => {
+                                            element.textContent = element.textContent = newCount;
+                                        });
+                                    }
+                                }
+                            }
+
                             // Hide loading indicator
                             document.getElementById('vinLoadingIndicator').style.display = 'none';
-                            
+
                             // Show the modal
                             openVinModal();
                         })
@@ -116,6 +132,7 @@
                             document.getElementById('vinLoadingIndicator').style.display = 'none';
                             openVinModal();
                         });
+
                 });
             }
         });
@@ -176,7 +193,7 @@
                         </div>
                         <div class="flex-1 flex items-left">
                             <form th:action="@{'/ads/' + ${advert.id} + '/check-vin#vinInfo'}" method="get" style="display: inline-block; margin-right: 10px;">
-                                <button th:if="${advert.vinNumber != null && !#strings.isEmpty(advert.vinNumber) && user != null && !user.subscriptions.empty && user.subscriptions.get(0).vinChecksLeft > 0}"
+                                <button th:if="${advert.vinNumber != null && !#strings.isEmpty(advert.vinNumber) && user != null && !user.subscriptions.isEmpty() && user.subscriptions[0].vinChecksLeft > 0}"
                                     type="submit"
                                     class="vin-check-button">
                                     Check VIN
@@ -184,10 +201,10 @@
                             </form>
                         </div>
                         <div class="flex-1 flex justify-end">
-                            <div th:if="${user != null && !user.subscriptions.empty}" 
+                            <div th:if="${user != null && !user.subscriptions.isEmpty()}"
                                  class="px-3 py-1 bg-blue-100 border border-blue-300 rounded-full inline-flex items-center">
                                 <span class="text-sm font-medium text-blue-800">VIN Checks Left: </span>
-                                <span class="ml-2 px-3 py-0.5 bg-blue-500 text-white text-sm font-bold rounded-full" 
+                                <span id="vin-checks" class="ml-2 px-3 py-0.5 bg-blue-500 text-white text-sm font-bold rounded-full"
                                       th:text="${user.subscriptions.get(0).vinChecksLeft}">0</span>
                             </div>
                         </div>
