@@ -1,102 +1,174 @@
-# **Cars Bidding Application**
-Welcome to the **Cars Bidding Application**, a modern platform for car enthusiasts, buyers, and sellers to engage in transparent car buying and selling through dynamic bidding. This application provides users with features like managing car advertisements, placing bids, monitoring subscriptions, and reviewing transaction histories.
-## **Features**
-### For General Users:
-- **Browse Cars**: View a wide range of listed cars with detailed descriptions, images, and specifications.
-- **Car Search**: Search for cars based on brand, model, manufacture year, and price range.
-- **Bidding**: Participate in active car auctions and place competitive bids for your dream car.
+# Cars Bidding Application
 
-### For Advertisers:
-- **List Adverts**: Create, update, and manage car listings with photos and detailed information.
-- **Auto-Extend Options**: Automatically extend your advert duration for maximum visibility.
-- **Buy Now Options**: Allow buyers to purchase your car instantly with a predefined price.
+## Overview
 
-### Additional Functionalities:
-- **Dynamic Pricing**: Adjust car advert durations and manage flexible pricing plans (default, plus, professional).
-- **Subscriptions**: Upgrade your subscription plan for increased advert limits and enhanced features.
-- **Transaction Management**: View all past transactions, including successful and failed payments.
-- **VIN Checks**: Access free VIN (Vehicle Identification Number) checks, depending on your subscription level.
+The **Cars Bidding Application** is a comprehensive platform designed for automotive enthusiasts, buyers, and sellers to engage in a transparent, secure, and efficient car marketplace. With powerful features like real-time bidding, VIN verification, comprehensive car listings, and flexible subscription plans, this application streamlines the entire car buying and selling experience.
 
-## **Tech Stack**
-The Cars Bidding Application is built using modern technologies to ensure performance, security, and rapid scalability.
-### Backend:
-- **Java 22**: Main programming language.
-- **Spring Boot**: For building a robust and modular backend application.
-- **Spring Security**: To support user authentication and role-based authorization.
-- **Spring Data JPA**: Database ORM for interacting with PostgreSQL or another relational database.
+![Cars Bidding Application](https://img.shields.io/badge/Status-Production-green)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-Latest-brightgreen)
 
-### Frontend:
-- **Thymeleaf**: Server-side rendering for dynamic HTML templates.
-- **TailwindCSS**: For consistent and responsive UI styling.
-- **JavaScript**: Enhancing user interactivity with dynamic behaviors.
+## Key Features
 
-### Database:
-- **PostgreSQL**: Stores user data, advertisements, transactions, bidding information, and subscriptions.
+### For Buyers
+- **Advanced Car Search & Browsing**: Find vehicles based on brand, model, year, price range, and more
+- **Bidding System**: Place competitive bids on vehicles with real-time updates
+- **Buy Now Option**: Purchase vehicles instantly at a fixed price
+- **VIN Verification**: Check vehicle identification numbers for authenticity and history
+- **Saved Searches**: Save favorite searches for quick access
+- **Watchlist**: Monitor specific vehicles of interest
 
-### Others:
-- **Maven**: Dependency management and project building.
-- **HTML5 & CSS3**: For responsive, visually appealing frontend design.
-- **JUnit**: For maintaining high test coverage and ensuring reliable code performance.
+### For Sellers
+- **Comprehensive Ad Management**: Create, edit, and monitor vehicle listings with detailed specifications
+- **Media Support**: Upload high-quality images to showcase vehicles
+- **Bid Management**: Track and respond to bids from potential buyers
+- **Analytics Dashboard**: View insights about listing performance and buyer interest
+- **Flexible Pricing Options**: Set Buy Now prices or enable auction-style bidding
+- **Auto-Extend Listings**: Configure ads to automatically extend when receiving bids near closing time
 
-## **Installation and Setup**
-To get started with the Cars Bidding Application, follow these steps:
+### Account Management
+- **Subscription Plans**: Choose from various subscription tiers with different benefits
+- **Transaction History**: View complete record of all past transactions
+- **Wallet System**: Secure payment processing for bids and purchases
+- **Profile Management**: Update personal information and preferences
+- **Notification System**: Receive alerts for bid updates, auction ends, and more
+
+## Technology Stack
+
+### Backend
+- **Java 21**
+- **Spring Boot**: Modern framework for building production-ready applications
+- **Spring Security**: Comprehensive security for authentication and authorization
+- **Spring Data JPA**: Simplified data access layer with Hibernate
+- **Spring MVC**: Web application development with Model-View-Controller pattern
+
+### Frontend
+- **Thymeleaf**: Modern server-side Java template engine
+- **TailwindCSS**: Utility-first CSS framework for rapid UI development
+- **JavaScript**: Enhanced client-side functionality
+- **Responsive Design**: Optimized for all device types (desktop, tablet, mobile)
+
+### Database & Storage
+- **MySQL**: Reliable relational database for structured data storage
+- **Redis**: Caching for improved performance (optional implementation)
+
+### Integration & Services
+- **RESTful APIs**: Clean API design for service integration
+- **VIN Verification Service**: External integration for vehicle history checks
+- **Payment Processing**: Secure transaction handling
+
+## Getting Started
 
 ### Prerequisites
-Ensure the following tools are installed on your system:
-- Java Development Kit (JDK) 22+
+- Java Development Kit (JDK) 21+
 - Maven 3.8+
-- Docker (optional, for containerized deployment)
+- MySQL 8+
+- Modern web browser
 
-1. Access the application:
-    - Open your browser and navigate to `http://localhost:8081`.
+### Installation
 
-## **Usage**
+1. **Clone the repository**
+```shell script
+git clone https://github.com/your-organization/cars-bidding-application.git
+   cd cars-bidding-application
+```
 
-### User Roles
 
-- **Guest**: Can view car advertisements, but cannot participate in bidding or create adverts.
-- **Registered User**: Can bid on cars, view transaction history, and create limited car advertisements.
-- **Premium User**: Access additional features like "Auto-Extend Ads", premium bidding, VIN check for Automobiles.
+2. **Configure database**
+   - Create a PostgreSQL database named `cars_bidding`
+   - Update `application.properties` with your database credentials
 
-### Key Pages
+3. **Build the application**
+```shell script
+mvn clean install
+```
 
-- **Home Page**: Displays all active auctions with filters to narrow the search.
-- **My Ads**: Manage personal adverts and their statuses.
-- **Subscriptions**: Upgrade or downgrade your subscription plans.
-- **Transactions**: Review past transaction details.
-- **Bidding Page**: Participate in live car bidding or buy cars directly with the "Buy Now" feature.
 
-## **API Endpoints**
+4. **Run the application**
+```shell script
+mvn spring-boot:run
+```
 
-Here are some key API endpoints for developers:
 
-### Authentication
-- `POST /auth/login`: Authenticate a user.
-- `POST /auth/register`: Register a new user.
+5. **Access the application**
+   - Open your browser and navigate to `http://localhost:8081`
 
-### Ads
-- `GET /ads`: Fetch all advertisements.
-- `POST /ads`: Create a new car advert.
-- `PUT /ads/{id}`: Update an existing advert.
-- `DELETE /ads/{id}`: Remove a car advert.
+## User Roles and Permissions
 
-### Bidding
-- `GET /bids/{advertId}`: Get bids for a specific car advertisement.
-- `POST /bids`: Place a new bid on an advert.
+| Feature | Guest | Basic User | Premium User | Admin |
+|---------|-------|------------|--------------|-------|
+| View Listings | ✅ | ✅ | ✅ | ✅ |
+| Create Listings | ❌ | ✅ (limited) | ✅ (unlimited) | ✅ |
+| Place Bids | ❌ | ✅ | ✅ | ✅ |
+| VIN Checks | ❌ | ✅ (limited) | ✅ (unlimited) | ✅ |
+| Auto-Extend | ❌ | ❌ | ✅ | ✅ |
+| Analytics | ❌ | ❌ | ✅ | ✅ |
+| User Management | ❌ | ❌ | ❌ | ✅ |
 
-### Transactions
-- `GET /transactions`: Fetch all user transactions.
+## Subscription Plans
 
-### Subscriptions
-- `POST /subscriptions/change/{type}`: Change subscription type.
+| Feature | Free | Standard | Premium |
+|---------|------|----------|---------|
+| Monthly Price | $0 | $9.99 | $19.99 |
+| Active Listings | 2 | 10 | Unlimited |
+| Featured Listings | 0 | 2 | 5 |
+| VIN Checks/Month | 5 | 20 | 50 |
+| Auto-Extend | ❌ | ✅ | ✅ |
+| Advanced Analytics | ❌ | ❌ | ✅ |
 
-## **License**
+## API Documentation
 
-This project is licensed under the **MIT License**. For more details, see the `LICENSE` file.
+The application provides a comprehensive RESTful API for developers and integrators:
 
-## **Contact**
+- **Authentication**: `/api/auth/*` - Login, registration, and token management
+- **Listings**: `/api/ads/*` - CRUD operations for vehicle advertisements
+- **Bidding**: `/api/bids/*` - Bid placement and management
+- **User**: `/api/users/*` - User profile and preference management
+- **Subscriptions**: `/api/subscriptions/*` - Subscription handling
 
-- **Author**: Kostadin Prosenikov
-- **Profile**: https://github.com/KostaProsenikov
+For detailed API documentation, access the Swagger UI at `/swagger-ui.html` when running the application.
 
-Let us know if you have questions or need support!
+## Project Structure
+
+```
+src/
+├── main/
+│   ├── java/app/
+│   │   ├── ad/           # Advertisement management
+│   │   ├── auth/         # Authentication and security
+│   │   ├── bid/          # Bidding functionality
+│   │   ├── config/       # Application configuration
+│   │   ├── subscription/ # Subscription plans
+│   │   ├── transaction/  # Payment processing
+│   │   ├── user/         # User management
+│   │   ├── utils/        # Utility classes
+│   │   ├── vin/          # VIN verification
+│   │   └── wallet/       # User wallet system
+│   └── resources/
+│       ├── static/       # Static resources (CSS, JS)
+│       ├── templates/    # Thymeleaf templates
+│       └── application.properties
+└── test/                 # Test cases
+```
+
+
+## Contributing
+
+We welcome contributions to the Cars Bidding Application! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
+
+## Support
+
+For support, please contact our team at support@carsbidding.example.com or open an issue in the GitHub repository.
+
+---
+
+© 2025 Cars Bidding Application. All rights reserved.
