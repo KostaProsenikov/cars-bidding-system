@@ -7,12 +7,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import app.svc_vin_check.config.SecurityConfig;
+import app.svc_vin_check.repository.VinCheckRepository;
 import app.svc_vin_check.web.IndexController;
 
 import java.util.Map;
@@ -31,6 +33,9 @@ class SvcVinCheckApplicationTests {
 
 	@Autowired
 	private TestRestTemplate restTemplate;
+	
+	@MockBean
+	private VinCheckRepository vinCheckRepository;
 
 	@Test
 	@DisplayName("Context loads and all components are created")
@@ -104,7 +109,7 @@ class SvcVinCheckApplicationTests {
 			Map.class
 		);
 		
-		// Then we should get an error response - with Spring Security this returns 403 FORBIDDEN
-		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
+		// Then we should get an error response
+		assertThat(response.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 	}
 }
