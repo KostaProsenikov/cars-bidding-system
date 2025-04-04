@@ -1,10 +1,10 @@
-# Cars Bidding Application
+# Cars Bidding System
 
 ## Overview
 
-The **Cars Bidding Application** is a comprehensive platform designed for automotive enthusiasts, buyers, and sellers to engage in a transparent, secure, and efficient car marketplace. With powerful features like real-time bidding, VIN verification, comprehensive car listings, and flexible subscription plans, this application streamlines the entire car buying and selling experience.
+The **Cars Bidding System** is a comprehensive platform designed for automotive enthusiasts, buyers, and sellers to engage in a transparent, secure, and efficient car marketplace. With powerful features like real-time bidding, VIN verification, comprehensive car listings, and flexible subscription plans, this application streamlines the entire car buying and selling experience.
 
-![Cars Bidding Application](https://img.shields.io/badge/Status-Production-green)
+![Cars Bidding System](https://img.shields.io/badge/Status-Production-green)
 ![Spring Boot](https://img.shields.io/badge/Spring%20Boot-Latest-brightgreen)
 
 ## Key Features
@@ -19,7 +19,7 @@ The **Cars Bidding Application** is a comprehensive platform designed for automo
 
 ### For Sellers
 - **Comprehensive Ad Management**: Create, edit, and monitor vehicle listings with detailed specifications
-- **Media Support**: Upload high-quality images to showcase vehicles
+- **Media Support**: Link high-quality images to showcase vehicles
 - **Bid Management**: Track and respond to bids from potential buyers
 - **Analytics Dashboard**: View insights about listing performance and buyer interest
 - **Flexible Pricing Options**: Set Buy Now prices or enable auction-style bidding
@@ -68,13 +68,13 @@ The **Cars Bidding Application** is a comprehensive platform designed for automo
 
 1. **Clone the repository**
 ```shell script
-git clone https://github.com/your-organization/cars-bidding-application.git
-   cd cars-bidding-application
+git clone https://github.com/KostaProsenikov/cars-bidding-system.git
+cd cars-bidding-system
 ```
 
 
 2. **Configure database**
-   - Create a PostgreSQL database named `cars_bidding`
+   - Create a MySQL database named `cars_bidding_system`
    - Update `application.properties` with your database credentials
 
 3. **Build the application**
@@ -125,24 +125,24 @@ The application provides a comprehensive RESTful API for developers and integrat
 - **User**: `/api/users/*` - User profile and preference management
 - **Subscriptions**: `/api/subscriptions/*` - Subscription handling
 
-For detailed API documentation, access the Swagger UI at `/swagger-ui.html` when running the application.
-
 ## Project Structure
 
 ```
 src/
 ├── main/
 │   ├── java/app/
-│   │   ├── ad/           # Advertisement management
-│   │   ├── auth/         # Authentication and security
+│   │   ├── advert/       # Advertisement management
 │   │   ├── bid/          # Bidding functionality
 │   │   ├── config/       # Application configuration
+│   │   ├── exception/    # Exception handling
+│   │   ├── scheduler/    # Scheduled tasks and CRON jobs
+│   │   ├── security/     # Authentication and security config
 │   │   ├── subscription/ # Subscription plans
 │   │   ├── transaction/  # Payment processing
 │   │   ├── user/         # User management
-│   │   ├── utils/        # Utility classes
 │   │   ├── vin/          # VIN verification
 │   │   └── wallet/       # User wallet system
+│   │   └── web/          # Web Endpoints
 │   └── resources/
 │       ├── static/       # Static resources (CSS, JS)
 │       ├── templates/    # Thymeleaf templates
@@ -171,4 +171,4 @@ For support, please contact our team at support@carsbidding.example.com or open 
 
 ---
 
-© 2025 Cars Bidding Application. All rights reserved.
+© 2025 Cars Bidding System. All rights reserved.

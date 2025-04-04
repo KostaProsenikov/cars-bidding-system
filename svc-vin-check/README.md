@@ -19,22 +19,19 @@ The **svc-vin-check** is a specialized microservice designed to provide Vehicle 
 
 ## API Endpoints
 ### VIN Verification
-- `GET /api/vin/{vinNumber}` - Retrieve information about a specific VIN
-- `POST /api/vin/check` - Perform a new VIN check and store results
-- `GET /api/vin/user/{userId}` - Retrieve all VIN checks for a specific user
-- `GET /api/vin/validate/{vinNumber}` - Validate a VIN without saving the check
+- `GET /vin-svc/api/v1/get-vin/${vin}` - Retrieve information about a specific VIN
+- `POST /vin-svc/api/v1/save-vin-check` - Perform a new VIN check and store results
+- `POST /vin-svc/api/v1/has-checked-vin` - Check if a user has already checked a specific VIN number
 
 ### VIN History
-- `GET /api/vin/history/{vinNumber}` - Retrieve check history for a specific VIN
-- `GET /api/vin/history/user/{userId}` - Get all VIN checks performed by a user
-- `POST /api/vin/history` - Create a new VIN check history record
-- `GET /api/vin/history/exists?vin={vinNumber}&userId={userId}` - Check if this user has previously checked this VIN
-
+- `GET /vin-svc/api/v1/vin-history` - Retrieve check history for a specific VIN
+- `GET /vin-svc/api/v1/user-vin-history` - Get all VIN checks performed by a user
+- 
 ## Getting Started
 ### Prerequisites
 - Java Development Kit (JDK) 21+
 - Maven 3.8+
-- MySQL 16+
+- MySQL 8+
 
 ### Installation
 1. **Clone the repository**
@@ -43,11 +40,11 @@ The **svc-vin-check** is a specialized microservice designed to provide Vehicle 
    cd svc-vin-check
 ```
 1. **Configure database**
-    - Create a PostgreSQL database named `vin_check_service`
+    - Create a MySQL database named `vin_check_service`
     - Update with your database credentials: `application.properties`
 ``` properties
-     spring.datasource.url=jdbc:postgresql://localhost:5432/vin_check_service
-     spring.datasource.username=postgres
+     spring.datasource.url=jdbc:mysql://localhost:3306/vin_check_service
+     spring.datasource.username=mysql
      spring.datasource.password=your_password
 ```
 1. **Build the application**
@@ -68,10 +65,10 @@ spring.application.name=vin-check-service
 
 # Database configuration
 spring.datasource.url=jdbc:postgresql://localhost:5432/vin_check_service
-spring.datasource.username=postgres
+spring.datasource.username=mysql
 spring.datasource.password=your_password
 spring.jpa.hibernate.ddl-auto=update
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
 
 # VIN check configuration
 vin.check.external.api.url=https://vehicle-data-provider.example.com/api
@@ -86,19 +83,16 @@ logging.pattern.console=%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n
 ``` 
 src/
 ├── main/
-│   ├── java/app/vin/
-│   │   ├── controller/   # REST API endpoints
-│   │   ├── model/        # Entity classes
+│   ├── java/app/svc_vin_check/
 │   │   ├── repository/   # Data access layer
-│   │   ├── service/      # Business logic
-│   │   ├── client/       # External API integrations
+│   │   ├── dto/          # VINs DTOs
+│   │   ├── model/        # Vin Check Model
+│   │   ├── repository/   # VIN Check Repository
 │   │   ├── config/       # Service configuration
 │   │   ├── exception/    # Exception handling
-│   │   └── util/         # Utility classes
+|   |   └── web/          # Web exposed Endpoints
 │   └── resources/
 │       ├── application.properties
-│       ├── data.sql      # Initial data setup
-│       └── logback.xml   # Logging configuration
 └── test/                 # Test cases
 ```
 ## Integration with Cars Bidding Application
