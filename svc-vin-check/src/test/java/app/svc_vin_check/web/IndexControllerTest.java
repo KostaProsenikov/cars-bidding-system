@@ -1,21 +1,35 @@
 package app.svc_vin_check.web;
 
 import static org.hamcrest.Matchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import app.svc_vin_check.config.SecurityConfig;
+import app.svc_vin_check.dto.VinCheckRequest;
+import app.svc_vin_check.model.VinCheck;
+import app.svc_vin_check.repository.VinCheckRepository;
 
 @WebMvcTest(IndexController.class)
 @Import(SecurityConfig.class)
@@ -23,6 +37,12 @@ public class IndexControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
+    
+    @MockBean
+    private VinCheckRepository vinCheckRepository;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     @DisplayName("Should allow access to VIN endpoint without authentication")
@@ -312,9 +332,8 @@ public class IndexControllerTest {
         
         mockMvc.perform(get("/vin-svc/api/v1/get-vin")
                 .param("vin", unknownVin))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status", is("INVALID")))
-                .andExpect(jsonPath("$.manufacturer", is("Unknown manufacturer")));
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status", is("INVALID")));
     }
     
     @Test
@@ -334,5 +353,109 @@ public class IndexControllerTest {
                 .param("vin", invalidVin))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status", is("INVALID")));
+    }
+    
+    @Test
+    @DisplayName("Should save VIN check")
+    public void shouldSaveVinCheck() throws Exception {
+        // Setup mock repository
+        UUID userId = UUID.randomUUID();
+        String vin = "WBAWL73589P473158";
+        
+        VinCheck savedCheck = VinCheck.builder()
+            .id(UUID.randomUUID())
+            .vinNumber(vin)
+            .userId(userId)
+            .manufacturer("BMW")
+            .modelYear("2009")
+            .assemblyPlant("P")
+            .status("VALID")
+            .resultJson("{\"status\":\"VALID\",\"manufacturer\":\"BMW\"}")
+            .build();
+        
+        when(vinCheckRepository.save(any(VinCheck.class))).thenReturn(savedCheck);
+        
+        // Create request
+        VinCheckRequest request = new VinCheckRequest();
+        request.setVinNumber(vin);
+        request.setUserId(userId);
+        
+        mockMvc.perform(post("/vin-svc/api/v1/save-vin-check")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isCreated())
+                .andExpect(jsonPath("$.vinNumber", is(vin)))
+                .andExpect(jsonPath("$.userId", is(userId.toString())))
+                .andExpect(jsonPath("$.manufacturer", is("BMW")));
+    }
+    
+    @Test
+    @DisplayName("Should get user VIN history")
+    public void shouldGetUserVinHistory() throws Exception {
+        // Setup
+        UUID userId = UUID.randomUUID();
+        List<VinCheck> history = new ArrayList<>();
+        
+        VinCheck check1 = VinCheck.builder()
+            .id(UUID.randomUUID())
+            .vinNumber("WBAWL73589P473158")
+            .userId(userId)
+            .manufacturer("BMW")
+            .modelYear("2009")
+            .build();
+        
+        history.add(check1);
+        
+        when(vinCheckRepository.findByUserIdOrderByCheckedAtDesc(userId)).thenReturn(history);
+        
+        // Execute
+        mockMvc.perform(get("/vin-svc/api/v1/user-vin-history")
+                .param("userId", userId.toString()))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)))
+                .andExpect(jsonPath("$[0].manufacturer", is("BMW")));
+    }
+    
+    @Test
+    @DisplayName("Should check if user has checked VIN before")
+    public void shouldCheckIfUserHasCheckedVinBefore() throws Exception {
+        // Setup
+        UUID userId = UUID.randomUUID();
+        String vin = "WBAWL73589P473158";
+        List<VinCheck> history = new ArrayList<>();
+        
+        VinCheck check = VinCheck.builder()
+            .id(UUID.randomUUID())
+            .vinNumber(vin)
+            .userId(userId)
+            .build();
+        
+        history.add(check);
+        
+        when(vinCheckRepository.findByUserIdAndVinNumber(userId, vin)).thenReturn(history);
+        
+        // Execute
+        mockMvc.perform(get("/vin-svc/api/v1/has-checked-vin")
+                .param("userId", userId.toString())
+                .param("vinNumber", vin))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
+    }
+    
+    @Test
+    @DisplayName("Should return false if user has not checked VIN before")
+    public void shouldReturnFalseIfUserHasNotCheckedVinBefore() throws Exception {
+        // Setup
+        UUID userId = UUID.randomUUID();
+        String vin = "WBAWL73589P473158";
+        
+        when(vinCheckRepository.findByUserIdAndVinNumber(userId, vin)).thenReturn(new ArrayList<>());
+        
+        // Execute
+        mockMvc.perform(get("/vin-svc/api/v1/has-checked-vin")
+                .param("userId", userId.toString())
+                .param("vinNumber", vin))
+                .andExpect(status().isOk())
+                .andExpect(content().string("false"));
     }
 }
