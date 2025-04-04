@@ -103,7 +103,10 @@ public class SubscriptionService {
             completedOn = now.plusWeeks(1);
         }
 
-        int vinChecksLeft = currentSubscription.getVinChecksLeft();
+        int vinChecksLeft = 0;
+        if (currentSubscription.getVinChecksLeft() != null) {
+            vinChecksLeft = currentSubscription.getVinChecksLeft();
+        }
 
         switch (subscriptionPeriod) {
             case WEEKLY:
@@ -188,11 +191,10 @@ public class SubscriptionService {
     }
 
     public void renewSubscription(Subscription subscription) {
-        Subscription newSubscription = subscription;
-        newSubscription.setPeriod(subscription.getPeriod());
+        subscription.setPeriod(subscription.getPeriod());
         LocalDateTime now = LocalDateTime.now();
-        newSubscription.setCreatedOn(now);
-        newSubscription.setStatus(SubscriptionStatus.ACTIVE);
+        subscription.setCreatedOn(now);
+        subscription.setStatus(SubscriptionStatus.ACTIVE);
         LocalDateTime completedOn;
         if (subscription.getPeriod().name().equals(SubscriptionPeriod.WEEKLY.name())) {
             completedOn = now.plusWeeks(1);
@@ -201,8 +203,8 @@ public class SubscriptionService {
         } else {
             completedOn = now.plusYears(1);
         }
-        newSubscription.setCompletedOn(completedOn);
-        subscriptionRepository.save(newSubscription);
+        subscription.setCompletedOn(completedOn);
+        subscriptionRepository.save(subscription);
         System.out.printf("Subscription [%s] has been renewed for [%s].".formatted(subscription.getId(), subscription.getPeriod()));
         this.markSubscriptionAsTerminated(subscription);
     }

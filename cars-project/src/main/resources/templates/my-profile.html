@@ -49,13 +49,13 @@
 
                             <div class="details-section-container flex flex-col items-center md:items-start">
                                 <strong class="text-gray-700">VIN Checks Left: </strong>
-                                <p class="text-gray-600" th:text="${!user.subscriptions.empty ? user.subscriptions.get(0).vinChecksLeft : '0'}"></p>
+                                <p class="text-gray-600" id="vin-checks" th:text="${!user.subscriptions.isEmpty() ? user.subscriptions.get(0).vinChecksLeft : '0'}"></p>
                             </div>
 
                             <div class="details-section-container flex flex-col items-center md:items-start">
                                 <strong class="text-gray-700">Balance in Wallet: </strong>
                                 <div class="flex items-center gap-2">
-                                    <p class="text-gray-600" th:text="${!user.wallets.empty ? user.wallets.get(0).balance + ' EUR' : '0 EUR'}"></p>
+                                    <p class="text-gray-600" th:text="${!user.wallets.isEmpty() ? user.wallets.get(0).balance + ' EUR' : '0 EUR'}"></p>
                                     <a th:href="@{/transactions/top-up}" class="bg-blue-500 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded-full">Top Up</a>
                                 </div>
                             </div>
