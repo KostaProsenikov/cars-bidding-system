@@ -4,106 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c6629ed4-748d-4b8d-91fc-fe567dfba9ce" name="Changes" comment="Add FeignClient information">
-      <change beforePath="$PROJECT_DIR$/.gitattributes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.mvn/wrapper/maven-wrapper.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/mvnw.cmd" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/CarsProjectApplication.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/model/Advert.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/model/CarBrand.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/model/CarStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/model/FuelType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/model/GearboxType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/repository/AdvertRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/service/AdvertSeederService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/advert/service/AdvertService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/bid/model/Bid.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/bid/repository/BidsRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/bid/service/BidsService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/config/BeanConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/config/WebMVCConfiguration.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/exception/DomainException.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/leasing/model/Leasing.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/scheduler/AdvertsScheduler.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/security/AuthenticationMetadata.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/model/Subscription.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/model/SubscriptionPeriod.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/model/SubscriptionStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/model/SubscriptionType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/repository/SubscriptionRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/subscription/service/SubscriptionService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/transaction/model/Transaction.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/transaction/model/TransactionStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/transaction/model/TransactionType.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/transaction/repository/TransactionRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/transaction/service/TransactionService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/user/model/User.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/user/model/UserRole.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/user/repository/UserRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/user/service/UserService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/vin/client/VinClient.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/wallet/model/Wallet.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/wallet/model/WalletStatus.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/wallet/repository/WalletRepository.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/wallet/service/WalletService.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/AdsController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/BidsController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/IndexController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/SubscriptionsController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/TransactionController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/UserController.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/CreateNewAdvertRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/LoginRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/RegisterRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/TransferRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/UpgradeRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/dto/UserEditRequest.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/web/mapper/DtoMapper.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/styles.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/tailwind.css" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/FMI_Location.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/audir8.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/avatar.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/aventador.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/bmwx4.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/cars_bidding_logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/cars_bidding_logo_2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/cars_bidding_system_logo.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/ferrari.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/fordgt.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/logo.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/mercedescclass.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/nissangtr.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/porsche911.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/teslamodels.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/images/toyotasupra.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/about-us.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/ad-info.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/all-ads.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/bid-info.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/bids.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/contact.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/footer.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/greeting.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/navigation.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/side-menu.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/index.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/login.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/my-ads.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/my-profile.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/my-reservations.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/new-advert.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/register.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/subscriptions.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/transaction-result.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/transactions.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/app/CarsprojectApplicationTests.java" beforeDir="false" />
-    </list>
+    <list default="true" id="c6629ed4-748d-4b8d-91fc-fe567dfba9ce" name="Changes" comment="Add FeignClient information" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -134,6 +35,9 @@
     &quot;assignee&quot;: &quot;KostaProsenikov&quot;
   }
 }</component>
+  <component name="GithubDefaultAccount">
+    <option name="defaultAccountId" value="881f252e-ae5a-4bb3-86fa-ed082e2bf296" />
+  </component>
   <component name="GithubPullRequestsUISettings">{
   &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/KostaProsenikov/cars-bidding-system.git&quot;,
@@ -211,7 +115,7 @@
       <recent name="app.web.dto" />
     </key>
   </component>
-  <component name="RunManager" selected="Spring Boot.CarsProjectApplication">
+  <component name="RunManager" selected="Maven.carsproject [clean,compile]">
     <configuration name="carsproject [clean,compile]" type="MavenRunConfiguration" factoryName="Maven" temporary="true">
       <MavenSettings>
         <option name="myGeneralSettings" />
@@ -258,7 +162,6 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Spring Boot.CarsProjectApplication" />
         <item itemvalue="Maven.carsproject [clean,compile]" />
       </list>
     </recent_temporary>

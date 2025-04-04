@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/extras/spring-security">
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+<!-- Header -->
+<th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
+
+<th:block th:insert="~{fragments/greeting :: greeting('Top Up Your Wallet')}"></th:block>
+<!-- Top Up Form Section -->
+<div class="main-container container margin-25 flex flex-row items-start gap-4">
+  <th:block sec:authorize="isAuthenticated()"
+            th:insert="~{fragments/side-menu :: side-menu(${user})}">
+  </th:block>
+  <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
+    <div class="max-w-2xl mx-auto bg-white rounded-lg shadow-lg p-8">
+      <!-- Current Balance -->
+      <div class="mb-8 bg-blue-50 rounded-lg p-6 border-l-4 border-blue-500">
+        <h3 class="text-xl font-bold text-blue-700 mb-2">Current Wallet Balance</h3>
+        <p th:if="${wallet != null}" class="text-4xl font-bold text-gray-800">
+          <span th:text="${wallet.balance}">0.00</span> <span class="text-sm">EUR</span>
+        </p>
+        <p th:if="${wallet == null}" class="text-xl text-red-600">
+          No active wallet found. Please contact support.
+        </p>
+      </div>
+
+      <!-- Top Up Options -->
+      <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Select Amount to Top Up</h2>
+      
+      <div th:if="${wallet != null}" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <!-- 20 EUR Option -->
+        <form th:action="@{/transactions/top-up}" method="post" class="h-full">
+          <input type="hidden" name="walletId" th:value="${wallet.id}" />
+          <input type="hidden" name="amount" value="20.00" />
+          <button type="submit" class="w-full h-full bg-white border-2 border-blue-500 rounded-lg p-6 flex flex-col items-center justify-center transition-all hover:bg-blue-50 hover:shadow-lg">
+            <span class="text-3xl font-bold text-blue-600">€20</span>
+            <span class="text-gray-600 mt-2">Quick Top Up</span>
+          </button>
+        </form>
+
+        <!-- 50 EUR Option -->
+        <form th:action="@{/transactions/top-up}" method="post" class="h-full">
+          <input type="hidden" name="walletId" th:value="${wallet.id}" />
+          <input type="hidden" name="amount" value="50.00" />
+          <button type="submit" class="w-full h-full bg-white border-2 border-blue-500 rounded-lg p-6 flex flex-col items-center justify-center transition-all hover:bg-blue-50 hover:shadow-lg">
+            <span class="text-3xl font-bold text-blue-600">€50</span>
+            <span class="text-gray-600 mt-2">Standard Top Up</span>
+          </button>
+        </form>
+
+        <!-- 100 EUR Option -->
+        <form th:action="@{/transactions/top-up}" method="post" class="h-full">
+          <input type="hidden" name="walletId" th:value="${wallet.id}" />
+          <input type="hidden" name="amount" value="100.00" />
+          <button type="submit" class="w-full h-full bg-white border-2 border-blue-500 rounded-lg p-6 flex flex-col items-center justify-center transition-all hover:bg-blue-50 hover:shadow-lg">
+            <span class="text-3xl font-bold text-blue-600">€100</span>
+            <span class="text-gray-600 mt-2">Premium Top Up</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Disclaimer -->
+      <div class="mt-8 text-sm text-gray-600 bg-gray-50 p-4 rounded-lg">
+        <p class="mb-2"><strong>Note:</strong> This is a simulated top-up system for demonstration purposes.</p>
+        <p>In a real application, this would connect to a payment provider to process the transaction.</p>
+      </div>
+    </div>
+  </main>
+</div>
+
+<th:block th:insert="~{fragments/footer :: footer}"></th:block>
+
+</body>
+</html>

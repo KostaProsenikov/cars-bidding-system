@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<th:block th:insert="~{fragments/navigation :: head(${user})}"></th:block>
+<body class="bg-gray-100">
+<!-- Header -->
+<th:block th:insert="~{fragments/navigation :: header(${user})}"></th:block>
+
+<!-- Page Title Banner -->
+<th:block th:insert="~{fragments/greeting :: greeting('Manage System Users')}"></th:block>
+
+<!-- Main Container -->
+<div class="main-container container margin-25 flex flex-row items-start gap-4">
+    <!-- Side Menu -->
+    <th:block th:insert="~{fragments/side-menu :: side-menu(${user})}"></th:block>
+    
+    <!-- Main Content -->
+    <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
+        <div class="home-section">
+            <div class="single-section-box">
+                <h2 class="font-bold text-xl mb-4">User Management</h2>
+                
+                <!-- Success/Error Messages -->
+                <div th:if="${success}" class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                    <span th:text="${success}">Success message</span>
+                </div>
+                <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    <span th:text="${error}">Error message</span>
+                </div>
+    
+                <!-- Users Table -->
+                <div class="overflow-x-auto">
+                    <table class="styled-table min-w-full">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Username</th>
+                                <th>Full Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Created On</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="user : ${users}">
+                                <td data-label="ID" th:text="${user.id}">ID</td>
+                                <td data-label="Username" th:text="${user.username}">Username</td>
+                                <td data-label="Full Name" th:text="${user.firstName + ' ' + user.lastName}">Full Name</td>
+                                <td data-label="Email" th:text="${user.email}">Email</td>
+                                <td data-label="Role" th:text="${user.role}">Role</td>
+                                <td data-label="Status">
+                                    <span th:if="${user.isActive}" class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">Active</span>
+                                    <span th:unless="${user.isActive}" class="bg-red-200 text-red-800 py-1 px-3 rounded-full text-xs">Inactive</span>
+                                </td>
+                                <td data-label="Created On" th:text="${#temporals.format(user.createdOn, 'dd MMM YYYY HH:mm')}">Created On</td>
+                                <td data-label="Actions">
+                                    <form th:action="@{/users/{id}/toggle-active(id=${user.id})}" method="post" class="inline">
+                                        <input type="hidden" name="isActive" th:value="${!user.isActive}">
+                                        <button type="submit" 
+                                                th:class="${user.isActive ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} + ' text-white font-bold py-1 px-2 rounded text-xs transition-colors'">
+                                            <span th:text="${user.isActive ? 'Deactivate' : 'Activate'}">Toggle Status</span>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+<th:block th:insert="~{fragments/footer :: footer}"></th:block>
+</body>
+</html>

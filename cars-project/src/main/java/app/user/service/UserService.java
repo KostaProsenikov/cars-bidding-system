@@ -16,6 +16,7 @@ import app.web.dto.UserEditRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -82,6 +83,16 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @CacheEvict(value = "users", allEntries = true)
+    public void updateUserActiveStatus(UUID id, boolean isActive) {
+        User user = getById(id);
+        user.setIsActive(isActive);
+        user.setUpdatedOn(LocalDateTime.now());
+        userRepository.save(user);
+        log.info("User with ID [{}] active status set to [{}]", id, isActive);
+    }
+
     private User initializeUser(RegisterRequest registerRequest) {
         return User.builder()
                 .username(registerRequest.getUsername())
@@ -101,7 +112,25 @@ public class UserService implements UserDetailsService {
     }
 
     public User getById(UUID id) {
-        return userRepository.findById(id).orElseThrow(() -> new DomainException("User with ID [%s] is not found!".formatted(id)));
+        User user = userRepository.findById(id).orElseThrow(() -> new DomainException("User with ID [%s] is not found!".formatted(id)));
+        
+        // Ensure user has subscriptions
+        if (user.getSubscriptions() == null || user.getSubscriptions().isEmpty()) {
+            log.info("Creating missing default subscription for user [{}]", user.getUsername());
+            Subscription defaultSubscription = subscriptionService.createDefaultSubscription(user);
+            user.setSubscriptions(List.of(defaultSubscription));
+            userRepository.save(user);
+        }
+        
+        // Ensure user has wallets
+        if (user.getWallets() == null || user.getWallets().isEmpty()) {
+            log.info("Creating missing default wallet for user [{}]", user.getUsername());
+            Wallet standardWallet = walletService.initializeFirstWallet(user);
+            user.setWallets(List.of(standardWallet));
+            userRepository.save(user);
+        }
+        
+        return user;
     }
 
     @Override
