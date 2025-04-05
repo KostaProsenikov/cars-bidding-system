@@ -7,6 +7,10 @@
     font-size: 20px;
 }
 
+.margin-top-bottom-15 {
+    margin: 15px 0;
+}
+
 /* Active menu item styling */
 .active-menu-item {
     background-color: rgba(56, 161, 105, var(--bg-opacity, 1)) !important;

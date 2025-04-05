@@ -32,6 +32,10 @@
                 <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                     <a th:href="'/ads/' + ${advert.id} + '/info'">More Information</a>
                 </button>
+                <button type="button"  th:if="${advert.owner.id == user.id || user.role.name() == 'ADMIN'}"
+                        class="bg-green-600 hover:bg-green-700 text-white margin-top-bottom-15 font-bold py-2 px-4 rounded">
+                    <a th:href="'/ads/' + ${advert.id} + '/edit'">Edit Advert</a>
+                </button>
             </div>
         </div>
 
