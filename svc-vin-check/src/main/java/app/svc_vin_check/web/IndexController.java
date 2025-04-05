@@ -197,16 +197,14 @@ public class IndexController {
             case "1FM": info.put("manufacturer", "Ford SUV USA"); break;
             case "JH4": info.put("manufacturer", "Acura"); break;
             case "JHM": info.put("manufacturer", "Honda"); break;
-            case "JT4": info.put("manufacturer", "Toyota"); break;
-            case "JTD": info.put("manufacturer", "Toyota"); break;
+            case "JT4", "JTD": info.put("manufacturer", "Toyota"); break;
             case "WVW": info.put("manufacturer", "Volkswagen"); break;
             case "WAU": info.put("manufacturer", "Audi"); break;
             case "WBA": info.put("manufacturer", "BMW"); break;
             case "WBS": info.put("manufacturer", "BMW M"); break;
             case "WDD": info.put("manufacturer", "Mercedes-Benz"); break;
             case "YV1": info.put("manufacturer", "Volvo"); break;
-            case "5YJ": info.put("manufacturer", "Tesla"); break;
-            case "7SA": info.put("manufacturer", "Tesla"); break;
+            case "5YJ", "7SA": info.put("manufacturer", "Tesla"); break;
             default: info.put("manufacturer", "Unknown manufacturer");
         }
 
