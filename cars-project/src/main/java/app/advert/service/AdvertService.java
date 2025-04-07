@@ -3,7 +3,7 @@ package app.advert.service;
 import app.advert.model.Advert;
 import app.advert.model.CarStatus;
 import app.advert.repository.AdvertRepository;
-import app.exception.DomainException;
+import app.exception.AdvertNotFoundException;
 import app.user.model.User;
 import app.web.dto.CreateNewAdvertRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -88,7 +88,7 @@ public class AdvertService {
     }
 
     public Advert getAdvertById(UUID id) {
-        return advertRepository.findById(id).orElseThrow(() -> new DomainException("Advert with ID [%s] is not found!".formatted(id)));
+        return advertRepository.findById(id).orElseThrow(() -> new AdvertNotFoundException("Advert with ID [%s] is not found!".formatted(id)));
     }
 
     public void reserveCarAdvert(UUID id, User winner) {
@@ -103,7 +103,7 @@ public class AdvertService {
     public void updateAdvert(UUID id, Advert advert) {
         Advert advertToUpdate = getAdvertById(id);
         LocalDateTime now = LocalDateTime.now();
-        Advert build = advertToUpdate.builder()
+        Advert build = Advert.builder()
                 .id(advertToUpdate.getId())
                 .owner(advertToUpdate.getOwner())
                 .advertName(advert.getAdvertName())
@@ -136,7 +136,7 @@ public class AdvertService {
     }
 
     public List<Advert> getFirst20VisibleAdverts() {
-        return advertRepository.findByVisibleTrue().stream().filter(advert -> advert.getVisible()).limit(20).toList();
+        return advertRepository.findByVisibleTrue().stream().filter(Advert::getVisible).limit(20).toList();
     }
 
     public List<Advert> getAllExpiredAdverts() {

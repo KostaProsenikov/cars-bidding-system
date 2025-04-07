@@ -2,6 +2,7 @@ package app.web;
 
 import app.advert.model.Advert;
 import app.advert.service.AdvertService;
+import app.exception.AdvertNotFoundException;
 import app.exception.DomainException;
 import app.security.AuthenticationMetadata;
 import app.subscription.service.SubscriptionService;
@@ -74,7 +75,6 @@ public class AdsController {
         advert.setViewCount(advert.getViewCount() + 1);
         advertService.updateAdvert(id, advert);
         User user = userService.getById(authenticationMetadata.getUserId());
-//        List<Bid> bids = bidsService.getBidsForAdvertIdAndUser(id, user);
         modelAndView.addObject("advert", advert);
         modelAndView.addObject("user", user);
         return modelAndView;
@@ -351,4 +351,10 @@ public class AdsController {
         
         return value;
     }
+
+    @ExceptionHandler(AdvertNotFoundException.class)
+    public String handleAdvertNotFound() {
+        return "redirect:/ads";
+    }
+
 }

@@ -62,17 +62,9 @@ public class BidsController {
                          @RequestParam("maxBidPrice") BigDecimal maxBidPrice) {
         User user = userService.getById(authenticationMetadata.getUserId());
         Advert advert = advertService.getAdvertById(advertId);
-        LocalDateTime now = LocalDateTime.now();
-        Bid bidToCreate = Bid.builder()
-                .bidPrice(bidPrice)
-                .maxBidPrice(maxBidPrice)
-                .createdOn(now)
-                .updatedOn(now)
-                .isAccepted(false)
-                .bidder(user)
-                .build();
-        Bid createdBid = this.bidsService.createNewBidForAdvert(advert, bidToCreate);
+        Bid createdBid = this.bidsService.createBid(advert, bidPrice, maxBidPrice, user);
         if (createdBid != null) {
+            LocalDateTime now = LocalDateTime.now();
             advert.setCurrentBidPrice(createdBid.getBidPrice());
             advert.setLastBidder(user);
             advert.setLastBidDate(now);
