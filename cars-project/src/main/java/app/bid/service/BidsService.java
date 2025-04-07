@@ -5,6 +5,9 @@ import app.bid.model.Bid;
 import app.bid.repository.BidsRepository;
 import app.exception.DomainException;
 import app.user.model.User;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -26,6 +29,20 @@ public class BidsService {
     public Bid getById(UUID id) {
         return bidsRepository.findById(id).orElseThrow(() ->
                 new DomainException("Bid with id [" + id + "] does not exist"));
+    }
+
+    public Bid createBid(Advert advert, BigDecimal bidPrice, BigDecimal maxBidPrice, User user) {
+        LocalDateTime now = LocalDateTime.now();
+        Bid bidToCreate = Bid.builder()
+                .bidPrice(bidPrice)
+                .maxBidPrice(maxBidPrice)
+                .createdOn(now)
+                .updatedOn(now)
+                .isAccepted(false)
+                .bidder(user)
+                .build();
+        this.createNewBidForAdvert(advert, bidToCreate);
+        return bidsRepository.save(bidToCreate);
     }
 
     public Bid createNewBidForAdvert(Advert advert, Bid bidToCreate) {
