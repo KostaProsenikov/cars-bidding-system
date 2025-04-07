@@ -4,7 +4,6 @@ import app.advert.model.Advert;
 import app.advert.model.CarBrand;
 import app.advert.model.CarStatus;
 import app.advert.service.AdvertService;
-import app.bid.service.BidsService;
 import app.security.AuthenticationMetadata;
 import app.subscription.model.Subscription;
 import app.subscription.model.SubscriptionPeriod;
@@ -31,11 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertInstanceOf;
@@ -54,9 +49,6 @@ class AdsControllerTest {
 
     @Mock
     private UserService userService;
-
-    @Mock
-    private BidsService bidsService;
     
     @Mock
     private BindingResult bindingResult;
@@ -76,7 +68,7 @@ class AdsControllerTest {
     private User testUser;
     private Advert testAdvert;
     private UUID testUserId;
-    private UUID testAdvertId;
+    private String testAdvertId;
     private AuthenticationMetadata authMetadata;
     private CreateNewAdvertRequest createRequest;
     private Subscription testSubscription;
@@ -84,7 +76,7 @@ class AdsControllerTest {
     @BeforeEach
     void setUp() {
         testUserId = UUID.randomUUID();
-        testAdvertId = UUID.randomUUID();
+        testAdvertId = UUID.randomUUID().toString();
         
         // Setup subscription for VIN checks
         testSubscription = Subscription.builder()
@@ -111,7 +103,7 @@ class AdsControllerTest {
                 .build();
                 
         testAdvert = Advert.builder()
-                .id(testAdvertId)
+                .id(UUID.fromString(testAdvertId))
                 .advertName("Test Car")
                 .description("Test Description")
                 .owner(testUser)
@@ -150,13 +142,13 @@ class AdsControllerTest {
     @DisplayName("Should return first ads page")
     void shouldReturnFirstAdsPage() {
         // Arrange
-        List<Advert> adverts = Arrays.asList(testAdvert);
+        List<Advert> adverts = Collections.singletonList(testAdvert);
         when(userService.getById(testUserId)).thenReturn(testUser);
         when(advertService.getAllShownAdvertsByPage(0, "DESC", "createdOn")).thenReturn(adverts);
         when(advertService.getAdvertCount()).thenReturn(1);
 
         // Act
-        ModelAndView modelAndView = adsController.getFirstAdsPage(authMetadata);
+        ModelAndView modelAndView = adsController.getFirstAdsPage(authMetadata, Optional.empty());
 
         // Assert
         assertEquals("all-ads", modelAndView.getViewName());
@@ -171,7 +163,7 @@ class AdsControllerTest {
     @DisplayName("Should return advert info page")
     void shouldReturnAdvertInfoPage() {
         // Arrange
-        when(advertService.getAdvertById(testAdvertId)).thenReturn(testAdvert);
+        when(advertService.getAdvertById(UUID.fromString(testAdvertId))).thenReturn(testAdvert);
         when(userService.getById(testUserId)).thenReturn(testUser);
 
         // Act
@@ -182,14 +174,14 @@ class AdsControllerTest {
         assertEquals(testAdvert, modelAndView.getModel().get("advert"));
         assertEquals(testUser, modelAndView.getModel().get("user"));
         
-        verify(advertService).updateAdvert(eq(testAdvertId), any(Advert.class));
+        verify(advertService).updateAdvert(eq(UUID.fromString(testAdvertId)), any(Advert.class));
     }
 
     @Test
     @DisplayName("Should return update advert page")
     void shouldReturnUpdateAdvertPage() {
         // Arrange
-        when(advertService.getAdvertById(testAdvertId)).thenReturn(testAdvert);
+        when(advertService.getAdvertById(UUID.fromString(testAdvertId))).thenReturn(testAdvert);
         when(userService.getById(testUserId)).thenReturn(testUser);
         
         CreateNewAdvertRequest expectedRequest = DtoMapper.mapAdvertToCreateNewAdvertRequest(testAdvert);
@@ -212,7 +204,7 @@ class AdsControllerTest {
     void shouldReturnAdvertsByPage() {
         // Arrange
         int page = 2;
-        List<Advert> adverts = Arrays.asList(testAdvert);
+        List<Advert> adverts = Collections.singletonList(testAdvert);
         when(userService.getById(testUserId)).thenReturn(testUser);
         when(advertService.getAllShownAdvertsByPage(1, "DESC", "createdOn")).thenReturn(adverts);
         when(advertService.getAdvertCount()).thenReturn(25);
@@ -233,7 +225,7 @@ class AdsControllerTest {
     @DisplayName("Should return my adverts page")
     void shouldReturnMyAdvertsPage() {
         // Arrange
-        List<Advert> adverts = Arrays.asList(testAdvert);
+        List<Advert> adverts = Collections.singletonList(testAdvert);
         when(userService.getById(testUserId)).thenReturn(testUser);
         when(advertService.getAdvertsByOwnerId(testUserId)).thenReturn(adverts);
 
@@ -253,7 +245,7 @@ class AdsControllerTest {
     @DisplayName("Should return my reservations page")
     void shouldReturnMyReservationsPage() {
         // Arrange
-        List<Advert> adverts = Arrays.asList(testAdvert);
+        List<Advert> adverts = Collections.singletonList(testAdvert);
         when(userService.getById(testUserId)).thenReturn(testUser);
         when(advertService.getAdvertsByWinnerId(testUserId)).thenReturn(adverts);
 
@@ -317,10 +309,10 @@ class AdsControllerTest {
         // Arrange
         when(bindingResult.hasErrors()).thenReturn(false);
         when(userService.getById(testUserId)).thenReturn(testUser);
-        when(advertService.getAdvertById(testAdvertId)).thenReturn(testAdvert);
+        when(advertService.getAdvertById(UUID.fromString(testAdvertId))).thenReturn(testAdvert);
         
         // Act
-        ModelAndView result = adsController.updateAdvert(createRequest, bindingResult, testAdvertId, authMetadata);
+        ModelAndView result = adsController.updateAdvert(createRequest, bindingResult, UUID.fromString(testAdvertId), authMetadata);
         
         // Assert
         assertEquals("redirect:/ads", result.getViewName());
@@ -335,7 +327,7 @@ class AdsControllerTest {
         when(userService.getById(testUserId)).thenReturn(testUser);
         
         // Act
-        ModelAndView result = adsController.updateAdvert(createRequest, bindingResult, testAdvertId, authMetadata);
+        ModelAndView result = adsController.updateAdvert(createRequest, bindingResult, UUID.fromString(testAdvertId), authMetadata);
         
         // Assert
         assertEquals("new-advert", result.getViewName());
@@ -360,12 +352,12 @@ class AdsControllerTest {
                 .status("CLEAN")
                 .build();
                 
-        when(advertService.getAdvertById(testAdvertId)).thenReturn(testAdvert);
+        when(advertService.getAdvertById(UUID.fromString(testAdvertId))).thenReturn(testAdvert);
         when(userService.getById(testUserId)).thenReturn(testUser);
         when(vinHistoryService.findUserVinCheck(testUserId, vinNumber)).thenReturn(Optional.of(vinHistory));
         
         // Act
-        ModelAndView result = adsController.checkVin(testAdvertId, authMetadata);
+        ModelAndView result = adsController.checkVin(UUID.fromString(testAdvertId), authMetadata);
         
         // Assert
         assertEquals("ad-info", result.getViewName());
@@ -391,13 +383,13 @@ class AdsControllerTest {
         String vinNumber = "WAUZZZ8V5KA123456";
         String vinResponse = "{\"manufacturer\":\"AUDI\",\"model_year\":\"2019\",\"assembly_plant_code\":\"Germany\",\"status\":\"CLEAN\"}";
         
-        when(advertService.getAdvertById(testAdvertId)).thenReturn(testAdvert);
+        when(advertService.getAdvertById(UUID.fromString(testAdvertId))).thenReturn(testAdvert);
         when(userService.getById(testUserId)).thenReturn(testUser);
         when(vinHistoryService.findUserVinCheck(testUserId, vinNumber)).thenReturn(Optional.empty());
         when(vinClient.getVINInformation(vinNumber)).thenReturn(ResponseEntity.ok(vinResponse));
         
         // Act
-        ModelAndView result = adsController.checkVin(testAdvertId, authMetadata);
+        ModelAndView result = adsController.checkVin(UUID.fromString(testAdvertId), authMetadata);
         
         // Assert
         assertEquals("ad-info", result.getViewName());
@@ -430,11 +422,11 @@ class AdsControllerTest {
         // Arrange
         testAdvert.setVinNumber(null);
         
-        when(advertService.getAdvertById(testAdvertId)).thenReturn(testAdvert);
+        when(advertService.getAdvertById(UUID.fromString(testAdvertId))).thenReturn(testAdvert);
         when(userService.getById(testUserId)).thenReturn(testUser);
         
         // Act
-        ModelAndView result = adsController.checkVin(testAdvertId, authMetadata);
+        ModelAndView result = adsController.checkVin(UUID.fromString(testAdvertId), authMetadata);
         
         // Assert
         assertEquals("ad-info", result.getViewName());
@@ -454,12 +446,12 @@ class AdsControllerTest {
         // Set VIN checks to 0
         testSubscription.setVinChecksLeft(0);
         
-        when(advertService.getAdvertById(testAdvertId)).thenReturn(testAdvert);
+        when(advertService.getAdvertById(UUID.fromString(testAdvertId))).thenReturn(testAdvert);
         when(userService.getById(testUserId)).thenReturn(testUser);
         when(vinHistoryService.findUserVinCheck(testUserId, testAdvert.getVinNumber())).thenReturn(Optional.empty());
         
         // Act
-        ModelAndView result = adsController.checkVin(testAdvertId, authMetadata);
+        ModelAndView result = adsController.checkVin(UUID.fromString(testAdvertId), authMetadata);
         
         // Assert
         assertEquals("ad-info", result.getViewName());
@@ -479,12 +471,12 @@ class AdsControllerTest {
         String json = "{\"manufacturer\":\"AUDI\",\"model_year\":\"2019\"}";
         
         // Act - We can't directly call the private method so we use checkVin that uses it
-        when(advertService.getAdvertById(testAdvertId)).thenReturn(testAdvert);
+        when(advertService.getAdvertById(UUID.fromString(testAdvertId))).thenReturn(testAdvert);
         when(userService.getById(testUserId)).thenReturn(testUser);
         when(vinHistoryService.findUserVinCheck(testUserId, testAdvert.getVinNumber())).thenReturn(Optional.empty());
         when(vinClient.getVINInformation(testAdvert.getVinNumber())).thenReturn(ResponseEntity.ok(json));
         
-        ModelAndView result = adsController.checkVin(testAdvertId, authMetadata);
+        ModelAndView result = adsController.checkVin(UUID.fromString(testAdvertId), authMetadata);
         
         // Assert - indirectly testing extractJsonValue
         assertEquals("AUDI", result.getModel().get("vinManufacturer"));
@@ -498,10 +490,10 @@ class AdsControllerTest {
         when(userService.getById(testUserId)).thenReturn(testUser);
 
         // Act
-        ModelAndView modelAndView = adsController.reserveAdvert(testAdvertId, authMetadata);
+        ModelAndView modelAndView = adsController.reserveAdvert(UUID.fromString(testAdvertId), authMetadata);
 
         // Assert
         assertEquals("redirect:/ads", modelAndView.getViewName());
-        verify(advertService).reserveCarAdvert(testAdvertId, testUser);
+        verify(advertService).reserveCarAdvert(UUID.fromString(testAdvertId), testUser);
     }
 }

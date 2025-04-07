@@ -8,10 +8,16 @@
 <!-- Main Section -->
 <th:block th:insert="~{fragments/greeting :: greeting('All Adverts')}"></th:block>
 
+<!-- Display an error if it exists -->
+<div class="flex flex-col items-center justify-center py-12" th:if="${error != null}">
+    <th:block th:insert="~{fragments/error :: error(${error})}"></th:block>
+</div>
+
 <div class="main-container container margin-25 flex flex-row items-start gap-4">
     <th:block sec:authorize="isAuthenticated()"
               th:insert="~{fragments/side-menu :: side-menu(${user})}">
     </th:block>
+
     <!-- Automobile Ads Section -->
     <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

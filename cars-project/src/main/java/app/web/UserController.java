@@ -1,14 +1,15 @@
 package app.web;
 
+import app.exception.AdvertNotFoundException;
+import app.exception.UsernameNotFoundException;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.user.service.UserService;
+import app.utils.Utilities;
 import app.vin.client.VinClient;
 import app.vin.model.VinHistory;
-import app.vin.service.VinHistoryService;
 import app.web.dto.UserEditRequest;
 import app.web.mapper.DtoMapper;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,20 +31,16 @@ import java.util.UUID;
 public class UserController {
 
     private final UserService userService;
-    private final VinHistoryService vinHistoryService;
     private final VinClient vinClient;
-    private final ObjectMapper objectMapper;
 
     @Autowired
-    public UserController(UserService userService, VinHistoryService vinHistoryService, VinClient vinClient, ObjectMapper objectMapper) {
+    public UserController(UserService userService, VinClient vinClient) {
         this.userService = userService;
-        this.vinHistoryService = vinHistoryService;
         this.vinClient = vinClient;
-        this.objectMapper = objectMapper;
     }
 
     @GetMapping ("/my-profile")
-    public ModelAndView getProfilePage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, UserEditRequest userEditRequest) {
+    public ModelAndView getProfilePage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         User user = userService.getById(authenticationMetadata.getUserId());
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("user", user);
@@ -64,15 +60,13 @@ public class UserController {
                 for (Object item : responseBody) {
                     HashMap<String, Object> recordMap = new HashMap<>();
                     
-                    if (item instanceof Map) {
+                    if (item instanceof Map<?, ?> itemMap) {
                         // If it's already a map, normalize keys
-                        Map<?, ?> itemMap = (Map<?, ?>) item;
                         for (Object key : itemMap.keySet()) {
                             recordMap.put(key.toString(), itemMap.get(key));
                         }
-                    } else if (item instanceof VinHistory) {
+                    } else if (item instanceof VinHistory history) {
                         // If it's a VinHistory entity, convert to map
-                        VinHistory history = (VinHistory) item;
                         recordMap.put("vinNumber", history.getVinNumber());
                         recordMap.put("manufacturer", history.getManufacturer());
                         recordMap.put("modelYear", history.getModelYear());
@@ -124,15 +118,13 @@ public class UserController {
                 for (Object item : responseBody) {
                     HashMap<String, Object> recordMap = new HashMap<>();
                     
-                    if (item instanceof Map) {
+                    if (item instanceof Map<?, ?> itemMap) {
                         // If it's already a map, normalize keys
-                        Map<?, ?> itemMap = (Map<?, ?>) item;
                         for (Object key : itemMap.keySet()) {
                             recordMap.put(key.toString(), itemMap.get(key));
                         }
-                    } else if (item instanceof VinHistory) {
+                    } else if (item instanceof VinHistory history) {
                         // If it's a VinHistory entity, convert to map
-                        VinHistory history = (VinHistory) item;
                         recordMap.put("vinNumber", history.getVinNumber());
                         recordMap.put("manufacturer", history.getManufacturer());
                         recordMap.put("modelYear", history.getModelYear());
@@ -190,16 +182,25 @@ public class UserController {
     
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}/toggle-active")
-    public ModelAndView toggleUserActiveStatus(@PathVariable UUID id, 
+    public ModelAndView toggleUserActiveStatus(@PathVariable String id,
                                               @RequestParam boolean isActive,
                                               RedirectAttributes redirectAttributes) {
         try {
-            userService.updateUserActiveStatus(id, isActive);
+            UUID userId = Utilities.isValidUUID(id) ? UUID.fromString(id) : null;
+            if (userId == null) {
+                throw new AdvertNotFoundException("Advert with id [%s] found and cannot be updated!".formatted(id));
+            }
+            userService.updateUserActiveStatus(userId, isActive);
             String statusMessage = isActive ? "activated" : "deactivated";
             redirectAttributes.addFlashAttribute("success", "User has been " + statusMessage + " successfully");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }
         return new ModelAndView("redirect:/users");
+    }
+
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public String handleUsernameNotValid() {
+        return "redirect:/index?error=1";
     }
 }
