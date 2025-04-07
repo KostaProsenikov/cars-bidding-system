@@ -4,10 +4,13 @@ import app.advert.model.Advert;
 import app.advert.service.AdvertService;
 import app.exception.AdvertNotFoundException;
 import app.exception.DomainException;
+import app.exception.NumberFormatExceptionHandler;
+import app.exception.UserNotAllowedToEditAdvert;
 import app.security.AuthenticationMetadata;
 import app.subscription.service.SubscriptionService;
 import app.user.model.User;
 import app.user.service.UserService;
+import app.utils.Utilities;
 import app.vin.client.VinClient;
 import app.vin.service.VinHistoryService;
 import app.web.dto.CreateNewAdvertRequest;
@@ -23,6 +26,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @Controller
@@ -34,6 +38,7 @@ public class AdsController {
     private final VinClient vinClient;
     private final SubscriptionService subscriptionService;
     private final VinHistoryService vinHistoryService;
+
 
     @Autowired
     public AdsController(AdvertService advertService, UserService userService,
@@ -47,7 +52,8 @@ public class AdsController {
     }
 
     @GetMapping("")
-    public ModelAndView getFirstAdsPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+    public ModelAndView getFirstAdsPage(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata,
+                                        @RequestParam("error") Optional<Integer> error) {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("all-ads");
         int currentPage = 0;
@@ -57,6 +63,11 @@ public class AdsController {
         List<Advert> adverts = advertService.getAllShownAdvertsByPage(currentPage, sortType, sortField);
         int totalVisibleAds = advertService.getAdvertCount();
         int totalPages = (int) Math.ceil((double) totalVisibleAds / 20);
+        if (error.isPresent() && error.get() == 1) {
+            modelAndView.addObject("error", "Advert not found!");
+        } else if (error.isPresent() && error.get() == 2) {
+            modelAndView.addObject("error", "You are not allowed to edit this advert!");
+        }
         modelAndView.addObject("adverts", adverts);
         modelAndView.addObject("user", user);
         modelAndView.addObject("totalVisibleAds", totalVisibleAds);
@@ -67,13 +78,17 @@ public class AdsController {
     }
 
     @GetMapping("{id}/info")
-    public ModelAndView getAdvertInfoPage(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
-        Advert advert = advertService.getAdvertById(id);
+    public ModelAndView getAdvertInfoPage(@PathVariable String id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        UUID advertId = Utilities.isValidUUID(id) ? UUID.fromString(id) : null;
+        if (advertId == null) {
+            throw new AdvertNotFoundException("Advert with id [%s] is found!".formatted(id));
+        }
+        Advert advert =  advertService.getAdvertById(advertId);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("ad-info");
 //        Update view count of the advert
         advert.setViewCount(advert.getViewCount() + 1);
-        advertService.updateAdvert(id, advert);
+        advertService.updateAdvert(UUID.fromString(id), advert);
         User user = userService.getById(authenticationMetadata.getUserId());
         modelAndView.addObject("advert", advert);
         modelAndView.addObject("user", user);
@@ -81,8 +96,12 @@ public class AdsController {
     }
 
     @GetMapping("{id}/edit")
-    public ModelAndView updateAdvertPage(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
-        Advert advert = advertService.getAdvertById(id);
+    public ModelAndView updateAdvertPage(@PathVariable String id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
+        UUID advertId = Utilities.isValidUUID(id) ? UUID.fromString(id) : null;
+        if (advertId == null) {
+            throw new AdvertNotFoundException("Advert with id [%s] found and cannot be updated!".formatted(id));
+        }
+        Advert advert = advertService.getAdvertById(advertId);
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("new-advert");
 //        Update view count of the advert
@@ -189,7 +208,7 @@ public class AdsController {
         User user = userService.getById(authenticationMetadata.getUserId());
         Advert updatedAdvert = DtoMapper.mapCreateNewAdvertRequestToAdvert(createAdvertRequest, advertService.getAdvertById(id));
         if (updatedAdvert.getOwner().getId() != user.getId() && !user.getRole().name().equals("ADMIN")) {
-            throw new DomainException("You are not allowed to edit this advert!");
+            throw new UserNotAllowedToEditAdvert("You are not allowed to edit this advert!");
         }
 
         advertService.saveAdvert(updatedAdvert);
@@ -280,7 +299,6 @@ public class AdsController {
                     } catch (Exception ex) {
                         // Log the error but don't use local fallback
                         System.err.println("Error saving to VIN microservice: " + ex.getMessage());
-                        ex.printStackTrace();
                         System.out.println("VIN check not saved due to microservice error");
                     }
 
@@ -354,7 +372,16 @@ public class AdsController {
 
     @ExceptionHandler(AdvertNotFoundException.class)
     public String handleAdvertNotFound() {
-        return "redirect:/ads";
+        return "redirect:/ads?error=1";
     }
 
+    @ExceptionHandler(UserNotAllowedToEditAdvert.class)
+    public String handleUserNotAllowedToEditAdvert() {
+        return "redirect:/ads?error=2";
+    }
+
+    @ExceptionHandler(NumberFormatExceptionHandler.class)
+    public String handleUUIDNotValid() {
+        return "redirect:/ads?error=3";
+    }
 }
