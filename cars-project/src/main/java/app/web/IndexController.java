@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import app.user.service.UserService;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.View;
 
 import java.util.List;
 
@@ -98,6 +97,19 @@ public class IndexController {
     @PostMapping ("/register")
     public ModelAndView registerNewUser(@Valid RegisterRequest registerRequest, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
+            return new ModelAndView("register");
+        }
+
+        boolean errorsFound = false;
+        if (registerRequest.getPassword().length() < 6 || registerRequest.getPassword().length() > 50) {
+            bindingResult.rejectValue("password", "<PASSWORD>", "Password must be between 8 and 50 characters");
+            errorsFound = true;
+        } else if (!registerRequest.getPassword().equals(registerRequest.getRepeatPassword())) {
+            bindingResult.rejectValue("repeatPassword", "<PASSWORD>", "Passwords do not match");
+            errorsFound = true;
+        }
+
+        if (errorsFound) {
             return new ModelAndView("register");
         }
 
