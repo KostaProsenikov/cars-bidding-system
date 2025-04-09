@@ -18,6 +18,9 @@ public class RegisterRequest {
     @Size(min = 6, max = 50, message = "The password must be at least 6 and max 50 characters")
     private String password;
 
+    @Size(min = 6, max = 50, message = "The confirmation password must be at least 6 and max 50 characters")
+    private String repeatPassword;
+
     @Size(min = 3, max = 50, message = "The first name must be at least 3 and max 50 characters")
     private String firstName;
 
