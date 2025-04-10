@@ -45,7 +45,7 @@ class UserControllerTest {
     private BindingResult bindingResult;
 
     @InjectMocks
-    private UserController userController;
+    private UsersController usersController;
 
     private User testUser;
     private UUID userId;
@@ -101,7 +101,7 @@ class UserControllerTest {
                     .thenReturn(userEditRequest);
             
             // Act
-            ModelAndView result = userController.getProfilePage(authenticationMetadata, new UserEditRequest());
+            ModelAndView result = usersController.getProfilePage(authenticationMetadata);
             
             // Assert
             assertNotNull(result);
@@ -124,7 +124,7 @@ class UserControllerTest {
         when(vinHistoryService.getUserVinHistory(userId)).thenReturn(vinHistoryList);
         
         // Act
-        ModelAndView result = userController.getVinHistoryPage(authenticationMetadata);
+        ModelAndView result = usersController.getVinHistoryPage(authenticationMetadata);
         
         // Assert
         assertNotNull(result);
@@ -144,7 +144,7 @@ class UserControllerTest {
         when(authenticationMetadata.getUserId()).thenReturn(userId);
         
         // Act
-        ModelAndView result = userController.getProfilePage(authenticationMetadata, userEditRequest, bindingResult);
+        ModelAndView result = usersController.getProfilePage(authenticationMetadata, userEditRequest, bindingResult);
         
         // Assert
         assertNotNull(result);
@@ -162,7 +162,7 @@ class UserControllerTest {
         when(userService.getById(userId)).thenReturn(testUser);
         
         // Act
-        ModelAndView result = userController.getProfilePage(authenticationMetadata, userEditRequest, bindingResult);
+        ModelAndView result = usersController.getProfilePage(authenticationMetadata, userEditRequest, bindingResult);
         
         // Assert
         assertNotNull(result);

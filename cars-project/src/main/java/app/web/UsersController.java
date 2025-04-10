@@ -28,13 +28,13 @@ import java.util.UUID;
 
 @Controller
 @RequestMapping ("/users")
-public class UserController {
+public class UsersController {
 
     private final UserService userService;
     private final VinClient vinClient;
 
     @Autowired
-    public UserController(UserService userService, VinClient vinClient) {
+    public UsersController(UserService userService, VinClient vinClient) {
         this.userService = userService;
         this.vinClient = vinClient;
     }
