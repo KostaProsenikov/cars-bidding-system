@@ -104,6 +104,6 @@ public class CreateNewAdvertRequest {
     private LocalDateTime lastBidDate;
 
     @Nullable
-    @Size(min = 17, max = 17, message = "VIN number must be exactly 17 characters")
+    @Size(max = 17, message = "VIN number must be maximum 17 characters")
     private String vinNumber;
 }

@@ -184,6 +184,7 @@ public class AdsController {
             @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         if (bindingResult.hasErrors()) {
             ModelAndView modelAndView = new ModelAndView("new-advert");
+            modelAndView.addObject("org.springframework.validation.BindingResult.createAdvertRequest", bindingResult);
             modelAndView.addObject("user", authenticationMetadata.getUserId() != null ? userService.getById(authenticationMetadata.getUserId()) : null);
             modelAndView.addObject("createAdvertRequest", createAdvertRequest);
             return modelAndView;
