@@ -144,4 +144,14 @@ public class UserService implements UserDetailsService {
                 user.getIsActive()
         );
     }
+
+    @CacheEvict(value = "users", allEntries = true)
+    @PreAuthorize("hasRole('ADMIN')")
+    public void updateUserRole(UUID userId, UserRole userRole) {
+        User user = getById(userId);
+        user.setRole(userRole);
+        user.setUpdatedOn(LocalDateTime.now());
+        userRepository.save(user);
+        log.info("User with ID [{}] has been set the role: [{}]", userId, userRole.name());
+    }
 }

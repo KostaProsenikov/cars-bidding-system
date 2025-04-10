@@ -4,6 +4,7 @@ import app.exception.AdvertNotFoundException;
 import app.exception.UsernameNotFoundException;
 import app.security.AuthenticationMetadata;
 import app.user.model.User;
+import app.user.model.UserRole;
 import app.user.service.UserService;
 import app.utils.Utilities;
 import app.vin.client.VinClient;
@@ -183,16 +184,36 @@ public class UsersController {
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{id}/toggle-active")
     public ModelAndView toggleUserActiveStatus(@PathVariable String id,
-                                              @RequestParam boolean isActive,
+                 @RequestParam boolean isActive,
                                               RedirectAttributes redirectAttributes) {
         try {
             UUID userId = Utilities.isValidUUID(id) ? UUID.fromString(id) : null;
             if (userId == null) {
-                throw new AdvertNotFoundException("Advert with id [%s] found and cannot be updated!".formatted(id));
+                throw new AdvertNotFoundException("User with id [%s] is not found and cannot be updated!".formatted(id));
             }
             userService.updateUserActiveStatus(userId, isActive);
             String statusMessage = isActive ? "activated" : "deactivated";
             redirectAttributes.addFlashAttribute("success", "User has been " + statusMessage + " successfully");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+        }
+        return new ModelAndView("redirect:/users");
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/{id}/toggle-admin")
+    public ModelAndView toggleAdminStatus(@PathVariable String id, RedirectAttributes redirectAttributes) {
+        try {
+            UUID userId = Utilities.isValidUUID(id) ? UUID.fromString(id) : null;
+            if (userId == null) {
+                throw new AdvertNotFoundException("User with id [%s] not found and cannot be updated!".formatted(id));
+            }
+            User user = userService.getById(userId);
+            UserRole role = user.getRole().name().equals(UserRole.ADMIN.name()) ? UserRole.USER : UserRole.ADMIN;
+            userService.updateUserRole(userId, role);
+            String statusMessage = role.name().substring(0, 1).toUpperCase() + role.name().substring(1).toLowerCase();
+            String username = user.getUsername();
+            redirectAttributes.addFlashAttribute("success", "User role [" + statusMessage + "] has been set to [" + username + "] successfully");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", e.getMessage());
         }

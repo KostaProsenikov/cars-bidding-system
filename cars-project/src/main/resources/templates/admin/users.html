@@ -43,23 +43,32 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="user : ${users}">
-                                <td data-label="ID" th:text="${user.id}">ID</td>
-                                <td data-label="Username" th:text="${user.username}">Username</td>
-                                <td data-label="Full Name" th:text="${user.firstName + ' ' + user.lastName}">Full Name</td>
-                                <td data-label="Email" th:text="${user.email}">Email</td>
-                                <td data-label="Role" th:text="${user.role}">Role</td>
-                                <td data-label="Status">
-                                    <span th:if="${user.isActive}" class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">Active</span>
-                                    <span th:unless="${user.isActive}" class="bg-red-200 text-red-800 py-1 px-3 rounded-full text-xs">Inactive</span>
+                            <tr th:each="currentUser : ${users}">
+                                <td data-label="ID" th:text="${currentUser.id}">ID</td>
+                                <td data-label="Username" th:text="${currentUser.username}">Username</td>
+                                <td data-label="Full Name" th:text="${currentUser.firstName + ' ' + currentUser.lastName}">Full Name</td>
+                                <td data-label="Email" th:text="${currentUser.email}">Email</td>
+                                <td data-label="Role">
+                                    <span th:if="${currentUser.role.name.equals('ADMIN')}" class="bg-blue-500 text-white py-1 px-3 rounded-full text-xs">ADMIN</span>
+                                    <span th:unless="${currentUser.role.name.equals('ADMIN')}" class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">USER</span>
                                 </td>
-                                <td data-label="Created On" th:text="${#temporals.format(user.createdOn, 'dd MMM YYYY HH:mm')}">Created On</td>
+                                <td data-label="Status">
+                                    <span th:if="${currentUser.isActive}" class="bg-green-200 text-green-800 py-1 px-3 rounded-full text-xs">Active</span>
+                                    <span th:unless="${currentUser.isActive}" class="bg-red-200 text-red-800 py-1 px-3 rounded-full text-xs">Inactive</span>
+                                </td>
+                                <td data-label="Created On" th:text="${#temporals.format(currentUser.createdOn, 'dd MMM YYYY HH:mm')}">Created On</td>
                                 <td data-label="Actions">
-                                    <form th:action="@{/users/{id}/toggle-active(id=${user.id})}" method="post" class="inline">
-                                        <input type="hidden" name="isActive" th:value="${!user.isActive}">
+                                    <form th:action="@{/users/{id}/toggle-active(id=${currentUser.id})}" method="post" class="inline">
+                                        <input type="hidden" name="isActive" th:value="${!currentUser.isActive}">
                                         <button type="submit" 
-                                                th:class="${user.isActive ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} + ' text-white font-bold py-1 px-2 rounded text-xs transition-colors'">
-                                            <span th:text="${user.isActive ? 'Deactivate' : 'Activate'}">Toggle Status</span>
+                                                th:class="${currentUser.isActive ? 'bg-red-500 hover:bg-red-600' : 'bg-green-500 hover:bg-green-600'} + ' text-white font-bold py-1 px-2 rounded text-xs transition-colors'">
+                                            <span th:text="${currentUser.isActive ? 'Deactivate' : 'Activate'}">Toggle Status</span>
+                                        </button>
+                                    </form>
+                                    <form th:action="@{/users/{id}/toggle-admin(id=${currentUser.id})}" method="post" class="inline">
+                                        <button type="submit"
+                                                th:class="${currentUser.getRole().name().equals('ADMIN') ? 'bg-blue-500 hover:bg-blue-600' : 'bg-green-500 hover:bg-green-600'} + ' text-white font-bold py-1 px-2 rounded text-xs transition-colors'">
+                                            <span th:text="${currentUser.getRole().name().equals('ADMIN') ? 'Set Role User' : 'Promote to ADMIN'}">USER</span>
                                         </button>
                                     </form>
                                 </td>
