@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,12 +64,10 @@ public class UsersController {
                     HashMap<String, Object> recordMap = new HashMap<>();
                     
                     if (item instanceof Map<?, ?> itemMap) {
-                        // If it's already a map, normalize keys
                         for (Object key : itemMap.keySet()) {
                             recordMap.put(key.toString(), itemMap.get(key));
                         }
                     } else if (item instanceof VinHistory history) {
-                        // If it's a VinHistory entity, convert to map
                         recordMap.put("vinNumber", history.getVinNumber());
                         recordMap.put("manufacturer", history.getManufacturer());
                         recordMap.put("modelYear", history.getModelYear());
@@ -82,19 +82,42 @@ public class UsersController {
                 modelAndView.addObject("vinHistory", historyList);
                 System.out.println("VIN history entries from microservice: " + historyList.size());
             } else {
-                // Empty history list if no results
                 modelAndView.addObject("vinHistory", List.of());
                 System.out.println("No VIN history found in microservice");
             }
         } catch (Exception e) {
             System.err.println("Error fetching VIN history from microservice: " + e.getMessage());
-            // Empty history list on error
             modelAndView.addObject("vinHistory", List.of());
             System.out.println("Error retrieving VIN history, showing empty list");
         }
         
         modelAndView.setViewName("my-profile");
         return modelAndView;
+    }
+
+    @PostMapping("/vin-history/delete-old")
+    public String deleteOldVinChecks(@AuthenticationPrincipal AuthenticationMetadata authenticationMetadata, RedirectAttributes redirectAttributes) {
+        UUID userId = authenticationMetadata.getUserId();
+        // Retrieve user's VIN history
+        ResponseEntity<Object[]> userVinChecksResponse = vinClient.getUserVinHistory(userId);
+        Object[] vinChecksArray = userVinChecksResponse.getBody();
+
+        if (vinChecksArray != null) {
+            LocalDateTime thresholdDate = LocalDateTime.now().minusDays(30);
+
+            for (Object vinCheckObj : vinChecksArray) {
+                Map<String, Object> vinCheck = (Map<String, Object>)vinCheckObj;
+                UUID vinCheckId = UUID.fromString(vinCheck.get("id").toString());
+                LocalDateTime checkDate = LocalDateTime.parse(vinCheck.get("checkedAt").toString());
+
+                if (checkDate.isBefore(thresholdDate)) {
+                    vinClient.deleteVinCheck(userId, vinCheckId);
+                }
+            }
+        }
+
+        redirectAttributes.addFlashAttribute("success", "VIN checks older than 30 days were successfully deleted.");
+        return "redirect:/users/vin-history";
     }
     
     @GetMapping("/vin-history")
@@ -122,8 +145,17 @@ public class UsersController {
                     if (item instanceof Map<?, ?> itemMap) {
                         // If it's already a map, normalize keys
                         for (Object key : itemMap.keySet()) {
-                            recordMap.put(key.toString(), itemMap.get(key));
+                            Object value = itemMap.get(key);
+                            if ("checkedAt".equals(key.toString()) && value instanceof String) {
+                                recordMap.put(
+                                        key.toString(),
+                                        LocalDateTime.parse((String) value, DateTimeFormatter.ISO_DATE_TIME)
+                                );
+                            } else {
+                                recordMap.put(key.toString(), value);
+                            }
                         }
+
                     } else if (item instanceof VinHistory history) {
                         // If it's a VinHistory entity, convert to map
                         recordMap.put("vinNumber", history.getVinNumber());
@@ -131,7 +163,7 @@ public class UsersController {
                         recordMap.put("modelYear", history.getModelYear());
                         recordMap.put("assemblyPlant", history.getAssemblyPlant());
                         recordMap.put("status", history.getStatus());
-                        recordMap.put("checkedAt", history.getCheckedOn().toString());
+                        recordMap.put("checked", history.getCheckedOn().toLocalTime());
                     }
                     
                     historyList.add(recordMap);

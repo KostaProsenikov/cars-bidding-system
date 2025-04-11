@@ -12,10 +12,15 @@
     <th:block sec:authorize="isAuthenticated()"
               th:insert="~{fragments/side-menu :: side-menu(${user})}">
     </th:block>
-    
+
     <!-- Main Content -->
     <main class="flex-1 overflow-auto w-4/5 p-4 main-content-panel">
         <h1 class="text-2xl font-bold mb-6">VIN Check History</h1>
+
+                <!-- Success message -->
+                <div th:if="${success}" class="mb-6 p-4 text-sm text-green-700 bg-green-100 rounded-md border border-green-200 shadow-sm">
+                    <span th:text="${success}"></span>
+                </div>
                 
                 <div th:if="${vinHistory.isEmpty()}" class="p-4 mb-4 text-center">
                     <p class="text-gray-600">You haven't checked any VINs yet.</p>
@@ -47,13 +52,38 @@
                                         <span th:if="${status != 'Error' && status != 'Invalid' && status != 'INVALID'}" th:text="${status}">Verified</span>
                                     </span>
                                 </td>
-                                <td class="py-2 px-4" th:text="${record['checkedAt']}">01-04-2025 14:30</td>
+                                <td class="px-4 py-2 text-gray-700"
+                                    th:text="${#temporals.format(record.checkedAt, 'dd MMM yyyy HH:mm')}">
+                                </td>
+                                <!--                                <td class="px-4 py-2 text-gray-700"-->
+<!--                                    th:text="${#temporals.format(record['checked'], 'dd MMM yyyy HH:mm')}">-->
+<!--                                </td>-->
                             </tr>
                         </tbody>
                     </table>
+                    <!-- Delete Old VIN Checks Button -->
+                    <div class="flex justify-center my-6">
+                        <form th:action="@{/users/vin-history/delete-old}" th:method="POST"
+                              onsubmit="return confirm('Are you sure you want to permanently delete VIN checks older than 30 days?');">
+                            <button type="submit"
+                                    class="flex items-center gap-2 px-6 py-3
+                       bg-red-500 hover:bg-red-600 focus:ring-4 focus:ring-red-200
+                       text-white font-medium rounded-lg shadow-md transition duration-150 ease-in-out">
+                                <!-- Trash Icon -->
+                                <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M19 7L5 7M9 7V5C9 4.44772 9.44772 4 10 4H14C14.5523 4 15 4.44772 15 5V7M10 11V17M14 11V17M6 7V19C6 19.5523 6.44772 20 7 20H17C17.5523 20 18 19.5523 18 19V7"/>
+                                </svg>
+                                Delete VIN Checks Older Than 30 Days
+                            </button>
+                        </form>
+                    </div>
                 </div>
         </main>
     </div>
+
+
 
 <div th:replace="fragments/footer :: footer"></div>
 

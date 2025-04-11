@@ -20,12 +20,16 @@ import org.springframework.web.client.RestTemplate;
 @Component
 public class VinClient {
     
-    @Autowired
-    private RestTemplate restTemplate;
+    private final RestTemplate restTemplate;
     
     @Value("${vin.service.url:http://localhost:8082}")
     private String vinServiceUrl;
-    
+
+    @Autowired
+    public VinClient(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
+
     /**
      * Get VIN information from external service
      * @param vin The Vehicle Identification Number
@@ -72,7 +76,8 @@ public class VinClient {
                 url,
                 HttpMethod.POST,
                 requestEntity,
-                new org.springframework.core.ParameterizedTypeReference<HashMap<String, Object>>() {}
+                    new org.springframework.core.ParameterizedTypeReference<>() {
+                    }
             );
             
             // Log success
@@ -155,4 +160,29 @@ public class VinClient {
             return false;
         }
     }
+
+    /**
+     * Delete a specific VIN check entry from the user's history
+     *
+     * @param userId The ID of the user
+     * @param vinCheckId The ID of the specific VIN check entry to delete
+     * @return A ResponseEntity indicating the outcome of the deletion
+     */
+    public ResponseEntity<Void> deleteVinCheck(UUID userId, UUID vinCheckId) {
+        // Construct the target URL
+        String url = vinServiceUrl + "/vin-svc/api/v1/delete-vin-check/{userId}/{vinCheckId}";
+
+        Map<String, UUID> uriParams = new HashMap<>();
+        uriParams.put("userId", userId);
+        uriParams.put("vinCheckId", vinCheckId);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        HttpEntity<Void> requestEntity = new HttpEntity<>(headers);
+
+        // Invoke DELETE request
+        return restTemplate.exchange(url, HttpMethod.DELETE, requestEntity, Void.class, uriParams);
+    }
+
+
 }
