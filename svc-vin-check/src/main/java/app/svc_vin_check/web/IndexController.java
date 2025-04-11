@@ -10,12 +10,7 @@ import java.util.regex.Pattern;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -31,11 +26,14 @@ public class IndexController {
 
     private static final Pattern VIN_PATTERN = Pattern.compile("^[A-HJ-NPR-Z0-9]{17}$");
     
+    private final VinCheckRepository vinCheckRepository;
+    private final ObjectMapper objectMapper;
+
     @Autowired
-    private VinCheckRepository vinCheckRepository;
-    
-    @Autowired
-    private ObjectMapper objectMapper;
+    public IndexController(VinCheckRepository vinCheckRepository, ObjectMapper objectMapper) {
+        this.vinCheckRepository = vinCheckRepository;
+        this.objectMapper = objectMapper;
+    }
 
     @GetMapping("/get-vin")
     public ResponseEntity<?> getVinInfo(@RequestParam String vin) {
@@ -174,6 +172,19 @@ public class IndexController {
         List<VinCheck> vinChecks = vinCheckRepository.findByVinNumberOrderByCheckedAtDesc(vinNumber);
         return ResponseEntity.ok(vinChecks);
     }
+
+
+    @DeleteMapping("/delete-vin-check/{userId}/{vinCheckId}")
+    public ResponseEntity<Void> deleteVinCheck(@PathVariable UUID userId, @PathVariable UUID vinCheckId) {
+        // First verify that a record with the supplied IDs exists
+        return vinCheckRepository.findByIdAndUserId(vinCheckId, userId)
+                .map(record -> {
+                    vinCheckRepository.deleteById(record.getId());
+                    return new ResponseEntity<Void>(HttpStatus.NO_CONTENT);  // Successful deletion
+                })
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND)); // Record not found
+    }
+
 
     private Map<String, Object> decodeVin(String vin) {
         Map<String, Object> info = new HashMap<>();

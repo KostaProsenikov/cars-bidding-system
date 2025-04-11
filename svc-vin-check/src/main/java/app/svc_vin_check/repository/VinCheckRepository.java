@@ -1,6 +1,7 @@
 package app.svc_vin_check.repository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,4 +17,6 @@ public interface VinCheckRepository extends JpaRepository<VinCheck, UUID> {
     List<VinCheck> findByVinNumberOrderByCheckedAtDesc(String vinNumber);
     
     List<VinCheck> findByUserIdAndVinNumber(UUID userId, String vinNumber);
+
+    Optional<VinCheck> findByIdAndUserId(UUID vinCheckId, UUID userId);
 }
