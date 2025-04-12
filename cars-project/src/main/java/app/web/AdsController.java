@@ -230,10 +230,11 @@ public class AdsController {
     public ModelAndView checkVin(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         Advert advert = advertService.getAdvertById(id);
         User user = userService.getById(authenticationMetadata.getUserId());
+        System.out.println("Test advert ID: " + id);
         ModelAndView modelAndView = new ModelAndView("ad-info");
 
         // Check if VIN exists
-        if (advert.getVinNumber() != null && !advert.getVinNumber().isEmpty()) {
+        if (advert != null && advert.getVinNumber() != null && !advert.getVinNumber().isEmpty()) {
             boolean alreadyChecked = vinClient.hasUserCheckedVin(advert.getVinNumber(), user.getId());
 
             if (alreadyChecked) {

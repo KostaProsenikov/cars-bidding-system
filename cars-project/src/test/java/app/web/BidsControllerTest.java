@@ -22,13 +22,11 @@ import org.springframework.web.servlet.ModelAndView;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -112,7 +110,7 @@ class BidsControllerTest {
     @DisplayName("Should return bids page with user bids")
     void shouldReturnBidsPage() {
         // Arrange
-        List<Bid> bids = Arrays.asList(testBid);
+        List<Bid> bids = Collections.singletonList(testBid);
         when(userService.getById(testUserId)).thenReturn(testUser);
         when(bidsService.getBidsForUserId(testUser)).thenReturn(bids);
 
@@ -167,7 +165,6 @@ class BidsControllerTest {
         
         when(userService.getById(testUserId)).thenReturn(testUser);
         when(advertService.getAdvertById(testAdvertId)).thenReturn(testAdvert);
-        when(bidsService.createNewBidForAdvert(eq(testAdvert), any(Bid.class))).thenReturn(null);
 
         // Act
         String redirectUrl = bidsController.addBid(testAdvertId, authMetadata, bidPrice, maxBidPrice);
