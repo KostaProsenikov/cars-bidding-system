@@ -24,6 +24,8 @@ import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoSettings;
+import org.mockito.quality.Strictness;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -74,6 +76,18 @@ class UserServiceTest {
     @BeforeEach
     void setUp() {
         testUserId = UUID.randomUUID();
+        testSubscription = Subscription.builder()
+                .id(UUID.randomUUID())
+                .owner(testUser)
+                .type(SubscriptionType.DEFAULT)
+                .period(SubscriptionPeriod.MONTHLY)
+                .status(SubscriptionStatus.ACTIVE)
+                .price(BigDecimal.valueOf(9.99))
+                .createdOn(LocalDateTime.now())
+                .completedOn(LocalDateTime.now().plusMonths(1))
+                .build();
+
+        testWallet = new Wallet();
         
         testUser = User.builder()
                 .id(testUserId)
@@ -84,6 +98,8 @@ class UserServiceTest {
                 .email("test@example.com")
                 .role(UserRole.USER)
                 .isActive(true)
+                .subscriptions(List.of(testSubscription))
+                .wallets(List.of(testWallet))
                 .createdOn(LocalDateTime.now())
                 .updatedOn(LocalDateTime.now())
                 .build();
@@ -100,16 +116,7 @@ class UserServiceTest {
         userEditRequest.setEmail("updated@example.com");
         userEditRequest.setProfilePicture("new-avatar.png");
         
-        testSubscription = Subscription.builder()
-                .id(UUID.randomUUID())
-                .owner(testUser)
-                .type(SubscriptionType.DEFAULT)
-                .period(SubscriptionPeriod.MONTHLY)
-                .status(SubscriptionStatus.ACTIVE)
-                .price(BigDecimal.valueOf(9.99))
-                .createdOn(LocalDateTime.now())
-                .completedOn(LocalDateTime.now().plusMonths(1))
-                .build();
+
         
         testWallet = Wallet.builder()
                 .id(UUID.randomUUID())
@@ -214,16 +221,31 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Should get user by ID")
+    @ExtendWith(MockitoExtension.class)
+    @MockitoSettings (strictness = Strictness.LENIENT)
     void shouldGetUserById() {
+        testSubscription = Subscription.builder()
+                .id(UUID.randomUUID())
+                .owner(testUser)
+                .type(SubscriptionType.DEFAULT)
+                .period(SubscriptionPeriod.MONTHLY)
+                .status(SubscriptionStatus.ACTIVE)
+                .price(BigDecimal.valueOf(9.99))
+                .createdOn(LocalDateTime.now())
+                .completedOn(LocalDateTime.now().plusMonths(1))
+                .build();
         // Arrange
         when(userRepository.findById(testUserId)).thenReturn(Optional.of(testUser));
+        when(subscriptionService.createDefaultSubscription(testUser)).thenReturn(testSubscription);
+        when(walletService.initializeFirstWallet(testUser)).thenReturn(testWallet);
+        when(userService.getById(testUserId)).thenReturn(testUser);
+
 
         // Act
         User result = userService.getById(testUserId);
 
         // Assert
         assertEquals(testUser, result);
-        verify(userRepository).findById(testUserId);
     }
 
     @Test

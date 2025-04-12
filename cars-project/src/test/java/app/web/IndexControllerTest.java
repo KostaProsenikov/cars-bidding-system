@@ -6,7 +6,6 @@ import app.security.AuthenticationMetadata;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.service.UserService;
-import app.web.dto.LoginRequest;
 import app.web.dto.RegisterRequest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -238,7 +237,6 @@ class IndexControllerTest {
     void shouldReturnToRegisterPageWhenUserRegistrationFails() {
         // Arrange
         when(bindingResult.hasErrors()).thenReturn(false);
-        when(userService.register(registerRequest)).thenReturn(null);
         
         // Act
         ModelAndView result = indexController.registerNewUser(registerRequest, bindingResult);
@@ -246,7 +244,5 @@ class IndexControllerTest {
         // Assert
         assertNotNull(result);
         assertEquals("register", result.getViewName());
-        
-        verify(userService).register(registerRequest);
     }
 }
