@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c6629ed4-748d-4b8d-91fc-fe567dfba9ce" name="Changes" comment="Add FeignClient information">
-      <change beforePath="$PROJECT_DIR$/cars-project/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/cars-project/src/main/resources/application.properties" afterDir="false" />
-    </list>
+    <list default="true" id="c6629ed4-748d-4b8d-91fc-fe567dfba9ce" name="Changes" comment="Add FeignClient information" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -213,7 +211,7 @@
       <workItem from="1743506185540" duration="147000" />
       <workItem from="1743506345008" duration="757000" />
       <workItem from="1744209846916" duration="68000" />
-      <workItem from="1744463681172" duration="9000" />
+      <workItem from="1744463681172" duration="261000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit for the Cars Bidding system">
       <option name="closed" value="true" />

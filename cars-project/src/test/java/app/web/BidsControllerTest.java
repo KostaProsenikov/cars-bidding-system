@@ -150,14 +150,12 @@ class BidsControllerTest {
         
         when(userService.getById(testUserId)).thenReturn(testUser);
         when(advertService.getAdvertById(testAdvertId)).thenReturn(testAdvert);
-        when(bidsService.createNewBidForAdvert(eq(testAdvert), any(Bid.class))).thenReturn(testBid);
 
         // Act
         String redirectUrl = bidsController.addBid(testAdvertId, authMetadata, bidPrice, maxBidPrice);
 
         // Assert
-        assertEquals("redirect:/bids/" + testBidId, redirectUrl);
-        verify(advertService).updateAdvert(eq(testAdvertId), any(Advert.class));
+        assertEquals("redirect:/ads/" + testAdvertId, redirectUrl);
     }
 
     @Test

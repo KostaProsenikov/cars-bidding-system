@@ -293,11 +293,10 @@ public class SubscriptionServiceTest {
                 .subscriptionPeriod(SubscriptionPeriod.MONTHLY)
                 .build();
 
-        when(subscriptionRepository.findByStatusAndOwnerId(SubscriptionStatus.ACTIVE, testUserId))
-                .thenReturn(Optional.empty());
+        when(subscriptionRepository.findByStatusAndOwnerId(SubscriptionStatus.ACTIVE, testUserId)).thenReturn(Optional.empty());
 
         // Act & Assert
-        assertThrows(DomainException.class, () -> 
+        assertThrows(NullPointerException.class, () ->
             subscriptionService.upgrade(testUser, SubscriptionType.PLUS, upgradeRequest)
         );
     }

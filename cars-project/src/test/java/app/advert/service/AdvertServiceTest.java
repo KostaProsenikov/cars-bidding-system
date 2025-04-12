@@ -6,6 +6,7 @@ import app.advert.model.CarStatus;
 import app.advert.model.FuelType;
 import app.advert.model.GearboxType;
 import app.advert.repository.AdvertRepository;
+import app.exception.AdvertNotFoundException;
 import app.exception.DomainException;
 import app.user.model.User;
 import app.user.model.UserRole;
@@ -31,6 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -255,18 +257,16 @@ class AdvertServiceTest {
         assertEquals(testAdvert, result);
     }
 
-    @Test
-    @DisplayName("Should throw exception when advert not found by ID")
-    void shouldThrowExceptionWhenAdvertNotFoundById() {
-        // Arrange
-        UUID nonExistentId = UUID.randomUUID();
-        when(advertRepository.findById(nonExistentId)).thenReturn(Optional.empty());
 
-        // Act & Assert
-        DomainException exception = assertThrows(DomainException.class, 
-                () -> advertService.getAdvertById(nonExistentId));
-        
-        assertTrue(exception.getMessage().contains("Advert with ID [" + nonExistentId + "] is not found!"));
+    @Test
+    @DisplayName("Should throw AdvertNotFoundException when advert is not found")
+    void shouldThrowAdvertNotFoundExceptionWhenAdvertIsNotFound()
+    {
+        UUID advertId = UUID.randomUUID();
+
+        assertThatThrownBy(() -> advertService.getAdvertById(advertId))
+                .isInstanceOf(AdvertNotFoundException.class)
+                .hasMessageContaining("Advert with ID [" + advertId + "] is not found!");
     }
 
     @Test
