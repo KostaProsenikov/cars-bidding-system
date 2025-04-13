@@ -224,6 +224,14 @@ class UserServiceTest {
     @ExtendWith(MockitoExtension.class)
     @MockitoSettings (strictness = Strictness.LENIENT)
     void shouldGetUserById() {
+        testUser = User.builder()
+                .id(testUserId)
+                .email("test@example.com")
+                .subscriptions(new ArrayList<>()) // simulate missing subscriptions
+                .wallets(new ArrayList<>())       // simulate missing wallets
+                .username("tester")
+                .build();
+
         testSubscription = Subscription.builder()
                 .id(UUID.randomUUID())
                 .owner(testUser)
@@ -234,18 +242,28 @@ class UserServiceTest {
                 .createdOn(LocalDateTime.now())
                 .completedOn(LocalDateTime.now().plusMonths(1))
                 .build();
+
+        testWallet = Wallet.builder()
+                .id(UUID.randomUUID())
+                .build();
         // Arrange
         when(userRepository.findById(testUserId)).thenReturn(Optional.of(testUser));
         when(subscriptionService.createDefaultSubscription(testUser)).thenReturn(testSubscription);
         when(walletService.initializeFirstWallet(testUser)).thenReturn(testWallet);
         when(userService.getById(testUserId)).thenReturn(testUser);
 
-
         // Act
         User result = userService.getById(testUserId);
 
         // Assert
         assertEquals(testUser, result);
+        assertNotNull(result);
+        assertEquals(testUserId, result.getId());
+        assertEquals(1, result.getSubscriptions().size());
+        assertEquals(testSubscription, result.getSubscriptions().get(0));
+        assertEquals(1, result.getWallets().size());
+        assertEquals(testWallet, result.getWallets().get(0));
+        verify(userRepository).save(testUser);
     }
 
     @Test
