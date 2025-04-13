@@ -15,7 +15,6 @@ import app.user.model.UserRole;
 import app.user.service.UserService;
 import app.vin.client.VinClient;
 import app.vin.model.VinHistory;
-import app.vin.service.VinHistoryService;
 import app.web.dto.CreateNewAdvertRequest;
 import app.web.mapper.DtoMapper;
 import org.springframework.http.ResponseEntity;
@@ -57,9 +56,6 @@ class AdsControllerTest {
     private BindingResult bindingResult;
 
     @Mock
-    private VinHistoryService vinHistoryService;
-
-    @Mock
     private VinClient vinClient;
 
     @Mock
@@ -73,7 +69,6 @@ class AdsControllerTest {
     private UUID testUserId;
     private UUID advertId;
     private CreateNewAdvertRequest createRequest;
-    private Subscription testSubscription;
 
     @BeforeEach
     void setUp() {
@@ -81,9 +76,9 @@ class AdsControllerTest {
         testUserId = UUID.randomUUID();
         
         // Setup subscription for VIN checks
-        testSubscription = Subscription.builder()
+        Subscription testSubscription = Subscription.builder()
                 .id(UUID.randomUUID())
-                .status(app.subscription.model.SubscriptionStatus.ACTIVE)
+                .status(SubscriptionStatus.ACTIVE)
                 .period(SubscriptionPeriod.MONTHLY)
                 .type(SubscriptionType.PLUS)
                 .vinChecksLeft(5)
@@ -91,7 +86,7 @@ class AdsControllerTest {
                 .completedOn(LocalDateTime.now().plusMonths(1))
                 .build();
         
-        List<Subscription> subscriptions = new ArrayList<>();
+        ArrayList<Subscription> subscriptions = new ArrayList<>();
         subscriptions.add(testSubscription);
 
         testUser = User.builder()
@@ -226,7 +221,6 @@ class AdsControllerTest {
 
         // Assert
         assertEquals("new-advert", modelAndView.getViewName());
-        assertEquals(testUser, testUser);
         assertInstanceOf(CreateNewAdvertRequest.class, modelAndView.getModel().get("createAdvertRequest"));
     }
 
@@ -294,10 +288,6 @@ class AdsControllerTest {
         when(advertService.getAdvertById(advertId)).thenReturn(testAdvert);
         when(vinClient.hasUserCheckedVin(vinNumber, testUserId)).thenReturn(true);
         when(vinClient.getVINInformation(vinNumber)).thenReturn(ResponseEntity.ok(vinHistory.getResultJson()));
-//        when(vinHistoryService.findUserVinCheck(testUserId, vinNumber)).thenReturn(Optional.of(vinHistory));
-        System.out.println("Injected advertService = " + adsController.getClass().getDeclaredFields()[0]);
-        System.out.println("Advert ID used in test: " + advertId);
-        System.out.println("Mock returned advert: " + advertService.getAdvertById(advertId));
         // Act
         ModelAndView result = adsController.checkVin(advertId, authMetadata);
         

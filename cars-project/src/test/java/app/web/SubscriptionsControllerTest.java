@@ -1,7 +1,6 @@
 package app.web;
 
 import app.security.AuthenticationMetadata;
-import app.subscription.model.SubscriptionPeriod;
 import app.subscription.model.SubscriptionType;
 import app.subscription.service.SubscriptionService;
 import app.transaction.model.Transaction;
@@ -48,21 +47,18 @@ class SubscriptionsControllerTest {
 
     private User testUser;
     private UUID testUserId;
-    private UUID testWalletId;
     private UUID testTransactionId;
     private AuthenticationMetadata authMetadata;
-    private Wallet testWallet;
     private Transaction testTransaction;
-    private LocalDateTime testTime;
 
     @BeforeEach
     void setUp() {
         testUserId = UUID.randomUUID();
-        testWalletId = UUID.randomUUID();
+        UUID testWalletId = UUID.randomUUID();
         testTransactionId = UUID.randomUUID();
-        testTime = LocalDateTime.now();
-        
-        testWallet = Wallet.builder()
+        LocalDateTime testTime = LocalDateTime.now();
+
+        Wallet testWallet = Wallet.builder()
                 .id(testWalletId)
                 .balance(BigDecimal.valueOf(500))
                 .status(WalletStatus.ACTIVE)

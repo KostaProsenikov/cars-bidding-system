@@ -1,6 +1,5 @@
 package app.subscription.service;
 
-import app.exception.DomainException;
 import app.subscription.model.Subscription;
 import app.subscription.model.SubscriptionPeriod;
 import app.subscription.model.SubscriptionStatus;
@@ -11,7 +10,6 @@ import app.transaction.model.TransactionStatus;
 import app.transaction.model.TransactionType;
 import app.user.model.User;
 import app.user.model.UserRole;
-import app.wallet.model.Wallet;
 import app.wallet.service.WalletService;
 import app.web.dto.UpgradeRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,15 +23,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -336,7 +329,7 @@ public class SubscriptionServiceTest {
     @DisplayName("Should get all subscriptions ready for renewal")
     void shouldGetAllSubscriptionsReadyForRenewal() {
         // Arrange
-        List<Subscription> subscriptions = Arrays.asList(testSubscription);
+        List<Subscription> subscriptions = Collections.singletonList(testSubscription);
         when(subscriptionRepository.findAllByStatusAndCompletedOnLessThanEqual(eq(SubscriptionStatus.ACTIVE), any(LocalDateTime.class)))
                 .thenReturn(subscriptions);
 

@@ -21,7 +21,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -51,14 +50,13 @@ class BidsControllerTest {
     private UUID testAdvertId;
     private UUID testBidId;
     private AuthenticationMetadata authMetadata;
-    private LocalDateTime testTime;
 
     @BeforeEach
     void setUp() {
         testUserId = UUID.randomUUID();
         testAdvertId = UUID.randomUUID();
         testBidId = UUID.randomUUID();
-        testTime = LocalDateTime.now();
+        LocalDateTime testTime = LocalDateTime.now();
         
         testUser = User.builder()
                 .id(testUserId)
