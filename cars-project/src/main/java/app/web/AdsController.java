@@ -16,7 +16,6 @@ import app.vin.service.VinHistoryService;
 import app.web.dto.CreateNewAdvertRequest;
 import app.web.mapper.DtoMapper;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -39,8 +38,6 @@ public class AdsController {
     private final SubscriptionService subscriptionService;
     private final VinHistoryService vinHistoryService;
 
-
-    @Autowired
     public AdsController(AdvertService advertService, UserService userService,
                         VinClient vinClient, SubscriptionService subscriptionService,
                         VinHistoryService vinHistoryService) {
@@ -230,7 +227,6 @@ public class AdsController {
     public ModelAndView checkVin(@PathVariable UUID id, @AuthenticationPrincipal AuthenticationMetadata authenticationMetadata) {
         Advert advert = advertService.getAdvertById(id);
         User user = userService.getById(authenticationMetadata.getUserId());
-        System.out.println("Test advert ID: " + id);
         ModelAndView modelAndView = new ModelAndView("ad-info");
 
         // Check if VIN exists
