@@ -1,16 +1,10 @@
 package app.web;
 
 import app.security.AuthenticationMetadata;
-import app.subscription.model.Subscription;
-import app.subscription.model.SubscriptionPeriod;
-import app.subscription.model.SubscriptionStatus;
-import app.subscription.model.SubscriptionType;
-import app.subscription.service.SubscriptionService;
 import app.user.model.User;
 import app.user.model.UserRole;
 import app.user.service.UserService;
 import app.vin.model.VinHistory;
-import app.vin.service.VinHistoryService;
 import app.web.dto.UserEditRequest;
 import app.web.mapper.DtoMapper;
 import org.junit.jupiter.api.BeforeEach;
@@ -23,8 +17,6 @@ import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
-
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +34,6 @@ class UserControllerTest {
     private UserService userService;
 
     @Mock
-    private SubscriptionService subscriptionService;
-
-    @Mock
-    private VinHistoryService vinHistoryService;
-
-    @Mock
     private AuthenticationMetadata authenticationMetadata;
 
     @Mock
@@ -58,17 +44,12 @@ class UserControllerTest {
 
     private User testUser;
     private UUID userId;
-    private List<VinHistory> vinHistoryList;
     private UserEditRequest userEditRequest;
-    private UUID testSubscriptionId;
-    private LocalDateTime testTime;
 
 
     @BeforeEach
     void setUp() {
-        testTime = LocalDateTime.now();
         userId = UUID.randomUUID();
-        testSubscriptionId = UUID.randomUUID();
         testUser = User.builder()
                 .id(userId)
                 .username("testuser")
@@ -82,7 +63,7 @@ class UserControllerTest {
                 .updatedOn(LocalDateTime.now())
                 .build();
 
-        vinHistoryList = new ArrayList<>();
+        List<VinHistory> vinHistoryList = new ArrayList<>();
         VinHistory vinHistory = VinHistory.builder()
                 .id(UUID.randomUUID())
                 .user(testUser)
@@ -147,18 +128,6 @@ class UserControllerTest {
     @Test
     @DisplayName("Should update user profile when validation passes")
     void shouldUpdateUserProfileWhenValidationPasses() {
-        Subscription testSubscription = Subscription.builder()
-                .id(testSubscriptionId)
-                .owner(testUser)
-                .status(SubscriptionStatus.ACTIVE)
-                .period(SubscriptionPeriod.MONTHLY)
-                .type(SubscriptionType.DEFAULT)
-                .vinChecksLeft(0)
-                .price(BigDecimal.ZERO)
-                .renewalAllowed(true)
-                .createdOn(testTime)
-                .completedOn(testTime.plusMonths(1))
-                .build();
         // Arrange
         when(bindingResult.hasErrors()).thenReturn(false);
         when(authenticationMetadata.getUserId()).thenReturn(userId);
